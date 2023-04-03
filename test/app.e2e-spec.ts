@@ -1,9 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { HttpServer, INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
 import { AppModule } from '../src/modules/app/app.module'
-import { Connection } from 'mongoose'
-import { DatabaseService } from '../src/database/database.service'
+import { INestApplication } from '@nestjs/common'
+import { Test, TestingModule } from '@nestjs/testing'
 
 describe('AppController', () => {
   let app: INestApplication

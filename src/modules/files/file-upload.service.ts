@@ -1,13 +1,13 @@
+import { BufferedFile } from '../minio/file.model'
 import { Injectable } from '@nestjs/common'
 import { MinioClientService } from '../minio/minio-client.service'
-import { BufferedFile } from '../minio/file.model'
 
 @Injectable()
 export class FileUploadService {
   constructor(private minioClientService: MinioClientService) {}
 
   async uploadSingle(image: BufferedFile) {
-    let uploaded_image = await this.minioClientService.upload(image)
+    const uploaded_image = await this.minioClientService.upload(image)
 
     return {
       image_url: uploaded_image.url,
@@ -16,11 +16,11 @@ export class FileUploadService {
   }
 
   async uploadMany(files: BufferedFile) {
-    let image1 = files['image1'][0]
-    let uploaded_image1 = await this.minioClientService.upload(image1)
+    const image1 = files['image1'][0]
+    const uploaded_image1 = await this.minioClientService.upload(image1)
 
-    let image2 = files['image2'][0]
-    let uploaded_image2 = await this.minioClientService.upload(image2)
+    const image2 = files['image2'][0]
+    const uploaded_image2 = await this.minioClientService.upload(image2)
 
     return {
       image1_url: uploaded_image1.url,
