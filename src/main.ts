@@ -5,6 +5,7 @@ import * as bodyParser from 'body-parser'
 import { HttpException, HttpStatus, ValidationError, ValidationPipe } from '@nestjs/common'
 import { AllExceptionsFilter } from './common/filters/all-exception.filter'
 import { HttpResponseInterceptor } from './common/interceptors/http-response.interceptor'
+import helmet from 'helmet'
 
 /**
  * Bootstrap the NestJS application
@@ -58,6 +59,7 @@ async function bootstrap() {
 
   // Security Measures
   app.enable('trust proxy')
+  app.use(helmet())
   await app.listen(3200)
 }
 bootstrap()
