@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { HttpException } from '@nestjs/common'
 
 /**
  * Dto for the error response
