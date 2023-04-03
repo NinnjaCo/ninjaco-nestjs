@@ -1,8 +1,9 @@
 import { AppController } from './app.controller'
 import { ConfigModule } from '@nestjs/config'
 import { LoggerMiddleware } from '../../common/middleware/logger.middleware'
+import { MailModule } from '../mail/mail.module'
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { validateConfig } from 'modules/config'
+import { validateConfig } from '../config'
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { validateConfig } from 'modules/config'
         return validateConfig(config)
       },
     }),
+    MailModule,
   ],
   controllers: [AppController],
 })
