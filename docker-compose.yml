@@ -1,0 +1,78 @@
+version: '3.1'
+
+services:
+  nestjs:
+    build: .
+    ports:
+      - ${NESTJS_PORT}:${NESTJS_PORT}
+    env_file:
+      - .env
+    environment:
+      MONGODB_URL: "mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_NAME}?authSource=admin"
+      MONGODB_URL_E2E_TEST: "mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/testdb?authSource=admin"
+    
+    networks:
+      - mynetwork
+    
+    volumes:
+      - /usr/src/app/node_modules
+      - .:/usr/src/app
+    depends_on:
+      - mongo
+      - minio
+
+  mongo:
+    image: mongo
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - ${MONGODB_PORT}:${MONGODB_PORT}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+    networks:
+      - mynetwork
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - ${MONGO_EXPRESS_PORT}:${MONGO_EXPRESS_PORT}
+    environment:
+      ME_CONFIG_MONGO_DB_ADMINUSERNAME: ${MONGODB_USERNAME}
+      ME_CONFIG_MONGO_DB_ADMINPASSWORD: ${MONGODB_PASSWORD}
+      ME_CONFIG_MONGO_DB_SERVER: mongodb
+      ME_CONFIG_MONGODB_URL: "mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}?authSource=admin"
+    networks:
+      - mynetwork
+    depends_on:
+      - mongo
+  
+  minio:
+    image: minio/minio
+    ports:
+      - ${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}
+      - ${MINIO_API_PORT}:${MINIO_API_PORT}
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: minio server --console-address ":${MINIO_CONSOLE_PORT}" /data
+    volumes:
+      - miniodata:/data
+    networks:
+      - mynetwork
+
+  maildev:
+    container_name: maildev
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+    networks:
+      - mynetwork
+      
+volumes:
+  mongodata:
+  miniodata:
+
+networks:
+  mynetwork:
