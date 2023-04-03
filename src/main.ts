@@ -60,6 +60,15 @@ async function bootstrap() {
   // Security Measures
   app.enable('trust proxy')
   app.use(helmet())
+
+  // localhost:3000 is NextJS frontend
+  // TODO replace it with list of allowed cros origin from .env
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization, Accept',
+    credentials: true,
+  })
   await app.listen(3200)
 }
 bootstrap()
