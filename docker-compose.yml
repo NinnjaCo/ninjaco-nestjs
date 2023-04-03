@@ -14,5 +14,17 @@ services:
       - /usr/src/app/node_modules
       - .:/usr/src/app
 
+  mongo:
+    image: mongo
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - ${MONGODB_PORT}:${MONGODB_PORT}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+    networks:
+      - mynetwork
+  
 networks:
   mynetwork:
