@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  nestjs:
+    build: .
+    ports:
+      - ${NESTJS_PORT}:${NESTJS_PORT}
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+    
+    volumes:
+      - /usr/src/app/node_modules
+      - .:/usr/src/app
+
+networks:
+  mynetwork:
