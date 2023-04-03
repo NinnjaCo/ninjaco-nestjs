@@ -2,7 +2,7 @@ import * as bodyParser from 'body-parser'
 import * as compression from 'compression'
 import { AllExceptionsFilter } from './common/filters'
 import { AppModule } from './modules/app/app.module'
-import { HttpException, HttpStatus, ValidationError, ValidationPipe } from '@nestjs/common'
+import { HttpException, HttpStatus, Logger, ValidationError, ValidationPipe } from '@nestjs/common'
 import { HttpResponseInterceptor } from './common/interceptors'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { NestFactory } from '@nestjs/core'
@@ -92,6 +92,10 @@ async function bootstrap() {
 
   // Setup swagger documentation
   SwaggerConfig(app, '1.0.0')
-  await app.listen(3200)
+
+  // Main entry point
+  const port = 3200
+  await app.listen(port)
+  Logger.log(`🚀 Application is running on: http://localhost:${port}/api`, 'Bootstrap')
 }
 bootstrap()
