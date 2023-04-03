@@ -3,6 +3,7 @@ import { AppModule } from './modules/app/app.module'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import * as bodyParser from 'body-parser'
 import { HttpException, HttpStatus, ValidationError, ValidationPipe } from '@nestjs/common'
+import { AllExceptionsFilter } from './common/filters/all-exception.filter'
 
 /**
  * Bootstrap the NestJS application
@@ -48,6 +49,10 @@ async function bootstrap() {
         ),
     })
   )
+
+  // Use global exception filter
+  app.useGlobalFilters(new AllExceptionsFilter())
+
   await app.listen(3200)
 }
 bootstrap()
