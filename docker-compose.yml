@@ -29,6 +29,20 @@ services:
     networks:
       - mynetwork
 
+  mongo-express:
+    image: mongo-express
+    ports:
+      - ${MONGO_EXPRESS_PORT}:${MONGO_EXPRESS_PORT}
+    environment:
+      ME_CONFIG_MONGO_DB_ADMINUSERNAME: ${MONGODB_USERNAME}
+      ME_CONFIG_MONGO_DB_ADMINPASSWORD: ${MONGODB_PASSWORD}
+      ME_CONFIG_MONGO_DB_SERVER: mongodb
+      ME_CONFIG_MONGODB_URL: "mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}?authSource=admin"
+    networks:
+      - mynetwork
+    depends_on:
+      - mongo
+      
 volumes:
   mongodata:
 
