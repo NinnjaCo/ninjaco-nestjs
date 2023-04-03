@@ -56,6 +56,8 @@ async function bootstrap() {
   // Http Request Interceptor
   app.useGlobalInterceptors(new HttpResponseInterceptor())
 
+  // Security Measures
+  app.enable('trust proxy')
   await app.listen(3200)
 }
 bootstrap()
