@@ -8,6 +8,7 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 import { NestFactory } from '@nestjs/core'
 import { RATE_LIMITER_EXCEPTION_MESSAGE } from './common/constants'
 import { rateLimit } from 'express-rate-limit'
+import SwaggerConfig from 'swagger'
 import helmet from 'helmet'
 
 /**
@@ -88,6 +89,9 @@ async function bootstrap() {
       },
     })
   )
+
+  // Setup swagger documentation
+  SwaggerConfig(app, '1.0.0')
   await app.listen(3200)
 }
 bootstrap()
