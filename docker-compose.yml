@@ -14,6 +14,9 @@ services:
       - /usr/src/app/node_modules
       - .:/usr/src/app
 
+    depends_on:
+      - mongo
+
   mongo:
     image: mongo
     volumes:
@@ -25,6 +28,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
     networks:
       - mynetwork
-  
+
+volumes:
+  mongodata:
+
 networks:
   mynetwork:
