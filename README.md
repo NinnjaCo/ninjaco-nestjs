@@ -39,3 +39,5 @@ This will run:
 - NestJs App
 
 - Minio
+
+- MailDev
