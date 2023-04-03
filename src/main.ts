@@ -4,9 +4,11 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 import * as compression from 'compression'
 import * as bodyParser from 'body-parser'
 import { HttpException, HttpStatus, ValidationError, ValidationPipe } from '@nestjs/common'
-import { AllExceptionsFilter } from './common/filters/all-exception.filter'
-import { HttpResponseInterceptor } from './common/interceptors/http-response.interceptor'
+import { AllExceptionsFilter } from './common/filters'
+import { HttpResponseInterceptor } from './common/interceptors'
 import helmet from 'helmet'
+import { rateLimit } from 'express-rate-limit'
+import { RATE_LIMITER_EXCEPTION_MESSAGE } from './common/constants'
 
 /**
  * Bootstrap the NestJS application
@@ -72,6 +74,20 @@ async function bootstrap() {
   })
   app.use(compression())
 
+  // Global rate limiter
+  // limit 1 ip for 100 request under 15 minutes
+  const maxAllowedRequest = 100
+  const durationForMaxAllowedRequest = 15 * 60 * 1000
+  app.use(
+    rateLimit({
+      windowMs: durationForMaxAllowedRequest,
+      max: maxAllowedRequest,
+      message: {
+        statusCode: HttpStatus.TOO_MANY_REQUESTS,
+        message: RATE_LIMITER_EXCEPTION_MESSAGE,
+      },
+    })
+  )
   await app.listen(3200)
 }
 bootstrap()
