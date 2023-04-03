@@ -4,10 +4,10 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 import * as bodyParser from 'body-parser'
 import { HttpException, HttpStatus, ValidationError, ValidationPipe } from '@nestjs/common'
 import { AllExceptionsFilter } from './common/filters/all-exception.filter'
+import { HttpResponseInterceptor } from './common/interceptors/http-response.interceptor'
 
 /**
  * Bootstrap the NestJS application
- *
  * @returns {Promise<void>}
  * @memberof Main
  * @method bootstrap
@@ -52,6 +52,9 @@ async function bootstrap() {
 
   // Use global exception filter
   app.useGlobalFilters(new AllExceptionsFilter())
+
+  // Http Request Interceptor
+  app.useGlobalInterceptors(new HttpResponseInterceptor())
 
   await app.listen(3200)
 }
