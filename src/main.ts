@@ -1,14 +1,14 @@
-import { NestFactory } from '@nestjs/core'
-import { AppModule } from './modules/app/app.module'
-import { NestExpressApplication } from '@nestjs/platform-express'
-import * as compression from 'compression'
 import * as bodyParser from 'body-parser'
-import { HttpException, HttpStatus, ValidationError, ValidationPipe } from '@nestjs/common'
+import * as compression from 'compression'
 import { AllExceptionsFilter } from './common/filters'
+import { AppModule } from './modules/app/app.module'
+import { HttpException, HttpStatus, ValidationError, ValidationPipe } from '@nestjs/common'
 import { HttpResponseInterceptor } from './common/interceptors'
-import helmet from 'helmet'
-import { rateLimit } from 'express-rate-limit'
+import { NestExpressApplication } from '@nestjs/platform-express'
+import { NestFactory } from '@nestjs/core'
 import { RATE_LIMITER_EXCEPTION_MESSAGE } from './common/constants'
+import { rateLimit } from 'express-rate-limit'
+import helmet from 'helmet'
 
 /**
  * Bootstrap the NestJS application
