@@ -43,6 +43,20 @@ services:
     depends_on:
       - mongo
 
+  minio:
+    image: minio/minio
+    ports:
+      - ${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}
+      - ${MINIO_API_PORT}:${MINIO_API_PORT}
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: minio server --console-address ":${MINIO_CONSOLE_PORT}" /data
+    volumes:
+      - miniodata:/data
+    networks:
+      - mynetwork
+
   maildev:
     container_name: maildev
     image: maildev/maildev
@@ -51,9 +65,10 @@ services:
       - 1025:1025
     networks:
       - mynetwork
-      
+
 volumes:
   mongodata:
+  miniodata:
 
 networks:
   mynetwork:
