@@ -20,6 +20,9 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: '5mb' }))
   app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }))
 
+  // Globale Prefix /api/...
+  app.setGlobalPrefix('api')
+
   await app.listen(3200)
 }
 bootstrap()
