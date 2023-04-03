@@ -9,7 +9,7 @@ services:
       - .env
     environment:
       MONGODB_URL: "mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_NAME}?authSource=admin"
-      
+      MONGODB_URL_E2E_TEST: "mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/testdb?authSource=admin"
     
     networks:
       - mynetwork
