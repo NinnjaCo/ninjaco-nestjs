@@ -21,3 +21,15 @@ export const checkIfValidObjectId = (id: string) => {
   const ObjectId = mongoose.Types.ObjectId
   return ObjectId.isValid(id) && new ObjectId(id).toString() === id
 }
+
+/**
+ * Check if hash is matched
+ * @param data
+ * @param hash
+ * @returns {boolean}
+ * @description hash data and compare it with the given hash
+ * @description if the hash is matched, return true, otherwise return false
+ */
+export const isHashMatched = (data: any, hash: string) => {
+  return hashData(data) === hash
+}
