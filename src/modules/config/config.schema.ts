@@ -2,9 +2,9 @@ import * as Joi from 'joi'
 
 const configSchema = Joi.object({
   MONGODB_PORT: Joi.number().required().default(27017),
-  MONGODB_URL: Joi.string().default('mongodb://localhost:27017/ninjaco'),
+  MONGODB_URL: Joi.string().default('mongodb://localhost:27017/ninjacodb'),
   MONGODB_URL_E2E_TEST: Joi.string().default('mongodb://localhost:27017/testdb'),
-  MONGODB_NAME: Joi.string().required().default('ninjaco'),
+  MONGODB_NAME: Joi.string().required().default('ninjacodb'),
   MONGODB_HOST: Joi.string().required(),
   MONGODB_USERNAME: Joi.string().required(),
   MONGODB_PASSWORD: Joi.string().required(),
