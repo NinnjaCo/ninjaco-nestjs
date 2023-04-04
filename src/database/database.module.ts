@@ -1,8 +1,9 @@
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { DatabaseService } from './database.service'
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 
+@Global()
 @Module({
   imports: [
     MongooseModule.forRootAsync({
