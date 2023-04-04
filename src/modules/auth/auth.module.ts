@@ -8,13 +8,18 @@ import { Module } from '@nestjs/common'
   imports: [
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
+        global: true,
         secret: configService.get('JWT_SECRET'),
-        signOptions: { expiresIn: configService.get('JWT_EXPIRATION_TIME') },
+        signOptions: {
+          expiresIn: configService.get('JWT_EXPIRATION_TIME'),
+          algorithm: 'RS256',
+        },
       }),
       inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}
