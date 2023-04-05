@@ -40,7 +40,7 @@ export class UsersService {
 
   /**
    * Create new user
-   * @param user
+   * @param CreateUsersDto
    * @returns Promise<User>
    * @description user.password is hashed before saving
    * @description user.email is unique since the email is set as unique in the schema
@@ -52,7 +52,27 @@ export class UsersService {
     return this.usersRepository.create(user)
   }
 
+  /**
+   * Find user by email
+   * @param email
+   * @returns Promise<User> if user is found, otherwise null
+   */
   findOneByEmail(email: string): Promise<User> {
     return this.usersRepository.findOne({ email })
+  }
+
+  /**
+   * Update user by id
+   * @param userId
+   * @param updateDto
+   * @returns Promise<User> if user is found, otherwise null
+   * @description user.password is hashed before saving
+   * @description user.email is unique since the email is set as unique in the schema
+   */
+  update(userId: string, updateDto): Promise<User> {
+    if (updateDto.password) {
+      updateDto.password = hashData(updateDto.password)
+    }
+    return this.usersRepository.findOneAndUpdate({ _id: userId }, updateDto)
   }
 }

@@ -1,6 +1,7 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { Controller, Delete, Get, Param } from '@nestjs/common'
+import { Public } from '../../common/decorators/public.decorator'
 import { User } from './schemas/user.schema'
 import { UsersService } from './users.service'
 

@@ -18,6 +18,10 @@ export class User extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
   password: string
+
+  @ApiProperty()
+  @Prop()
+  hashedRt: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
