@@ -1,25 +1,14 @@
+import { AtStrategy } from './strategies/at.strategy'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { Module } from '@nestjs/common'
+import { RtStrategy } from './strategies/rt.strategy'
+import { UsersModule } from 'modules/users/users.module'
 
 @Module({
-  imports: [
-    JwtModule.registerAsync({
-      useFactory: (configService: ConfigService) => ({
-        global: true,
-        secret: configService.get('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get('JWT_EXPIRATION_TIME'),
-          algorithm: 'RS256',
-        },
-      }),
-      inject: [ConfigService],
-    }),
-  ],
+  imports: [JwtModule.register({}), UsersModule],
   controllers: [AuthController],
-  providers: [AuthService],
-  exports: [AuthService],
+  providers: [AuthService, AtStrategy, RtStrategy],
 })
 export class AuthModule {}

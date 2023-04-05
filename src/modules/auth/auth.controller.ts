@@ -1,7 +1,12 @@
 import { ApiTags } from '@nestjs/swagger'
-import { AuthGuard } from './guards/auth.guard'
 import { AuthService } from './auth.service'
-import { Body, Controller, Get, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common'
+import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { GetCurrentUser } from '../../common/decorators/get-current-user.decorator'
+import { GetCurrentUserId } from '../../common/decorators/get-current-user-id.decorator'
+import { Public } from '../../common/decorators/public.decorator'
+import { RtGuard } from './guards/rt.guard'
+import { SignInDto } from './dto/signin.dto'
+import { SignUpDto } from './dto/signup.dto'
 import { Tokens } from './types'
 
 @ApiTags('auth')
@@ -9,34 +14,30 @@ import { Tokens } from './types'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Post('/local/signup')
-  // async register(@Body() body: SignupDto): Promise<Tokens> {
-  //   const user = await this.authService.signup(body.email, body.password)
-  //   return this.authService.signin(user)
-  // }
+  @Public()
+  @Post('/local/signup')
+  async register(@Body() body: SignUpDto): Promise<Tokens> {
+    return this.authService.signUp(body)
+  }
 
-  // @Post('/local/signin')
-  // async login(@Body() body: SignInDto): Promise<Tokens> {
-  //   const user = await this.authService.validateUser(body.email, body.password)
-  //   if (!user) {
-  //     throw new UnauthorizedException('Invalid credentials')
-  //   }
-  //   return this.authService.signin(user)
-  // }
+  @Public()
+  @Post('local/signin')
+  async signinLocal(@Body() dto: SignInDto): Promise<Tokens> {
+    return this.authService.signIn(dto)
+  }
 
-  // @Post('refresh')
-  // async refresh(@Body() body: RefreshDto): Promise<Tokens> {
-  //   return this.authService.refresh(body.refreshToken)
-  // }
+  @Post('logout')
+  async logout(@GetCurrentUserId() userId: string): Promise<boolean> {
+    return this.authService.logout(userId)
+  }
 
-  // @Post('logout')
-  // async logout(@Body() body: LogoutDto): Promise<void> {
-  //   return this.authService.logout(body.refreshToken)
-  // }
-
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  getProfile(@Req() req) {
-    return req.user
+  @Public()
+  @UseGuards(RtGuard)
+  @Post('refresh')
+  async refreshTokens(
+    @GetCurrentUserId() userId: string,
+    @GetCurrentUser('refreshToken') refreshToken: string
+  ): Promise<Tokens> {
+    return this.authService.refreshTokens(userId, refreshToken)
   }
 }
