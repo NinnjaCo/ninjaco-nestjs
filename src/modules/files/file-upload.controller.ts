@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger'
 import {
   Body,
   Controller,
@@ -12,6 +13,7 @@ import { BufferedFile } from '../minio/file.model'
 import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express'
 import { FileUploadService } from './file-upload.service'
 
+@ApiTags('File Upload')
 @Controller('file-upload')
 export class FileUploadController {
   constructor(private fileUploadService: FileUploadService) {}
