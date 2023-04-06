@@ -1,4 +1,5 @@
 import { ApiTags } from '@nestjs/swagger'
+import { AuthResponse } from './types'
 import { AuthService } from './auth.service'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 import { GetCurrentUser } from '../../common/decorators/get-current-user.decorator'
@@ -7,7 +8,6 @@ import { Public } from '../../common/decorators/public.decorator'
 import { RtGuard } from './guards/rt.guard'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
-import { Tokens } from './types'
 
 @ApiTags('auth')
 @Controller('auth')
@@ -16,13 +16,13 @@ export class AuthController {
 
   @Public()
   @Post('/local/signup')
-  async register(@Body() body: SignUpDto): Promise<Tokens> {
+  async register(@Body() body: SignUpDto): Promise<AuthResponse> {
     return this.authService.signUp(body)
   }
 
   @Public()
   @Post('local/signin')
-  async signinLocal(@Body() dto: SignInDto): Promise<Tokens> {
+  async signinLocal(@Body() dto: SignInDto): Promise<AuthResponse> {
     return this.authService.signIn(dto)
   }
 
@@ -37,7 +37,7 @@ export class AuthController {
   async refreshTokens(
     @GetCurrentUserId() userId: string,
     @GetCurrentUser('refreshToken') refreshToken: string
-  ): Promise<Tokens> {
+  ): Promise<AuthResponse> {
     return this.authService.refreshTokens(userId, refreshToken)
   }
 }

@@ -45,11 +45,17 @@ export class UsersService {
    * @description user.password is hashed before saving
    * @description user.email is unique since the email is set as unique in the schema
    */
-  create(user: CreateUsersDto): Promise<User> {
+  async create(userDto: CreateUsersDto): Promise<User> {
     // hash password
-    user.password = hashData(user.password)
+    userDto.password = hashData(userDto.password)
 
-    return this.usersRepository.create(user)
+    try {
+      const createdUser = await this.usersRepository.create(userDto)
+      return createdUser
+    } catch (error) {
+      // if duplicate key error, throw bad request exception with message 'Email already exists'
+      throw new BadRequestException(error.message)
+    }
   }
 
   /**

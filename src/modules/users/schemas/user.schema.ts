@@ -9,10 +9,14 @@ export type UserDocument = HydratedDocument<User>
 export class User extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
-  name: string
+  firstName: string
 
   @ApiProperty()
   @Prop({ required: true })
+  lastName: string
+
+  @ApiProperty()
+  @Prop({ required: true, unique: true })
   email: string
 
   @ApiProperty()

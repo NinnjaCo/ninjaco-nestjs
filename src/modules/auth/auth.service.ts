@@ -1,7 +1,7 @@
+import { AuthResponse, JwtPayload, Tokens } from './types'
 import { ConfigService } from '@nestjs/config'
 import { FORBIDDEN_EXCEPTION_MESSAGE } from '../../common/constants'
 import { ForbiddenException, Injectable } from '@nestjs/common'
-import { JwtPayload, Tokens } from './types'
 import { JwtService } from '@nestjs/jwt'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
@@ -24,13 +24,14 @@ export class AuthService {
    * @description create jwt tokens from the user id and email
    * @description update the user hashedRt in the database with the newly created refresh token
    */
-  async signUp(signUpDto: SignUpDto): Promise<Tokens> {
+  async signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
     const user = await this.usersService.create(signUpDto)
 
-    const tokens = await this.getTokens(user._id.toString(), user.email)
+    const tokens = await this.getTokens(user._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
-    return tokens
+    const { password, hashedRt, ...cleanUser } = user
+    return { user: cleanUser, ...tokens }
   }
 
   /**
@@ -44,7 +45,7 @@ export class AuthService {
    * @description update the user hashedRt in the database with the newly created refresh token
    * @description return the tokens
    */
-  async signIn(signInDto: SignInDto): Promise<Tokens> {
+  async signIn(signInDto: SignInDto): Promise<AuthResponse> {
     const user = await this.usersService.findOneByEmail(signInDto.email)
 
     if (!user) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
@@ -52,10 +53,16 @@ export class AuthService {
     const passwordMatches = await isHashMatched(signInDto.password, user.password)
     if (!passwordMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
 
-    const tokens = await this.getTokens(user._id.toString(), user.email)
+    const tokens = await this.getTokens(user._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
-    return tokens
+    user.password = undefined
+    user.hashedRt = undefined
+
+    return {
+      user,
+      ...tokens,
+    }
   }
 
   /**
@@ -81,7 +88,7 @@ export class AuthService {
    * @description create jwt tokens from the user id and email
    * @description update the user hashedRt in the database with the newly created refresh token
    */
-  async refreshTokens(userId: string, rt: string): Promise<Tokens> {
+  async refreshTokens(userId: string, rt: string): Promise<AuthResponse> {
     const user = await this.usersService.findOne(userId)
 
     if (!user || !user.hashedRt) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
@@ -89,10 +96,11 @@ export class AuthService {
     const rtMatches = await isHashMatched(rt, user.hashedRt)
     if (!rtMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
 
-    const tokens = await this.getTokens(user._id.toString(), user.email)
+    const tokens = await this.getTokens(user._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
-    return tokens
+    const { password, hashedRt, ...cleanUser } = user
+    return { user: cleanUser, ...tokens }
   }
 
   /**
@@ -111,14 +119,12 @@ export class AuthService {
   /**
    * Service that return the jwt tokens
    * @param userId
-   * @param email
    * @returns Promise<Tokens>
    * @description create jwt tokens from the user id and email
    */
-  async getTokens(userId: string, email: string): Promise<Tokens> {
+  async getTokens(userId: string): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
       sub: userId,
-      email: email,
     }
 
     const [at, rt] = await Promise.all([

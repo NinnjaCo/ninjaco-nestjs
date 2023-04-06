@@ -5,7 +5,12 @@ export class SignUpDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  name: string
+  firstName: string
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  lastName: string
 
   @ApiProperty()
   @IsString()
