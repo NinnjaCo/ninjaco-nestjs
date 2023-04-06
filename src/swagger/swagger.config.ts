@@ -8,12 +8,24 @@ const description =
 /**
  * Setup swagger in the application
  * @param app {INestApplication}
+ * @param apiVersion {string}
+ * @returns {void}
+ * @description This function is used to setup swagger in the application
  */
 export const SwaggerConfig = (app: INestApplication, apiVersion: string) => {
   const options = new DocumentBuilder()
     .setTitle(title)
     .setDescription(description)
     .setVersion(apiVersion)
+    .addBearerAuth(
+      {
+        type: 'http',
+        bearerFormat: 'JWT',
+        scheme: 'Bearer',
+        description: 'JWT Access Token',
+      },
+      'access-token'
+    )
     .build()
 
   const document = SwaggerModule.createDocument(app, options)

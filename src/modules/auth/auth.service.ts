@@ -1,4 +1,4 @@
-import { AuthResponse, JwtPayload, Tokens } from './types'
+import { AuthResponse, JwtPayload, Tokens } from './interfaces'
 import { ConfigService } from '@nestjs/config'
 import { FORBIDDEN_EXCEPTION_MESSAGE } from '../../common/constants'
 import { ForbiddenException, Injectable } from '@nestjs/common'
@@ -99,8 +99,13 @@ export class AuthService {
     const tokens = await this.getTokens(user._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
-    const { password, hashedRt, ...cleanUser } = user
-    return { user: cleanUser, ...tokens }
+    user.password = undefined
+    user.hashedRt = undefined
+
+    return {
+      user,
+      ...tokens,
+    }
   }
 
   /**

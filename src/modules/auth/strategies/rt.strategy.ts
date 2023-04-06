@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { ForbiddenException, Injectable } from '@nestjs/common'
-import { JwtPayload, JwtPayloadWithRt } from '../types'
+import { JwtPayload, JwtPayloadWithRt } from '../interfaces'
 import { PassportStrategy } from '@nestjs/passport'
 import { Request } from 'express'
 

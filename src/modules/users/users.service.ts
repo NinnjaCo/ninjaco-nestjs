@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { CreateUsersDto } from './dto/create-user.dto'
+import { MongoServerError } from 'mongodb'
 import { User } from './schemas/user.schema'
 import { UsersRepository } from './users.repository'
-import { checkIfValidObjectId, hashData } from 'common/shared'
+import { checkIfValidObjectId, handleMongoDuplicateKeyError, hashData } from 'common/shared'
 
 @Injectable()
 export class UsersService {
@@ -53,8 +54,13 @@ export class UsersService {
       const createdUser = await this.usersRepository.create(userDto)
       return createdUser
     } catch (error) {
-      // if duplicate key error, throw bad request exception with message 'Email already exists'
-      throw new BadRequestException(error.message)
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
     }
   }
 

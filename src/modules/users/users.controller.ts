@@ -1,7 +1,7 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
+import { ArraySchema } from 'swagger/swagger-primitive-type'
 import { Controller, Delete, Get, Param } from '@nestjs/common'
-import { Public } from '../../common/decorators/public.decorator'
 import { User } from './schemas/user.schema'
 import { UsersService } from './users.service'
 
@@ -10,7 +10,7 @@ import { UsersService } from './users.service'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiGlobalResponse(User, {
+  @ApiGlobalResponse(ArraySchema, {
     description: 'Get all users',
     isArray: true,
   })

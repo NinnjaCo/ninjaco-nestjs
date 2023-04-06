@@ -1,7 +1,9 @@
+import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
-import { AuthResponse } from './types'
+import { AuthResponse } from './interfaces'
 import { AuthService } from './auth.service'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { BooleanSchema } from 'swagger/swagger-primitive-type'
 import { GetCurrentUser } from '../../common/decorators/get-current-user.decorator'
 import { GetCurrentUserId } from '../../common/decorators/get-current-user-id.decorator'
 import { Public } from '../../common/decorators/public.decorator'
@@ -26,12 +28,18 @@ export class AuthController {
     return this.authService.signIn(dto)
   }
 
+  @ApiGlobalResponse(BooleanSchema, {
+    description: 'Logout user',
+  })
   @Post('logout')
   async logout(@GetCurrentUserId() userId: string): Promise<boolean> {
     return this.authService.logout(userId)
   }
 
   @Public()
+  @ApiGlobalResponse(AuthResponse, {
+    description: 'Refresh tokens',
+  })
   @UseGuards(RtGuard)
   @Post('refresh')
   async refreshTokens(
