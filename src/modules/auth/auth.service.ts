@@ -10,11 +10,24 @@ import { hashData, isHashMatched } from '../../common/shared'
 
 @Injectable()
 export class AuthService {
+  private readonly JWT_ACCESS_SECRET: string
+  private readonly JWT_REFRESH_SECRET: string
+
+  /**
+   * @param usersService
+   * @param jwtService
+   * @param configService
+   * @description get the JWT_ACCESS_SECRET and JWT_REFRESH_SECRET from the config service
+   * @description inject the users service, jwt service and config service
+   */
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService
-  ) {}
+  ) {
+    this.JWT_ACCESS_SECRET = this.configService.get('JWT_ACCESS_SECRET')
+    this.JWT_REFRESH_SECRET = this.configService.get('JWT_REFRESH_SECRET')
+  }
 
   /**
    * Service that create a user in the database and return the jwt tokens
@@ -134,11 +147,11 @@ export class AuthService {
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.configService.get('JWT_ACCESS_SECRET'),
+        secret: this.JWT_ACCESS_SECRET,
         expiresIn: '15m',
       }),
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.configService.get('JWT_REFRESH_SECRET'),
+        secret: this.JWT_REFRESH_SECRET,
         expiresIn: '7d',
       }),
     ])
