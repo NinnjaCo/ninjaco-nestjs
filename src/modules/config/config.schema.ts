@@ -24,6 +24,8 @@ const configSchema = Joi.object({
   MAIL_PASSWORD: Joi.string().allow('').required(),
 
   NEST_PORT: Joi.number().default(3200),
+  JWT_ACCESS_SECRET: Joi.string().required(),
+  JWT_REFRESH_SECRET: Joi.string().required(),
 })
 
 /**
