@@ -1,4 +1,6 @@
 import * as crypto from 'crypto'
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common'
+import { MongoServerError } from 'mongodb'
 import mongoose from 'mongoose'
 /**
  * Hash data with sha256
@@ -32,4 +34,20 @@ export const checkIfValidObjectId = (id: string) => {
  */
 export const isHashMatched = (data: any, hash: string) => {
   return hashData(data) === hash
+}
+
+export const handleMongoDuplicateKeyError = (error: MongoServerError) => {
+  // if error code is 11000, it means that the email is already taken
+  if (error.code === 11000) {
+    // E11000 duplicate key error collection: ninjacodb.users index: email_1 dup key: { email: "test@test.com" }
+    // extract the fields { email } from the error message
+    const fields = error.message.match(/\{(.+)\}/)
+    if (fields) {
+      const field = fields[1].split(':')[0]
+      throw new BadRequestException(`${field} is already taken`)
+    }
+
+    throw new InternalServerErrorException(error)
+  }
+  throw new InternalServerErrorException(error.cause)
 }
