@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { BaseEntity } from 'database/base.entity'
 import { HydratedDocument } from 'mongoose'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Role } from 'modules/roles/schemas/role.schema'
 
 export type UserDocument = HydratedDocument<User>
 
@@ -30,6 +31,10 @@ export class User extends BaseEntity {
   @ApiProperty()
   @Prop()
   hashedRt: string
+
+  @ApiProperty()
+  @Prop({ type: 'ObjectId', ref: Role.name })
+  role: Role
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
