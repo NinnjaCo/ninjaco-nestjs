@@ -1,4 +1,5 @@
 import {
+  ApiBearerAuth,
   ApiConsumes,
   ApiExtraModels,
   ApiForbiddenResponse,
@@ -28,6 +29,7 @@ export const ApiGlobalResponse = <TModel extends Type<any>>(
 ) => {
   return applyDecorators(
     ApiExtraModels(ResponseDto, model),
+    ApiBearerAuth('JWT'),
     ApiConsumes('application/json', 'application/x-www-form-urlencoded', 'multipart/form-data'),
     ApiOkResponse({
       schema: {
