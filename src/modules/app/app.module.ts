@@ -9,6 +9,8 @@ import { LoggerMiddleware } from '../../common/middleware/logger.middleware'
 import { MailModule } from '../mail/mail.module'
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { MinioClientModule } from '../minio/minio-client.module'
+import { RolesGuard } from 'modules/roles/roles.guard'
+import { RolesModule } from 'modules/roles/roles.module'
 import { UsersModule } from '../users/users.module'
 import { validateConfig } from '../config'
 
@@ -27,12 +29,17 @@ import { validateConfig } from '../config'
     DatabaseModule,
     AuthModule,
     UsersModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AtGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
