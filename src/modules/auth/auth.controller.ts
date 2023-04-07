@@ -4,9 +4,11 @@ import { AuthResponse } from './interfaces'
 import { AuthService } from './auth.service'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 import { BooleanSchema } from 'swagger/swagger-primitive-type'
+import { ForgotPasswordDto } from './dto/forgot-password.dto'
 import { GetCurrentUser } from '../../common/decorators/get-current-user.decorator'
 import { GetCurrentUserId } from '../../common/decorators/get-current-user-id.decorator'
 import { Public } from '../../common/decorators/public.decorator'
+import { ResetPasswordDto } from './dto/reset-password.dto'
 import { RtGuard } from './guards/rt.guard'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
@@ -47,5 +49,23 @@ export class AuthController {
     @GetCurrentUser('refreshToken') refreshToken: string
   ): Promise<AuthResponse> {
     return this.authService.refreshTokens(userId, refreshToken)
+  }
+
+  @Public()
+  @ApiGlobalResponse(BooleanSchema, {
+    description: 'Send email with link to reset password',
+  })
+  @Post('forgot-password')
+  async forgotPassword(@Body() body: ForgotPasswordDto): Promise<boolean> {
+    return this.authService.forgotPassword(body.email)
+  }
+
+  @Public()
+  @ApiGlobalResponse(BooleanSchema, {
+    description: 'Reset password',
+  })
+  @Post('reset-password')
+  async resetPassword(@Body() body: ResetPasswordDto): Promise<boolean> {
+    return this.authService.resetPassword(body)
   }
 }

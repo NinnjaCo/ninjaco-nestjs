@@ -30,6 +30,10 @@ export class User extends BaseEntity {
   @ApiProperty()
   @Prop()
   hashedRt: string
+
+  @ApiProperty()
+  @Prop()
+  resetPasswordToken: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
