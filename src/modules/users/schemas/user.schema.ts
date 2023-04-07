@@ -35,6 +35,10 @@ export class User extends BaseEntity {
   @ApiProperty()
   @Prop({ type: 'ObjectId', ref: Role.name })
   role: Role
+
+  @ApiProperty()
+  @Prop()
+  resetPasswordToken: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

@@ -1,8 +1,10 @@
 import { AuthResponse, JwtPayload, Tokens } from './interfaces'
 import { ConfigService } from '@nestjs/config'
 import { FORBIDDEN_EXCEPTION_MESSAGE } from '../../common/constants'
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { MailService } from 'modules/mail/mail.service'
+import { ResetPasswordDto } from './dto/reset-password.dto'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
 import { UsersService } from '../users/users.service'
@@ -23,7 +25,8 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly mailService: MailService
   ) {
     this.JWT_ACCESS_SECRET = this.configService.get('JWT_ACCESS_SECRET')
     this.JWT_REFRESH_SECRET = this.configService.get('JWT_REFRESH_SECRET')
@@ -162,5 +165,66 @@ export class AuthService {
       access_token: at,
       refresh_token: rt,
     }
+  }
+
+  /**
+   * Service that given an email, send an email with a link to reset the password and save the token in the database
+   * @param email
+   * @returns Promise<boolean>
+   * @description find the user in the database by email
+   * @description check if the user exists
+   * @description create a token with expiration date of 24 hours
+   * @description hash and save the token in the database
+   * @description send the email with the link to reset the password
+   */
+  async forgotPassword(email: string): Promise<boolean> {
+    const user = await this.usersService.findOneByEmail(email)
+
+    if (!user) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+
+    // create a token with expiration date of 24 hours
+    const token = await this.jwtService.signAsync(
+      { sub: user._id.toString() },
+      {
+        secret: this.JWT_ACCESS_SECRET, // Sign it with the access secret, because it can be decoded on the client side
+        expiresIn: '24h',
+      }
+    )
+
+    const hashedToken = await hashData(token)
+
+    // save the token in the database
+    try {
+      await this.usersService.update(user._id.toString(), { resetPasswordToken: hashedToken })
+    } catch (error) {
+      throw new InternalServerErrorException("Something went wrong, we couldn't send the email")
+    }
+
+    const sentTheEmail = await this.mailService.sendForgotPasswordMail(user, token)
+
+    return sentTheEmail
+  }
+
+  /**
+   * Service that given a token, reset the password and delete the token in the database
+   * @param resetPasswordDto
+   * @returns Promise<boolean>
+   * @description find the user in the database by id
+   * @description check if the user exists
+   * @description check if the token matches
+   * @description hash and save the new password in the database
+   * @description delete the token in the database
+   */
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<boolean> {
+    const user = await this.usersService.findOne(resetPasswordDto.userId)
+
+    if (!user) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    const tokenMatches = await isHashMatched(resetPasswordDto.token, user.resetPasswordToken)
+    if (!tokenMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+
+    const password = await hashData(resetPasswordDto.password)
+    await this.usersService.update(user._id.toString(), { password, resetPasswordToken: null })
+
+    return true
   }
 }
