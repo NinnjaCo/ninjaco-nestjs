@@ -1,21 +1,26 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { CreateUsersDto } from './dto/create-user.dto'
 import { MongoServerError } from 'mongodb'
+import { RoleEnum } from 'modules/roles/roles.enum'
+import { RolesService } from 'modules/roles/roles.service'
 import { User } from './schemas/user.schema'
 import { UsersRepository } from './users.repository'
 import { checkIfValidObjectId, handleMongoDuplicateKeyError, hashData } from 'common/shared'
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly roleService: RolesService
+  ) {}
 
   /**
    * Delete user by id
    * @param userId
    * @returns Promise<User> if user is found, otherwise null
    */
-  remove(userId: string): Promise<User> {
-    return this.usersRepository.findOneAndDelete({ _id: userId })
+  async remove(userId: string): Promise<User> {
+    return await this.usersRepository.findOneAndDelete({ _id: userId })
   }
 
   /**
@@ -23,20 +28,20 @@ export class UsersService {
    * @param userId
    * @returns Promise<User> if user is found, otherwise null
    */
-  findOne(userId: string): Promise<User> {
+  async findOne(userId: string): Promise<User> {
     // check if userId is of type ObjectId
     if (!checkIfValidObjectId(userId)) {
       throw new BadRequestException('Invalid user id')
     }
-    return this.usersRepository.findOne({ _id: userId })
+    return await this.usersRepository.findOne({ _id: userId })
   }
 
   /**
    * Find all users
    * @returns Promise<User[]> if users are found, otherwise empty array
    */
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find({})
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find({})
   }
 
   /**
@@ -50,8 +55,14 @@ export class UsersService {
     // hash password
     userDto.password = hashData(userDto.password)
 
+    // If no role is provided, set the default role to user
+    if (!userDto.role) {
+      userDto.role = await this.roleService.getRole(RoleEnum.USER)
+    }
+
     try {
       const createdUser = await this.usersRepository.create(userDto)
+      console.log('createdUser', createdUser)
       return createdUser
     } catch (error) {
       // if error type is from mongodb
@@ -69,8 +80,8 @@ export class UsersService {
    * @param email
    * @returns Promise<User> if user is found, otherwise null
    */
-  findOneByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOne({ email })
+  async findOneByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOne({ email })
   }
 
   /**
@@ -81,10 +92,10 @@ export class UsersService {
    * @description user.password is hashed before saving
    * @description user.email is unique since the email is set as unique in the schema
    */
-  update(userId: string, updateDto): Promise<User> {
+  async update(userId: string, updateDto): Promise<User> {
     if (updateDto.password) {
       updateDto.password = hashData(updateDto.password)
     }
-    return this.usersRepository.findOneAndUpdate({ _id: userId }, updateDto)
+    return await this.usersRepository.findOneAndUpdate({ _id: userId }, updateDto)
   }
 }

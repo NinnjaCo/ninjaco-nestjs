@@ -63,7 +63,18 @@ async function bootstrap() {
 
   // Security Measures
   app.enable('trust proxy')
-  app.use(helmet())
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: [`'self'`],
+          styleSrc: [`'self'`, `'unsafe-inline'`],
+          imgSrc: [`'self'`, 'data:', 'validator.swagger.io'],
+          scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
+        },
+      },
+    })
+  )
 
   // localhost:3000 is NextJS frontend
   // TODO replace it with list of allowed cros origin from .env

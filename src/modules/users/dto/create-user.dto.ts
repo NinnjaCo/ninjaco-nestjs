@@ -1,4 +1,5 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsString } from 'class-validator'
+import { IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { Role } from 'modules/roles/schemas/role.schema'
 
 export class CreateUsersDto {
   @IsString()
@@ -22,4 +23,8 @@ export class CreateUsersDto {
   @IsString()
   @IsNotEmpty()
   password: string
+
+  @IsOptional()
+  @IsString()
+  role?: Role
 }

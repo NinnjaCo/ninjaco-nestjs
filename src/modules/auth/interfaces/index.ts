@@ -13,6 +13,8 @@ export class Tokens {
 export class JwtPayload {
   @ApiProperty()
   sub: string
+  @ApiProperty()
+  role_id: string
 }
 
 export class AuthResponse {
