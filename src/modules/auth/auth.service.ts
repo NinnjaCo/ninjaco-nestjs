@@ -1,9 +1,14 @@
 import { AuthResponse, JwtPayload, Tokens } from './interfaces'
 import { ConfigService } from '@nestjs/config'
-import { FORBIDDEN_EXCEPTION_MESSAGE } from '../../common/constants'
-import { ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common'
+import { FORBIDDEN_EXCEPTION_MESSAGE, UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { MailService } from 'modules/mail/mail.service'
+import { MailService } from '../mail/mail.service'
 import { ResetPasswordDto } from './dto/reset-password.dto'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
@@ -65,10 +70,10 @@ export class AuthService {
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
     const user = await this.usersService.findOneByEmail(signInDto.email)
 
-    if (!user) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
     const passwordMatches = await isHashMatched(signInDto.password, user.password)
-    if (!passwordMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!passwordMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
     const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
@@ -108,10 +113,10 @@ export class AuthService {
   async refreshTokens(userId: string, rt: string): Promise<AuthResponse> {
     const user = await this.usersService.findOne(userId)
 
-    if (!user || !user.hashedRt) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!user || !user.hashedRt) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
     const rtMatches = await isHashMatched(rt, user.hashedRt)
-    if (!rtMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!rtMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
     const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
@@ -180,7 +185,7 @@ export class AuthService {
   async forgotPassword(email: string): Promise<boolean> {
     const user = await this.usersService.findOneByEmail(email)
 
-    if (!user) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
     // create a token with expiration date of 24 hours
     const token = await this.jwtService.signAsync(
@@ -218,9 +223,9 @@ export class AuthService {
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<boolean> {
     const user = await this.usersService.findOne(resetPasswordDto.userId)
 
-    if (!user) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
     const tokenMatches = await isHashMatched(resetPasswordDto.token, user.resetPasswordToken)
-    if (!tokenMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!tokenMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
     const password = await hashData(resetPasswordDto.password)
     await this.usersService.update(user._id.toString(), { password, resetPasswordToken: null })
