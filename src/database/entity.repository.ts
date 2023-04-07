@@ -7,7 +7,7 @@ export abstract class EntityRepository<T extends Document> {
     entityFilterQuery: FilterQuery<T>,
     projection?: Record<string, unknown>
   ): Promise<T | null> {
-    return this.entityModel
+    return await this.entityModel
       .findOne(entityFilterQuery, {
         ...projection,
       })
@@ -15,25 +15,25 @@ export abstract class EntityRepository<T extends Document> {
   }
 
   async find(entityFilterQuery: FilterQuery<T>): Promise<T[] | null> {
-    return this.entityModel.find(entityFilterQuery)
+    return await this.entityModel.find(entityFilterQuery)
   }
 
   async create(createEntityData: unknown): Promise<T> {
     const entity = new this.entityModel(createEntityData)
-    return entity.save()
+    return await entity.save()
   }
 
   async findOneAndUpdate(
     entityFilterQuery: FilterQuery<T>,
     updateEntityData: UpdateQuery<unknown>
   ): Promise<T | null> {
-    return this.entityModel.findOneAndUpdate(entityFilterQuery, updateEntityData, {
+    return await this.entityModel.findOneAndUpdate(entityFilterQuery, updateEntityData, {
       new: true,
     })
   }
 
   async findOneAndDelete(entityFilterQuery: FilterQuery<T>): Promise<T | null> {
-    return this.entityModel.findOneAndDelete(entityFilterQuery)
+    return await this.entityModel.findOneAndDelete(entityFilterQuery)
   }
 
   async updateMany(
