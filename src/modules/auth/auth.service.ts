@@ -40,11 +40,12 @@ export class AuthService {
   async signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
     const user = await this.usersService.create(signUpDto)
 
-    const tokens = await this.getTokens(user._id.toString())
+    const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
-    const { password, hashedRt, ...cleanUser } = user
-    return { user: cleanUser, ...tokens }
+    user.password = undefined
+    user.hashedRt = undefined
+    return { user, ...tokens }
   }
 
   /**
@@ -66,7 +67,7 @@ export class AuthService {
     const passwordMatches = await isHashMatched(signInDto.password, user.password)
     if (!passwordMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
 
-    const tokens = await this.getTokens(user._id.toString())
+    const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
     user.password = undefined
@@ -109,7 +110,7 @@ export class AuthService {
     const rtMatches = await isHashMatched(rt, user.hashedRt)
     if (!rtMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
 
-    const tokens = await this.getTokens(user._id.toString())
+    const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
     user.password = undefined
@@ -140,9 +141,10 @@ export class AuthService {
    * @returns Promise<Tokens>
    * @description create jwt tokens from the user id and email
    */
-  async getTokens(userId: string): Promise<Tokens> {
+  async getTokens(userId: string, roleId): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
       sub: userId,
+      role_id: roleId,
     }
 
     const [at, rt] = await Promise.all([
