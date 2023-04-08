@@ -4,10 +4,12 @@ import { Injectable, InternalServerErrorException, UnauthorizedException } from 
 import { JwtService } from '@nestjs/jwt'
 import { MailService } from '../mail/mail.service'
 import { ResetPasswordDto } from './dto/reset-password.dto'
+import { RolesService } from 'modules/roles/roles.service'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
 import { UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
 import { UsersService } from '../users/users.service'
+import { ValidateTokenRoleDto } from './dto/validate-token-role.dto'
 import { hashData, isHashMatched } from '../../common/shared'
 
 @Injectable()
@@ -26,7 +28,8 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
+    private readonly rolesService: RolesService
   ) {
     this.JWT_ACCESS_SECRET = this.configService.get('JWT_ACCESS_SECRET')
     this.JWT_REFRESH_SECRET = this.configService.get('JWT_REFRESH_SECRET')
@@ -226,5 +229,27 @@ export class AuthService {
     await this.usersService.update(user._id.toString(), { password, resetPasswordToken: null })
 
     return true
+  }
+
+  /**
+   * Service that given a token and a role validates that the owner of that token has that role
+   * @param validateTokenRoleDto
+   * @returns Promise<boolean>
+   * @description verify the token
+   * @description find the role in the database by id
+   * @description check if the role exists
+   * @description check if the role matches
+   */
+  async validateTokenRole(validateTokenRoleDto: ValidateTokenRoleDto): Promise<boolean> {
+    const decodedToken = await this.jwtService.verifyAsync(validateTokenRoleDto.token, {
+      secret: this.JWT_ACCESS_SECRET,
+    })
+
+    const role = await this.rolesService.getRoleById(decodedToken.role_id)
+    if (!role) return false
+
+    if (role.role === validateTokenRoleDto.role) return true
+
+    return false
   }
 }
