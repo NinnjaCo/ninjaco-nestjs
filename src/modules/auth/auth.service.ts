@@ -244,7 +244,12 @@ export class AuthService {
   /**
    * service that given a token, verify the email and delete the token in the database
    * @param token
-   * @returns
+   * @returns Promise<boolean>
+   * @description decode the token to get the user id
+   * @description find the user in the database by id
+   * @description check if the user exists
+   * @description check if the token matches
+   * @description update the user to be verified and delete the token in the database
    */
   async verifyEmail(verifyEmailDto: verifyEmailDto): Promise<boolean> {
     const decodedToken = await this.jwtService.verifyAsync(verifyEmailDto.token, {
