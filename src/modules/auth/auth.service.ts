@@ -241,5 +241,27 @@ export class AuthService {
 
     return true
   }
- 
+  /**
+   * service that given a token, verify the email and delete the token in the database
+   * @param token
+   * @returns
+   */
+  async verifyEmail(verifyEmailDto: verifyEmailDto): Promise<boolean> {
+    const decodedToken = await this.jwtService.verifyAsync(verifyEmailDto.token, {
+      secret: this.JWT_ACCESS_SECRET,
+    })
+
+    const user = await this.usersService.findOne(decodedToken.sub)
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
+    //compare the token with the one in the database
+    const tokenMatches = await isHashMatched(verifyEmailDto.token, user.verifyEmailToken)
+    if (!tokenMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
+
+    // Update the user to be verified
+    await this.usersService.update(user._id.toString(), {
+      isVerified: true,
+      verifyEmailToken: null,
+    })
+    return true
+  }
 }

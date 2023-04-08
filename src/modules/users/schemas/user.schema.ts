@@ -39,6 +39,14 @@ export class User extends BaseEntity {
   @ApiProperty()
   @Prop()
   resetPasswordToken: string
+
+  @ApiProperty()
+  @Prop()
+  verifyEmailToken: string
+
+  @ApiProperty()
+  @Prop({ default: false })
+  isVerified: boolean
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
