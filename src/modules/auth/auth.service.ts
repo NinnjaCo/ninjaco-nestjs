@@ -9,6 +9,7 @@ import { SignUpDto } from './dto/signup.dto'
 import { UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
 import { UsersService } from '../users/users.service'
 import { hashData, isHashMatched } from '../../common/shared'
+import { verifyEmailDto } from './dto/verify-email.dto'
 
 @Injectable()
 export class AuthService {
@@ -45,6 +46,19 @@ export class AuthService {
 
     const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
+    //create a verification token
+    const verificationToken = await this.jwtService.signAsync(
+      { sub: user._id.toString() },
+      {
+        secret: this.JWT_ACCESS_SECRET, // Sign it with the access secret, because it can be decoded on the client side
+        expiresIn: '24h',
+      }
+    )
+    const hashedToken = await hashData(verificationToken)
+    //save token in the database
+    await this.usersService.update(user._id.toString(), { verifyEmailToken: hashedToken })
+    //send verification email
+    await this.mailService.sendVerifyEmail(user, verificationToken)
 
     user.password = undefined
     user.hashedRt = undefined
@@ -227,4 +241,5 @@ export class AuthService {
 
     return true
   }
+ 
 }
