@@ -1,10 +1,12 @@
 import { AuthResponse, JwtPayload, Tokens } from './interfaces'
 import { ConfigService } from '@nestjs/config'
-import { FORBIDDEN_EXCEPTION_MESSAGE } from '../../common/constants'
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { MailService } from '../mail/mail.service'
+import { ResetPasswordDto } from './dto/reset-password.dto'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
+import { UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
 import { UsersService } from '../users/users.service'
 import { hashData, isHashMatched } from '../../common/shared'
 
@@ -23,7 +25,8 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly mailService: MailService
   ) {
     this.JWT_ACCESS_SECRET = this.configService.get('JWT_ACCESS_SECRET')
     this.JWT_REFRESH_SECRET = this.configService.get('JWT_REFRESH_SECRET')
@@ -40,11 +43,12 @@ export class AuthService {
   async signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
     const user = await this.usersService.create(signUpDto)
 
-    const tokens = await this.getTokens(user._id.toString())
+    const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
-    const { password, hashedRt, ...cleanUser } = user
-    return { user: cleanUser, ...tokens }
+    user.password = undefined
+    user.hashedRt = undefined
+    return { user, ...tokens }
   }
 
   /**
@@ -61,12 +65,12 @@ export class AuthService {
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
     const user = await this.usersService.findOneByEmail(signInDto.email)
 
-    if (!user) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
     const passwordMatches = await isHashMatched(signInDto.password, user.password)
-    if (!passwordMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!passwordMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
-    const tokens = await this.getTokens(user._id.toString())
+    const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
     user.password = undefined
@@ -104,12 +108,12 @@ export class AuthService {
   async refreshTokens(userId: string, rt: string): Promise<AuthResponse> {
     const user = await this.usersService.findOne(userId)
 
-    if (!user || !user.hashedRt) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!user || !user.hashedRt) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
     const rtMatches = await isHashMatched(rt, user.hashedRt)
-    if (!rtMatches) throw new ForbiddenException(FORBIDDEN_EXCEPTION_MESSAGE)
+    if (!rtMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
-    const tokens = await this.getTokens(user._id.toString())
+    const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
 
     user.password = undefined
@@ -140,9 +144,10 @@ export class AuthService {
    * @returns Promise<Tokens>
    * @description create jwt tokens from the user id and email
    */
-  async getTokens(userId: string): Promise<Tokens> {
+  async getTokens(userId: string, roleId): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
       sub: userId,
+      role_id: roleId,
     }
 
     const [at, rt] = await Promise.all([
@@ -160,5 +165,66 @@ export class AuthService {
       access_token: at,
       refresh_token: rt,
     }
+  }
+
+  /**
+   * Service that given an email, send an email with a link to reset the password and save the token in the database
+   * @param email
+   * @returns Promise<boolean>
+   * @description find the user in the database by email
+   * @description check if the user exists
+   * @description create a token with expiration date of 24 hours
+   * @description hash and save the token in the database
+   * @description send the email with the link to reset the password
+   */
+  async forgotPassword(email: string): Promise<boolean> {
+    const user = await this.usersService.findOneByEmail(email)
+
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
+
+    // create a token with expiration date of 24 hours
+    const token = await this.jwtService.signAsync(
+      { sub: user._id.toString() },
+      {
+        secret: this.JWT_ACCESS_SECRET, // Sign it with the access secret, because it can be decoded on the client side
+        expiresIn: '24h',
+      }
+    )
+
+    const hashedToken = await hashData(token)
+
+    // save the token in the database
+    try {
+      await this.usersService.update(user._id.toString(), { resetPasswordToken: hashedToken })
+    } catch (error) {
+      throw new InternalServerErrorException("Something went wrong, we couldn't send the email")
+    }
+
+    const sentTheEmail = await this.mailService.sendForgotPasswordMail(user, token)
+
+    return sentTheEmail
+  }
+
+  /**
+   * Service that given a token, reset the password and delete the token in the database
+   * @param resetPasswordDto
+   * @returns Promise<boolean>
+   * @description find the user in the database by id
+   * @description check if the user exists
+   * @description check if the token matches
+   * @description hash and save the new password in the database
+   * @description delete the token in the database
+   */
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<boolean> {
+    const user = await this.usersService.findOne(resetPasswordDto.userId)
+
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
+    const tokenMatches = await isHashMatched(resetPasswordDto.token, user.resetPasswordToken)
+    if (!tokenMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
+
+    const password = await hashData(resetPasswordDto.password)
+    await this.usersService.update(user._id.toString(), { password, resetPasswordToken: null })
+
+    return true
   }
 }
