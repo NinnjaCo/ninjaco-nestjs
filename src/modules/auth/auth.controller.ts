@@ -9,12 +9,11 @@ import { GetCurrentUser } from '../../common/decorators/get-current-user.decorat
 import { GetCurrentUserId } from '../../common/decorators/get-current-user-id.decorator'
 import { Public } from '../../common/decorators/public.decorator'
 import { ResetPasswordDto } from './dto/reset-password.dto'
-import { RoleEnum } from 'modules/roles/roles.enum'
-import { Roles } from 'modules/roles/roles.decorator'
 import { RtGuard } from './guards/rt.guard'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
 import { Throttle } from '@nestjs/throttler'
+import { ValidateTokenRoleDto } from './dto/validate-token-role.dto'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -75,5 +74,14 @@ export class AuthController {
   @Post('reset-password')
   async resetPassword(@Body() body: ResetPasswordDto): Promise<boolean> {
     return this.authService.resetPassword(body)
+  }
+
+  @ApiGlobalResponse(BooleanSchema, {
+    description: 'Validate a token role',
+  })
+  @Throttle(100, 60) // 100 requests per minute
+  @Post('validate-token-role')
+  async validateTokenRole(@Body() body: ValidateTokenRoleDto): Promise<boolean> {
+    return this.authService.validateTokenRole(body)
   }
 }
