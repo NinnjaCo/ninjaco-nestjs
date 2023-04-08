@@ -9,9 +9,12 @@ import { GetCurrentUser } from '../../common/decorators/get-current-user.decorat
 import { GetCurrentUserId } from '../../common/decorators/get-current-user-id.decorator'
 import { Public } from '../../common/decorators/public.decorator'
 import { ResetPasswordDto } from './dto/reset-password.dto'
+import { RoleEnum } from 'modules/roles/roles.enum'
+import { Roles } from 'modules/roles/roles.decorator'
 import { RtGuard } from './guards/rt.guard'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
+import { Throttle } from '@nestjs/throttler'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -19,12 +22,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @Throttle(5, 60) // 5 requests per minute
   @Post('/local/signup')
   async register(@Body() body: SignUpDto): Promise<AuthResponse> {
     return this.authService.signUp(body)
   }
 
   @Public()
+  @Throttle(10, 60) // 10 requests per minute
   @Post('local/signin')
   async signinLocal(@Body() dto: SignInDto): Promise<AuthResponse> {
     return this.authService.signIn(dto)
@@ -43,6 +48,7 @@ export class AuthController {
     description: 'Refresh tokens',
   })
   @UseGuards(RtGuard)
+  @Throttle(10, 60) // 10 requests per minute
   @Post('refresh')
   async refreshTokens(
     @GetCurrentUserId() userId: string,
@@ -55,6 +61,7 @@ export class AuthController {
   @ApiGlobalResponse(BooleanSchema, {
     description: 'Send email with link to reset password',
   })
+  @Throttle(5, 60) // 5 requests per minute
   @Post('forgot-password')
   async forgotPassword(@Body() body: ForgotPasswordDto): Promise<boolean> {
     return this.authService.forgotPassword(body.email)
@@ -64,6 +71,7 @@ export class AuthController {
   @ApiGlobalResponse(BooleanSchema, {
     description: 'Reset password',
   })
+  @Throttle(5, 60) // 5 requests per minute
   @Post('reset-password')
   async resetPassword(@Body() body: ResetPasswordDto): Promise<boolean> {
     return this.authService.resetPassword(body)
