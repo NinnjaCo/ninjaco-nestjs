@@ -1,17 +1,12 @@
 import { AuthResponse, JwtPayload, Tokens } from './interfaces'
 import { ConfigService } from '@nestjs/config'
-import { FORBIDDEN_EXCEPTION_MESSAGE, UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { MailService } from '../mail/mail.service'
 import { ResetPasswordDto } from './dto/reset-password.dto'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
+import { UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
 import { UsersService } from '../users/users.service'
 import { hashData, isHashMatched } from '../../common/shared'
 

@@ -1,5 +1,5 @@
-import { Document, FilterQuery, Model, Types } from 'mongoose'
 import { EntityRepository } from 'database/entity.repository'
+import { FilterQuery, Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { User, UserDocument } from './schemas/user.schema'

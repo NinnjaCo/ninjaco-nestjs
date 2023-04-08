@@ -42,6 +42,7 @@ export class MinioClientService {
       ],
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.client.setBucketPolicy(this.baseBucket, JSON.stringify(policy), function (err, res) {
       if (err) throw new HttpException('Error setting bucket policy', HttpStatus.BAD_REQUEST)
     })
@@ -67,6 +68,7 @@ export class MinioClientService {
     const fileName = `${filename}`
     const fileBuffer = file.buffer
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.client.putObject(baseBucket, fileName, fileBuffer, metaData, function (err, res) {
       if (err) throw new HttpException('Error uploading file' + err, HttpStatus.BAD_REQUEST)
     })
@@ -79,6 +81,7 @@ export class MinioClientService {
   }
 
   async delete(objetName: string, baseBucket: string = this.baseBucket) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.client.removeObject(baseBucket, objetName, function (err, res) {
       if (err) throw new HttpException('Oops Something wrong happend', HttpStatus.BAD_REQUEST)
     })
