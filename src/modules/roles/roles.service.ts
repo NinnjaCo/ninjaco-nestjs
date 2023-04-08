@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { Role } from './schemas/role.schema'
 import { RoleEnum } from './roles.enum'
 import { RolesRepository } from './roles.repository'
 
@@ -14,15 +15,15 @@ export class RolesService {
     return await this.rolesRepository.findOne({ role })
   }
 
-  async getRoleById(id: string) {
+  async getRoleById(id: string): Promise<Role> {
     return await this.rolesRepository.findOne({ _id: id })
   }
 
-  async isRoleExist(role: string) {
+  async isRoleExist(role: string): Promise<boolean> {
     return await this.rolesRepository.exists({ role })
   }
 
-  async createRole(role: RoleEnum) {
+  async createRole(role: RoleEnum): Promise<Role> {
     return await this.rolesRepository.create({ role })
   }
 }
