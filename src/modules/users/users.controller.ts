@@ -23,9 +23,8 @@ export class UsersController {
   }
 
   @ApiGlobalResponse(User, {
-    description: 'Get user by id | ADMIN only',
+    description: 'Get user by id',
   })
-  @Roles(RoleEnum.ADMIN)
   @Get(':id')
   findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id)
