@@ -11,6 +11,7 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { MinioClientModule } from '../minio/minio-client.module'
 import { RolesGuard } from 'modules/roles/roles.guard'
 import { RolesModule } from 'modules/roles/roles.module'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { UsersModule } from '../users/users.module'
 import { validateConfig } from '../config'
 
@@ -22,6 +23,11 @@ import { validateConfig } from '../config'
       validate: (config: Record<string, any>) => {
         return validateConfig(config)
       },
+    }),
+    // ratelimits each IP to 50 requests per minute for a single endpoint
+    ThrottlerModule.forRoot({
+      ttl: 60, // 60 seconds
+      limit: 50, // 50 requests
     }),
     MailModule,
     MinioClientModule,
@@ -40,6 +46,10 @@ import { validateConfig } from '../config'
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

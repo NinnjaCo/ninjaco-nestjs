@@ -4,11 +4,14 @@ import { Injectable, InternalServerErrorException, UnauthorizedException } from 
 import { JwtService } from '@nestjs/jwt'
 import { MailService } from '../mail/mail.service'
 import { ResetPasswordDto } from './dto/reset-password.dto'
+import { RolesService } from 'modules/roles/roles.service'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
 import { UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
 import { UsersService } from '../users/users.service'
+import { ValidateTokenRoleDto } from './dto/validate-token-role.dto'
 import { hashData, isHashMatched } from '../../common/shared'
+import { verifyEmailDto } from './dto/verify-email.dto'
 
 @Injectable()
 export class AuthService {
@@ -26,7 +29,8 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
+    private readonly rolesService: RolesService
   ) {
     this.JWT_ACCESS_SECRET = this.configService.get('JWT_ACCESS_SECRET')
     this.JWT_REFRESH_SECRET = this.configService.get('JWT_REFRESH_SECRET')
@@ -45,6 +49,19 @@ export class AuthService {
 
     const tokens = await this.getTokens(user._id.toString(), user.role._id.toString())
     await this.updateUserRtHash(user._id.toString(), tokens.refresh_token)
+    //create a verification token
+    const verificationToken = await this.jwtService.signAsync(
+      { sub: user._id.toString() },
+      {
+        secret: this.JWT_ACCESS_SECRET, // Sign it with the access secret, because it can be decoded on the client side
+        expiresIn: '24h',
+      }
+    )
+    const hashedToken = await hashData(verificationToken)
+    //save token in the database
+    await this.usersService.update(user._id.toString(), { verifyEmailToken: hashedToken })
+    //send verification email
+    await this.mailService.sendVerifyEmail(user, verificationToken)
 
     user.password = undefined
     user.hashedRt = undefined
@@ -225,6 +242,57 @@ export class AuthService {
     const password = await hashData(resetPasswordDto.password)
     await this.usersService.update(user._id.toString(), { password, resetPasswordToken: null })
 
+    return true
+  }
+
+  /**
+   * Service that given a token and a role validates that the owner of that token has that role
+   * @param validateTokenRoleDto
+   * @returns Promise<boolean>
+   * @description verify the token
+   * @description find the role in the database by id
+   * @description check if the role exists
+   * @description check if the role matches
+   */
+  async validateTokenRole(validateTokenRoleDto: ValidateTokenRoleDto): Promise<boolean> {
+    const decodedToken = await this.jwtService.verifyAsync(validateTokenRoleDto.token, {
+      secret: this.JWT_ACCESS_SECRET,
+    })
+
+    const role = await this.rolesService.getRoleById(decodedToken.role_id)
+    if (!role) return false
+
+    if (role.role === validateTokenRoleDto.role) return true
+
+    return false
+  }
+
+  /**
+   * service that given a token, verify the email and delete the token in the database
+   * @param token
+   * @returns Promise<boolean>
+   * @description decode the token to get the user id
+   * @description find the user in the database by id
+   * @description check if the user exists
+   * @description check if the token matches
+   * @description update the user to be verified and delete the token in the database
+   */
+  async verifyEmail(verifyEmailDto: verifyEmailDto): Promise<boolean> {
+    const decodedToken = await this.jwtService.verifyAsync(verifyEmailDto.token, {
+      secret: this.JWT_ACCESS_SECRET,
+    })
+
+    const user = await this.usersService.findOne(decodedToken.sub)
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
+    //compare the token with the one in the database
+    const tokenMatches = await isHashMatched(verifyEmailDto.token, user.verifyEmailToken)
+    if (!tokenMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
+
+    // Update the user to be verified
+    await this.usersService.update(user._id.toString(), {
+      isVerified: true,
+      verifyEmailToken: null,
+    })
     return true
   }
 }
