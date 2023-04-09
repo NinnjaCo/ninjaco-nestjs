@@ -241,6 +241,7 @@ export class AuthService {
 
     return true
   }
+
   /**
    * service that given a token, verify the email and delete the token in the database
    * @param token
