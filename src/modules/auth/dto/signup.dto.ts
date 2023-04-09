@@ -19,7 +19,6 @@ export class SignUpDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  @IsAlphanumeric()
   lastName: string
 
   @ApiProperty({ type: Date, example: '2021-01-01T00:00:00.000Z' })
