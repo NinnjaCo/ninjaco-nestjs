@@ -2,6 +2,7 @@ import { ApiGlobalResponse } from '../../common/decorators/api-global-response.d
 import { ApiTags } from '@nestjs/swagger'
 import { Controller, Get } from '@nestjs/common'
 import { Public } from '../../common/decorators/public.decorator'
+import { SkipThrottle, Throttle } from '@nestjs/throttler'
 import { StringSchema } from 'swagger/swagger-primitive-type'
 
 @Controller()
@@ -11,6 +12,7 @@ export class AppController {
   @ApiGlobalResponse(StringSchema, {
     description: 'OK',
   })
+  @Throttle(100, 60) // 100 requests per minute
   @Get('health')
   health() {
     return 'OK'
