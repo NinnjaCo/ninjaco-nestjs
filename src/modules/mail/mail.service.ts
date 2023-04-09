@@ -49,4 +49,29 @@ export class MailService {
       return false
     }
   }
+
+  async sendVerifyEmail(user: User, token: string) {
+    const url = `${this.APP_URL}/auth/verify-email/${token}`
+    try {
+      await this.mailerService.sendMail({
+        to: user.email,
+        subject: 'Verify your email | NinjaCo',
+        template: './verifyemail',
+        context: {
+          url,
+        },
+        attachments: [
+          {
+            filename: 'logo.svg',
+            path: __dirname + '/templates/logo.svg',
+            cid: 'logo',
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
 }

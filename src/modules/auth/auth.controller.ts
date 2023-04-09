@@ -14,6 +14,7 @@ import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
 import { Throttle } from '@nestjs/throttler'
 import { ValidateTokenRoleDto } from './dto/validate-token-role.dto'
+import { verifyEmailDto } from './dto/verify-email.dto'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -83,5 +84,14 @@ export class AuthController {
   @Post('validate-token-role')
   async validateTokenRole(@Body() body: ValidateTokenRoleDto): Promise<boolean> {
     return this.authService.validateTokenRole(body)
+  }
+
+  @Public()
+  @ApiGlobalResponse(BooleanSchema, {
+    description: 'Verify user email',
+  })
+  @Post('verify-email')
+  async verifyEmail(@Body() body: verifyEmailDto): Promise<boolean> {
+    return this.authService.verifyEmail(body)
   }
 }
