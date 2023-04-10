@@ -4,7 +4,7 @@ import { ArraySchema } from 'swagger/swagger-primitive-type'
 import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
-import { UpdateUsersDto } from './dto/update-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './schemas/user.schema'
 import { UsersService } from './users.service'
 
@@ -44,7 +44,7 @@ export class UsersController {
   })
   @Roles(RoleEnum.ADMIN)
   @Put(':id')
-  adminUpdate(@Param('id') id: string, @Body() userDto: UpdateUsersDto): Promise<User> {
+  update(@Param('id') id: string, @Body() userDto: UpdateUserDto): Promise<User> {
     return this.usersService.update(id, userDto)
   }
 }
