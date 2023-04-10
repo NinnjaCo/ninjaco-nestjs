@@ -1,9 +1,10 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { ArraySchema } from 'swagger/swagger-primitive-type'
-import { Controller, Delete, Get, Param } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
+import { UpdateUsersDto } from './dto/update-user.dto'
 import { User } from './schemas/user.schema'
 import { UsersService } from './users.service'
 
@@ -37,5 +38,13 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string): Promise<User> {
     return this.usersService.remove(id)
+  }
+  @ApiGlobalResponse(User, {
+    description: 'Update admin information',
+  })
+  @Roles(RoleEnum.ADMIN)
+  @Put(':id')
+  adminUpdate(@Param('id') id: string, @Body() userDto: UpdateUsersDto): Promise<User> {
+    return this.usersService.update(id, userDto)
   }
 }

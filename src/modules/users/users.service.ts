@@ -98,4 +98,7 @@ export class UsersService {
     }
     return await this.usersRepository.findOneAndUpdate({ _id: userId }, updateDto)
   }
+  async adminUpdate(userId: string, UpdateUsersDto): Promise<User> {
+    return await this.usersRepository.findOneAndUpdate({ _id: userId }, UpdateUsersDto)
+  }
 }
