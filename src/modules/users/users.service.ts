@@ -62,7 +62,6 @@ export class UsersService {
 
     try {
       const createdUser = await this.usersRepository.create(userDto)
-      console.log('createdUser', createdUser)
       return createdUser
     } catch (error) {
       // if error type is from mongodb
@@ -96,6 +95,17 @@ export class UsersService {
     if (updateDto.password) {
       updateDto.password = hashData(updateDto.password)
     }
-    return await this.usersRepository.findOneAndUpdate({ _id: userId }, updateDto)
+
+    try {
+      return await this.usersRepository.findOneAndUpdate({ _id: userId }, updateDto)
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
   }
 }
