@@ -48,6 +48,7 @@ export class UsersController {
   update(@Param('id') id: string, @Body() userDto: UpdateUserDto): Promise<User> {
     return this.usersService.update(id, userDto)
   }
+
   @ApiGlobalResponse(User, {
     description: 'Create new user or creator',
   })
