@@ -55,8 +55,6 @@ export class UsersController {
   @Roles(RoleEnum.ADMIN)
   @Post()
   create(@Body() userDto: CreateUsersDto): Promise<User> {
-    console.log('userdto:', userDto)
-    console.log('userdtoRole:', userDto.role)
     return this.usersService.create(userDto)
   }
 }
