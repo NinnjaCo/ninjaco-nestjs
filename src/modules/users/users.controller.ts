@@ -1,7 +1,8 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { ArraySchema } from 'swagger/swagger-primitive-type'
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { CreateUsersDto } from './dto/create-user.dto'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -46,5 +47,15 @@ export class UsersController {
   @Put(':id')
   update(@Param('id') id: string, @Body() userDto: UpdateUserDto): Promise<User> {
     return this.usersService.update(id, userDto)
+  }
+  @ApiGlobalResponse(User, {
+    description: 'Create new user or creator',
+  })
+  @Roles(RoleEnum.ADMIN)
+  @Post()
+  create(@Body() userDto: CreateUsersDto): Promise<User> {
+    console.log('userdto:', userDto)
+    console.log('userdtoRole:', userDto.role)
+    return this.usersService.create(userDto)
   }
 }

@@ -52,12 +52,23 @@ export class UsersService {
    * @description user.email is unique since the email is set as unique in the schema
    */
   async create(userDto: CreateUsersDto): Promise<User> {
+    // Use type any so that we can set the role property to an ObjectId (it was a RoleEnum in userDto)
+    const userToBeCreated: any = userDto
+
     // hash password
-    userDto.password = hashData(userDto.password)
+    userToBeCreated.password = hashData(userDto.password)
 
     // If no role is provided, set the default role to user
     if (!userDto.role) {
-      userDto.role = await this.roleService.getRole(RoleEnum.USER)
+      userToBeCreated.role = (await this.roleService.getRole(RoleEnum.USER))._id
+    }
+
+    if (userDto.role === RoleEnum.CREATOR) {
+      userToBeCreated.role = (await this.roleService.getRole(RoleEnum.CREATOR))._id
+    } else if (userDto.role === RoleEnum.ADMIN) {
+      userToBeCreated.role = (await this.roleService.getRole(RoleEnum.ADMIN))._id
+    } else {
+      userToBeCreated.role = (await this.roleService.getRole(RoleEnum.USER))._id
     }
 
     try {
