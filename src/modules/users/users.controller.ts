@@ -39,10 +39,10 @@ export class UsersController {
   remove(@Param('id') id: string): Promise<User> {
     return this.usersService.remove(id)
   }
+
   @ApiGlobalResponse(User, {
-    description: 'Update admin information',
+    description: 'Update user information',
   })
-  @Roles(RoleEnum.ADMIN)
   @Put(':id')
   update(@Param('id') id: string, @Body() userDto: UpdateUserDto): Promise<User> {
     return this.usersService.update(id, userDto)
