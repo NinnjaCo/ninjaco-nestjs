@@ -50,7 +50,7 @@ export class UsersController {
   }
 
   @ApiGlobalResponse(User, {
-    description: 'Create new user or creator',
+    description: 'Create new user or creator | ADMIN only',
   })
   @Roles(RoleEnum.ADMIN)
   @Post()
