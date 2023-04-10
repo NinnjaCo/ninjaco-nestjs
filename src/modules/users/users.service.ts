@@ -90,6 +90,7 @@ export class UsersService {
    * @returns Promise<User> if user is found, otherwise null
    * @description user.password is hashed before saving
    * @description user.email is unique since the email is set as unique in the schema
+   * @description user information is updated only if the new information is provided
    */
   async update(userId: string, updateDto): Promise<User> {
     if (updateDto.password) {
