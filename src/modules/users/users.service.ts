@@ -51,13 +51,21 @@ export class UsersService {
    * @description user.password is hashed before saving
    * @description user.email is unique since the email is set as unique in the schema
    */
-  async create(userDto: CreateUsersDto): Promise<User> {
+  async create(userDto): Promise<User> {
     // hash password
     userDto.password = hashData(userDto.password)
 
     // If no role is provided, set the default role to user
     if (!userDto.role) {
       userDto.role = await this.roleService.getRole(RoleEnum.USER)
+    }
+
+    if (userDto.role === RoleEnum.CREATOR) {
+      userDto.role = (await this.roleService.getRole(RoleEnum.CREATOR))._id
+    } else if (userDto.role === RoleEnum.ADMIN) {
+      userDto.role = (await this.roleService.getRole(RoleEnum.ADMIN))._id
+    } else {
+      userDto.role = (await this.roleService.getRole(RoleEnum.USER))._id
     }
 
     try {
