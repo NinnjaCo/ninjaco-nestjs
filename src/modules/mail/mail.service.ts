@@ -2,11 +2,16 @@ import { ConfigService } from '@nestjs/config'
 import { Injectable } from '@nestjs/common'
 import { MailerService } from '@nestjs-modules/mailer'
 import { User } from 'modules/users/schemas/user.schema'
-
+import { UsersService } from 'modules/users/users.service'
+import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
 @Injectable()
 export class MailService {
   private readonly APP_URL
-  constructor(private mailerService: MailerService, private configService: ConfigService) {
+  constructor(
+    private mailerService: MailerService,
+    private configService: ConfigService,
+    private readonly usersService: UsersService
+  ) {
     this.APP_URL = this.configService.get('APP_URL')
   }
 
@@ -60,6 +65,76 @@ export class MailService {
         context: {
           url,
         },
+        attachments: [
+          {
+            filename: 'logo.svg',
+            path: __dirname + '/templates/logo.svg',
+            cid: 'logo',
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+  async sendDeleteUserEmail(sendDto: sendEmailDto) {
+    console.log('inside mail service, thhe sendDto is:', sendDto)
+    const message = sendDto.message
+    const user = await this.usersService.findOneByEmail(sendDto.email)
+    try {
+      await this.mailerService.sendMail({
+        to: user.email,
+        subject: '',
+        template: './deleteUserEmail',
+        context: { message },
+        attachments: [
+          {
+            filename: 'logo.svg',
+            path: __dirname + '/templates/logo.svg',
+            cid: 'logo',
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+  async sendResetPasswordEmail(sendDto: sendEmailDto) {
+    const message = sendDto.message
+    const user = await this.usersService.findOneByEmail(sendDto.email)
+    try {
+      await this.mailerService.sendMail({
+        to: user.email,
+        subject: '',
+        template: './resetPasswordEmail',
+        context: { message },
+        attachments: [
+          {
+            filename: 'logo.svg',
+            path: __dirname + '/templates/logo.svg',
+            cid: 'logo',
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+  async sendNotifyUserEmail(sendDto: sendEmailDto) {
+    const message = sendDto.message
+    const user = await this.usersService.findOneByEmail(sendDto.email)
+    try {
+      await this.mailerService.sendMail({
+        to: user.email,
+        subject: '',
+        template: './notifyUserEmail',
+        context: { message },
         attachments: [
           {
             filename: 'logo.svg',
