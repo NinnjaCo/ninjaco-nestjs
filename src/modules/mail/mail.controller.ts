@@ -1,8 +1,8 @@
 import { Body, Post } from '@nestjs/common'
 import { Controller } from '@nestjs/common'
+import { EmailEnum } from './mail.enum'
 import { MailService } from './mail.service'
 import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
-import { EmailEnum } from './mail.enum'
 
 @Controller('send-email')
 export class MailController {
