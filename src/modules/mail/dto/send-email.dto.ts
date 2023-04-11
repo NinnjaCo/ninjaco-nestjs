@@ -1,19 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator'
+import { EmailEnum } from '../mail.enum'
+import { IsEmail, IsEnum, IsString } from 'class-validator'
 
 export class sendEmailDto {
   @ApiProperty()
   @IsString()
-  @IsEnum(['delete', 'reset', 'notify'])
-  emailEnum: string
+  @IsEnum(EmailEnum)
+  emailType: EmailEnum
 
   @ApiProperty()
   @IsString()
   @IsEmail()
-  email: string
+  receiverEmail: string
 
   @ApiProperty()
   @IsString()
-  @IsOptional()
   message: string
 }
