@@ -3,8 +3,8 @@ import { Controller } from '@nestjs/common'
 import { MailService } from './mail.service'
 import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
 
-@Controller('/send-email')
-export class mailController {
+@Controller('send-email')
+export class MailController {
   constructor(private readonly mailService: MailService) {}
   @Post('delete-user')
   async sendDeleteUserEmail(@Body() body: sendEmailDto): Promise<boolean> {

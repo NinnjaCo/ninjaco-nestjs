@@ -77,12 +77,13 @@ export class MailService {
   async sendDeleteUserEmail(sendDto: sendEmailDto) {
     console.log('inside mail service, thhe sendDto is:', sendDto)
     const message = sendDto.message
+    const email = sendDto.email
     try {
       await this.mailerService.sendMail({
-        to: sendDto.email,
+        to: email,
         subject: '',
         template: './deleteUserEmail',
-        context: { message },
+        context: { email, message },
         attachments: [
           {
             filename: 'logo.svg',
@@ -98,12 +99,15 @@ export class MailService {
     }
   }
   async sendResetPasswordEmail(sendDto: sendEmailDto) {
+    const email = sendDto.email
     try {
       await this.mailerService.sendMail({
-        to: sendDto.email,
+        to: email,
         subject: '',
         template: './resetPasswordEmail',
-        context: {},
+        context: {
+          email,
+        },
         attachments: [
           {
             filename: 'logo.svg',
@@ -120,12 +124,13 @@ export class MailService {
   }
   async sendNotifyUserEmail(sendDto: sendEmailDto) {
     const message = sendDto.message
+    const email = sendDto.email
     try {
       await this.mailerService.sendMail({
-        to: sendDto.email,
+        to: email,
         subject: '',
         template: './notifyUserEmail',
-        context: { message },
+        context: { email, message },
         attachments: [
           {
             filename: 'logo.svg',
