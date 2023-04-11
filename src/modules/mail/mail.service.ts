@@ -2,16 +2,11 @@ import { ConfigService } from '@nestjs/config'
 import { Injectable } from '@nestjs/common'
 import { MailerService } from '@nestjs-modules/mailer'
 import { User } from 'modules/users/schemas/user.schema'
-import { UsersService } from 'modules/users/users.service'
 import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
 @Injectable()
 export class MailService {
   private readonly APP_URL
-  constructor(
-    private mailerService: MailerService,
-    private configService: ConfigService,
-    private readonly usersService: UsersService
-  ) {
+  constructor(private mailerService: MailerService, private configService: ConfigService) {
     this.APP_URL = this.configService.get('APP_URL')
   }
 
@@ -82,10 +77,9 @@ export class MailService {
   async sendDeleteUserEmail(sendDto: sendEmailDto) {
     console.log('inside mail service, thhe sendDto is:', sendDto)
     const message = sendDto.message
-    const user = await this.usersService.findOneByEmail(sendDto.email)
     try {
       await this.mailerService.sendMail({
-        to: user.email,
+        to: sendDto.email,
         subject: '',
         template: './deleteUserEmail',
         context: { message },
@@ -104,14 +98,12 @@ export class MailService {
     }
   }
   async sendResetPasswordEmail(sendDto: sendEmailDto) {
-    const message = sendDto.message
-    const user = await this.usersService.findOneByEmail(sendDto.email)
     try {
       await this.mailerService.sendMail({
-        to: user.email,
+        to: sendDto.email,
         subject: '',
         template: './resetPasswordEmail',
-        context: { message },
+        context: {},
         attachments: [
           {
             filename: 'logo.svg',
@@ -128,10 +120,9 @@ export class MailService {
   }
   async sendNotifyUserEmail(sendDto: sendEmailDto) {
     const message = sendDto.message
-    const user = await this.usersService.findOneByEmail(sendDto.email)
     try {
       await this.mailerService.sendMail({
-        to: user.email,
+        to: sendDto.email,
         subject: '',
         template: './notifyUserEmail',
         context: { message },
