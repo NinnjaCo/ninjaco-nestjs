@@ -1,8 +1,10 @@
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter'
+import { MailController } from './mail.controller'
 import { MailService } from './mail.service'
 import { MailerModule } from '@nestjs-modules/mailer'
 import { Module } from '@nestjs/common'
+import { UsersModule } from 'modules/users/users.module'
 import { join } from 'path'
 
 @Module({
@@ -33,8 +35,10 @@ import { join } from 'path'
       inject: [ConfigService],
     }),
     ConfigModule,
+    UsersModule,
   ],
   providers: [MailService],
+  controllers: [MailController],
   exports: [MailService],
 })
 export class MailModule {}
