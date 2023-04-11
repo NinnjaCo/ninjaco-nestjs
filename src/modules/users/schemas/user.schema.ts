@@ -47,6 +47,10 @@ export class User extends BaseEntity {
   @ApiProperty()
   @Prop({ default: false })
   isVerified: boolean
+
+  @ApiProperty()
+  @Prop({ default: 0 })
+  points: number
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

@@ -1,9 +1,11 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { ArraySchema } from 'swagger/swagger-primitive-type'
-import { Controller, Delete, Get, Param } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { CreateUsersDto } from './dto/create-user.dto'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
+import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './schemas/user.schema'
 import { UsersService } from './users.service'
 
@@ -23,9 +25,8 @@ export class UsersController {
   }
 
   @ApiGlobalResponse(User, {
-    description: 'Get user by id | ADMIN only',
+    description: 'Get user by id',
   })
-  @Roles(RoleEnum.ADMIN)
   @Get(':id')
   findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id)
@@ -38,5 +39,22 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string): Promise<User> {
     return this.usersService.remove(id)
+  }
+
+  @ApiGlobalResponse(User, {
+    description: 'Update user information',
+  })
+  @Put(':id')
+  update(@Param('id') id: string, @Body() userDto: UpdateUserDto): Promise<User> {
+    return this.usersService.update(id, userDto)
+  }
+
+  @ApiGlobalResponse(User, {
+    description: 'Create new user or creator | ADMIN only',
+  })
+  @Roles(RoleEnum.ADMIN)
+  @Post()
+  create(@Body() userDto: CreateUsersDto): Promise<User> {
+    return this.usersService.create(userDto)
   }
 }

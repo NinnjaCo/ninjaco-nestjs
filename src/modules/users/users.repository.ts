@@ -16,4 +16,8 @@ export class UsersRepository extends EntityRepository<UserDocument> {
   ): Promise<UserDocument> {
     return await this.userModel.findOne(entityFilterQuery, projection).populate('role')
   }
+
+  async find(entityFilterQuery: FilterQuery<UserDocument>): Promise<UserDocument[]> {
+    return await this.userModel.find(entityFilterQuery).populate('role')
+  }
 }

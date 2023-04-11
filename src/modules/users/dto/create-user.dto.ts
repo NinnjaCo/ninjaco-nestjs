@@ -1,5 +1,13 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator'
-import { Role } from 'modules/roles/schemas/role.schema'
+import {
+  IsBoolean,
+  IsDateString,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator'
+import { RoleEnum } from 'modules/roles/roles.enum'
 
 export class CreateUsersDto {
   @IsString()
@@ -26,5 +34,10 @@ export class CreateUsersDto {
 
   @IsOptional()
   @IsString()
-  role?: Role
+  @IsEnum(RoleEnum)
+  role?: RoleEnum
+
+  @IsOptional()
+  @IsBoolean()
+  isVerified?: boolean
 }

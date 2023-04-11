@@ -52,17 +52,27 @@ export class UsersService {
    * @description user.email is unique since the email is set as unique in the schema
    */
   async create(userDto: CreateUsersDto): Promise<User> {
+    // Use type any so that we can set the role property to an ObjectId (it was a RoleEnum in userDto)
+    const userToBeCreated: any = userDto
+
     // hash password
-    userDto.password = hashData(userDto.password)
+    userToBeCreated.password = hashData(userDto.password)
 
     // If no role is provided, set the default role to user
     if (!userDto.role) {
-      userDto.role = await this.roleService.getRole(RoleEnum.USER)
+      userToBeCreated.role = (await this.roleService.getRole(RoleEnum.USER))._id
+    }
+
+    if (userDto.role === RoleEnum.CREATOR) {
+      userToBeCreated.role = (await this.roleService.getRole(RoleEnum.CREATOR))._id
+    } else if (userDto.role === RoleEnum.ADMIN) {
+      userToBeCreated.role = (await this.roleService.getRole(RoleEnum.ADMIN))._id
+    } else {
+      userToBeCreated.role = (await this.roleService.getRole(RoleEnum.USER))._id
     }
 
     try {
       const createdUser = await this.usersRepository.create(userDto)
-      console.log('createdUser', createdUser)
       return createdUser
     } catch (error) {
       // if error type is from mongodb
@@ -91,11 +101,23 @@ export class UsersService {
    * @returns Promise<User> if user is found, otherwise null
    * @description user.password is hashed before saving
    * @description user.email is unique since the email is set as unique in the schema
+   * @description user information is updated only if the new information is provided
    */
   async update(userId: string, updateDto): Promise<User> {
     if (updateDto.password) {
       updateDto.password = hashData(updateDto.password)
     }
-    return await this.usersRepository.findOneAndUpdate({ _id: userId }, updateDto)
+
+    try {
+      return await this.usersRepository.findOneAndUpdate({ _id: userId }, updateDto)
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
   }
 }
