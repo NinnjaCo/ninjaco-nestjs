@@ -6,17 +6,14 @@ import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
 @Controller('send-email')
 export class MailController {
   constructor(private readonly mailService: MailService) {}
-  @Post('delete-user')
+  @Post()
   async sendDeleteUserEmail(@Body() body: sendEmailDto): Promise<boolean> {
-    console.log('inside auth controller, the sendEmailDto (BODY) is ', body)
-    return this.mailService.sendDeleteUserEmail(body)
-  }
-  @Post('reset-password')
-  async sendResetPasswordEmail(@Body() body: sendEmailDto): Promise<boolean> {
-    return this.mailService.sendResetPasswordEmail(body)
-  }
-  @Post('notify-user')
-  async sendNotifyUserEmail(@Body() body: sendEmailDto): Promise<boolean> {
-    return this.mailService.sendNotifyUserEmail(body)
+    if (body.emailEnum === 'notify') {
+      return this.mailService.sendNotifyUserEmail(body)
+    } else if (body.emailEnum === 'delete') {
+      return this.mailService.sendDeleteUserEmail(body)
+    } else {
+      return this.mailService.sendResetPasswordEmail(body)
+    }
   }
 }
