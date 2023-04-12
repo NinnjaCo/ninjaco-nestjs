@@ -12,6 +12,8 @@ import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateCourseDto } from './dto/update-course.dto'
 
+import { UpdateMissionDto } from './dto/update-mission.dto'
+
 @ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
@@ -74,5 +76,27 @@ export class CoursesController {
   @Get(':id/missions/:missionId')
   findOneMission(@Param('id') id: string, @Param('missionId') missionId: string): Promise<Mission> {
     return this.coursesService.findMissionById(id, missionId)
+  }
+
+  @ApiGlobalResponse(Mission, {
+    description: 'Update new mission | ADMIN and creator only',
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Put(':id/missions/:missionId')
+  updateMission(
+    @Param('id') id: string,
+    @Param('missionId') missionId: string,
+    @Body() missionDto: UpdateMissionDto
+  ): Promise<Mission> {
+    return this.coursesService.updateMission(id, missionId, missionDto)
+  }
+
+  @ApiGlobalResponse(Mission, {
+    description: 'Delete new mission | ADMIN and creator only',
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Delete(':id/missions/:missionId')
+  removeMission(@Param('id') id: string, @Param('missionId') missionId: string): Promise<Mission> {
+    return this.coursesService.deleteMission(id, missionId)
   }
 }
