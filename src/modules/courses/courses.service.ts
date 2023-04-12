@@ -13,8 +13,9 @@ export class CoursesService {
     private readonly courseRepository: CoursesRepository,
     private readonly roleService: RolesService
   ) {}
-
-  async findAll(): Promise<Course[]> {
-    return await this.courseRepository.find({})
+  // ma tensa thota async
+  findAll(): string {
+    return 'Hello World!'
+    // return await this.courseRepository.find({})
   }
 }

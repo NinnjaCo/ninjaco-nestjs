@@ -3,19 +3,21 @@ import { ApiTags } from '@nestjs/swagger'
 import { ArraySchema } from 'swagger/swagger-primitive-type'
 import { Controller, Get } from '@nestjs/common'
 import { Course } from './schemas/course.schema'
+import { CoursesService } from './courses.service'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 
 @ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
+  constructor(private readonly coursesService: CoursesService) {}
   @ApiGlobalResponse(ArraySchema, {
     description: 'Get all users | ADMIN only',
     isArray: true,
   })
-  @Roles(RoleEnum.ADMIN)
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Get()
-  findAll(): Promise<Course[]> {
+  findAll(): string {
     return this.coursesService.findAll()
   }
 }
