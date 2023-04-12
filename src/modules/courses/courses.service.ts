@@ -10,6 +10,7 @@ import { Model } from 'mongoose'
 import { MongoServerError } from 'mongodb'
 import { RolesService } from 'modules/roles/roles.service'
 import { checkIfValidObjectId, handleMongoDuplicateKeyError } from 'common/shared'
+import { CreateMissionDto } from './dto/create-mission.dto'
 
 @Injectable()
 export class CoursesService {
