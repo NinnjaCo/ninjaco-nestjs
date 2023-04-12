@@ -1,37 +1,22 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
-
-export class UpdateCourseDto {
+export class UpdateMissionDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
   title: string
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   description: string
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   image: string
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
-  ageRange: string
-
-  @IsString()
-  @IsOptional()
-  preRequisites: string
-
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  objectives: string
-
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  type: string
+  categoryId: string
 }
