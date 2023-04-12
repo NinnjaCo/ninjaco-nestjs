@@ -3,6 +3,7 @@ import { AppController } from './app.controller'
 import { AtGuard } from '../auth/guards/at.guard'
 import { AuthModule } from '../auth/auth.module'
 import { ConfigModule } from '@nestjs/config'
+import { CoursesModule } from 'modules/courses/courses.module'
 import { DatabaseModule } from '../../database/database.module'
 import { FileUploadModule } from '../files/file-upload.module'
 import { LoggerMiddleware } from '../../common/middleware/logger.middleware'
@@ -36,6 +37,7 @@ import { validateConfig } from '../config'
     AuthModule,
     UsersModule,
     RolesModule,
+    CoursesModule,
   ],
   controllers: [AppController],
   providers: [
