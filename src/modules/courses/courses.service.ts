@@ -98,4 +98,52 @@ export class CoursesService {
     // return the mission with missionId insode the course
     return course.missions.find((mission) => (mission._id as unknown as string) === missionId)
   }
+
+  async updateMission(courseId: string, missionId: string, updateMissionDto): Promise<Mission> {
+    try {
+      const course = await this.courseRepository.findOne({ _id: courseId })
+      // find the index of the mission with missionId
+      const missionIndex = course.missions.findIndex(
+        (mission) => (mission._id as unknown as string) === missionId
+      )
+      // update the mission
+      course.missions[missionIndex] = updateMissionDto
+      // save the course
+      await course.save()
+      // return the updated mission
+      return course.missions[missionIndex]
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
+  }
+
+  async deleteMission(courseId: string, missionId: string): Promise<Mission> {
+    try {
+      const course = await this.courseRepository.findOne({ _id: courseId })
+      // find the index of the mission with missionId
+      const missionIndex = course.missions.findIndex(
+        (mission) => (mission._id as unknown as string) === missionId
+      )
+      // delete the mission
+      const deletedMission = course.missions.splice(missionIndex, 1)
+      // save the course
+      await course.save()
+      // return the deleted mission
+      return deletedMission[0]
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
+  }
 }
