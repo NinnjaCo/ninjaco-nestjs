@@ -85,6 +85,7 @@ export class AuthController {
   async validateTokenRole(@Body() body: ValidateTokenRoleDto): Promise<boolean> {
     return this.authService.validateTokenRole(body)
   }
+
   @ApiGlobalResponse(BooleanSchema, {
     description: 'Verify user email',
   })

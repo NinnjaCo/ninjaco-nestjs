@@ -262,7 +262,7 @@ export class AuthService {
     const role = await this.rolesService.getRoleById(decodedToken.role_id)
     if (!role) return false
 
-    if (role.role === validateTokenRoleDto.role) return true
+    if (validateTokenRoleDto.alloweRoles.includes(role.role)) return true
 
     return false
   }
