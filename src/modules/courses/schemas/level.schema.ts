@@ -4,6 +4,8 @@ import { HydratedDocument } from 'mongoose'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type LevelDocument = HydratedDocument<Level>
+
+@Schema({ collection: 'levels' })
 export class Level extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
