@@ -34,6 +34,7 @@ export class Course extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
   type: string
+
   @ApiProperty()
   missions: Mission[]
 }
