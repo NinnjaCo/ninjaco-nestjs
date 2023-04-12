@@ -51,6 +51,10 @@ export class User extends BaseEntity {
   @ApiProperty()
   @Prop({ default: 0 })
   points: number
+
+  @ApiProperty()
+  @Prop()
+  profilePicture: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
