@@ -10,6 +10,7 @@ import { CreateUsersDto } from 'modules/users/dto/create-user.dto'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateCourseDto } from './dto/update-course.dto'
+import { Mission } from './schemas/mission.schema'
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -56,5 +57,22 @@ export class CoursesController {
   @Post()
   create(@Body() courseDto: CreateCourseDto): Promise<Course> {
     return this.coursesService.createCourse(courseDto)
+  }
+
+  @ApiGlobalResponse(ArraySchema, {
+    description: 'Get all missions of a course ',
+    isArray: true,
+  })
+  @Get(':id/missions')
+  findAllMissions(@Param('id') id: string): Promise<Mission[]> {
+    return this.coursesService.findAllMissions(id)
+  }
+
+  @ApiGlobalResponse(Mission, {
+    description: 'Get mission by id',
+  })
+  @Get(':id/missions/:missionId')
+  findOneMission(@Param('id') id: string, @Param('missionId') missionId: string): Promise<Mission> {
+    return this.coursesService.findMissionById(id, missionId)
   }
 }
