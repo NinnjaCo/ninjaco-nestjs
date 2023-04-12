@@ -4,17 +4,17 @@ import { HydratedDocument } from 'mongoose'
 import { Level } from './level.schema'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
-export type MissionDocument = HydratedDocument<Mission>
-export class Mission extends BaseEntity {
+export type CategorieDocument = HydratedDocument<Categorie>
+
+@Schema({ collection: 'categories' })
+export class Categorie extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
-  title: string
+  categoryName: string
 
   @ApiProperty()
   @Prop({ required: true })
-  description: string
-
-  levels: Level[]
+  missionId: string[]
 }
 
-export const MissionSchema = SchemaFactory.createForClass(Mission)
+export const CategorieSchema = SchemaFactory.createForClass(Categorie)

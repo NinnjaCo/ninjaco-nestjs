@@ -11,7 +11,30 @@ export class Course extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
   title: string
+
+  @ApiProperty()
+  @Prop({ required: true })
   description: string
+
+  @ApiProperty()
+  @Prop({ required: true })
+  image: string
+
+  @ApiProperty()
+  @Prop({ required: true })
+  ageRange: string
+
+  @ApiProperty()
+  preRequisites: string
+
+  @ApiProperty()
+  @Prop({ required: true })
+  objectives: string
+
+  @ApiProperty()
+  @Prop({ required: true })
+  type: string
+  @ApiProperty()
   missions: Mission[]
 }
 
