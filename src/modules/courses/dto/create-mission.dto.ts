@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator'
 import { Level } from '../schemas/level.schema'
+import { Prop } from '@nestjs/mongoose'
 
 export class CreateMissionDto {
   @IsString()
@@ -18,5 +19,6 @@ export class CreateMissionDto {
   @IsNotEmpty()
   categoryId: string
 
+  @Prop({ default: [] })
   levels: Level[]
 }
