@@ -12,6 +12,7 @@ import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateCourseDto } from './dto/update-course.dto'
 import { UpdateMissionDto } from './dto/update-mission.dto'
+import { Level } from './schemas/level.schema'
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -106,5 +107,47 @@ export class CoursesController {
   @Post(':id/missions')
   createMission(@Param('id') id: string, @Body() missionDto: CreateMissionDto): Promise<Mission> {
     return this.coursesService.createMission(id, missionDto)
+  }
+
+  //create CRUD for the levels inside the missions
+  //change them
+  @ApiGlobalResponse(ArraySchema, {
+    description: 'Get all levels of a mission ',
+    isArray: true,
+  })
+  @Get(':id/missions/:missionId/levels')
+  findAllLevels(@Param('id') id: string, @Param('missionId') missionId: string): string {
+    return 'hello'
+    // return this.coursesService.findAllLevels(id, missionId)
+  }
+
+  @ApiGlobalResponse(ArraySchema, {
+    description: 'Get a level within a course ',
+    isArray: true,
+  })
+  @Get(':id/missions/:missionId/levels/:levelId')
+  findOneLevel(
+    @Param('id') id: string,
+    @Param('missionId') missionId: string,
+    @Param('levelId') levelId: string
+  ): string {
+    return 'hello'
+    // return this.coursesService.findLevelById(id, missionId, levelId)
+  }
+
+  @ApiGlobalResponse(ArraySchema, {
+    description: 'Update a level within a course | ADMIN and creator only',
+    isArray: true,
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Put(':id/missions/:missionId/levels/:levelId')
+  updateLevel(
+    @Param('id') id: string,
+    @Param('missionId') missionId: string,
+    @Param('levelId') levelId: string,
+    @Body() levelDto: Level
+  ): string {
+    return 'hello'
+    // return this.coursesService.updateLevel(id, missionId, levelId, levelDto)
   }
 }
