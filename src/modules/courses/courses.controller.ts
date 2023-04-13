@@ -123,7 +123,6 @@ export class CoursesController {
 
   @ApiGlobalResponse(ArraySchema, {
     description: 'Get a level within a course ',
-    isArray: true,
   })
   @Get(':id/missions/:missionId/levels/:levelId')
   findOneLevel(
@@ -137,7 +136,6 @@ export class CoursesController {
 
   @ApiGlobalResponse(ArraySchema, {
     description: 'Update a level within a course | ADMIN and creator only',
-    isArray: true,
   })
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Put(':id/missions/:missionId/levels/:levelId')
@@ -149,5 +147,33 @@ export class CoursesController {
   ): string {
     return 'hello'
     // return this.coursesService.updateLevel(id, missionId, levelId, levelDto)
+  }
+
+  @ApiGlobalResponse(ArraySchema, {
+    description: 'Delete a level within a course | ADMIN and creator only',
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Delete(':id/missions/:missionId/levels/:levelId')
+  removeLevel(
+    @Param('id') id: string,
+    @Param('missionId') missionId: string,
+    @Param('levelId') levelId: string
+  ): string {
+    return 'hello'
+    // return this.coursesService.deleteLevel(id, missionId, levelId)
+  }
+
+  @ApiGlobalResponse(ArraySchema, {
+    description: 'Create a level within a course | ADMIN and creator only',
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Post(':id/missions/:missionId/levels')
+  createLevel(
+    @Param('id') id: string,
+    @Param('missionId') missionId: string,
+    @Body() levelDto: Level
+  ): string {
+    return 'hello'
+    // return this.coursesService.createLevel(id, missionId, levelDto)
   }
 }
