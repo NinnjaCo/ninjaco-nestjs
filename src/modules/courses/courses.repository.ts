@@ -4,6 +4,7 @@ import { EntityRepository } from 'database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { Mission, MissionSchema } from './schemas/mission.schema'
+import { UpdateMissionDto } from './dto/update-mission.dto'
 import mongoose, { Model } from 'mongoose'
 
 @Injectable()
@@ -45,6 +46,30 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     //find the course having courseId
     const course = await this.CourseModel.find({ _id: courseId })
     //return the mission with missionId inside the courde
+    return course[0].missions.find((mission) => mission._id.toString() === missionId)
+  }
+
+  //update a mission
+  async findOneMisionAndUpdate(
+    courseId: string,
+    missionId: string,
+    missionDto: UpdateMissionDto
+  ): Promise<Mission> {
+    //update the mission
+    const course = await this.CourseModel.findOneAndUpdate(
+      { _id: courseId, 'missions._id': missionId },
+      {
+        $set: {
+          'missions.$.title': missionDto.title,
+          'missions.$.description': missionDto.description,
+          'missions.$.image': missionDto.image,
+          'missions.$.categoryId': missionDto.categoryId,
+        },
+      },
+      { new: true }
+    )
+    console.log(course)
+    //return the mission with missionId inside the course
     return course[0].missions.find((mission) => mission._id.toString() === missionId)
   }
 }

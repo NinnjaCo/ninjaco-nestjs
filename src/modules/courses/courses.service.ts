@@ -127,17 +127,13 @@ export class CoursesService {
 
   async updateMission(courseId: string, missionId: string, updateMissionDto): Promise<Mission> {
     try {
-      const course = await this.courseRepository.findOne({ _id: courseId })
-      // find the index of the mission with missionId
-      const missionIndex = course.missions.findIndex(
-        (mission) => (mission._id as unknown as string) === missionId
+      const mission = await this.courseRepository.findOneMisionAndUpdate(
+        courseId,
+        missionId,
+        updateMissionDto
       )
-      // update the mission
-      course.missions[missionIndex] = updateMissionDto
-      // save the course
-      await course.save()
-      // return the updated mission
-      return course.missions[missionIndex]
+      // find the index of the mission with missionId
+      return mission
     } catch (error) {
       // if error type is from mongodb
       if (error instanceof MongoServerError) {
