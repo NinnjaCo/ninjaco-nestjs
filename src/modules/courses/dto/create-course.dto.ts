@@ -19,6 +19,7 @@ export class CreateCourseDto {
   ageRange: string
 
   @IsString()
+  @IsNotEmpty()
   preRequisites: string
 
   @IsString()

@@ -31,4 +31,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     )
     return course.missions[course.missions.length - 1]
   }
+
+  //find all misisons in a course
+  async findAll(courseId: string): Promise<Mission[]> {
+    //find the course having courseId
+    const course = await this.CourseModel.find({ _id: courseId })
+    //return the missions array of the course
+    return course[0].missions
+  }
 }

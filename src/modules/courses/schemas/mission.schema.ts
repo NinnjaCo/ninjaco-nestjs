@@ -25,6 +25,7 @@ export class Mission extends BaseEntity {
 
   @ApiProperty()
   @Prop({ default: [] })
+  @Prop({ required: true })
   levels: Level[]
 }
 

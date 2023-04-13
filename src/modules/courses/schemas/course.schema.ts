@@ -25,6 +25,7 @@ export class Course extends BaseEntity {
   ageRange: string
 
   @ApiProperty()
+  @Prop({ required: true })
   preRequisites: string
 
   @ApiProperty()

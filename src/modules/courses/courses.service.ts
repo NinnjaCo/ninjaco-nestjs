@@ -100,8 +100,8 @@ export class CoursesService {
     if (!checkIfValidObjectId(courseId)) {
       throw new BadRequestException('Invalid course id')
     }
-    const course = await this.courseRepository.findOne({ _id: courseId })
-    return course.missions
+    const missions = await this.courseRepository.findAll(courseId)
+    return missions
   }
 
   /**
