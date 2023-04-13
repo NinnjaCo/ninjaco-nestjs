@@ -65,7 +65,8 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
           'missions.$.image': missionDto.image,
           'missions.$.categoryId': missionDto.categoryId,
         },
-      }
+      },
+      { new: true }
     )
     console.log(course)
     //return the mission with missionId inside the course
