@@ -7,12 +7,12 @@ import { CoursesService } from './courses.service'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { CreateCourseDto } from './dto/create-course.dto'
 import { CreateMissionDto } from './dto/create-mission.dto'
+import { Level } from './schemas/level.schema'
 import { Mission } from './schemas/mission.schema'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateCourseDto } from './dto/update-course.dto'
 import { UpdateMissionDto } from './dto/update-mission.dto'
-import { Level } from './schemas/level.schema'
 
 @ApiTags('Courses')
 @Controller('courses')
