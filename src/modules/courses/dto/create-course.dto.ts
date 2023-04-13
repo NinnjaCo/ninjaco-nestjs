@@ -1,4 +1,6 @@
-import { IsNotEmpty, IsString } from 'class-validator'
+import { IsNotEmpty, IsString, isArray } from 'class-validator'
+import { Mission } from '../schemas/mission.schema'
+
 export class CreateCourseDto {
   @IsString()
   @IsNotEmpty()
@@ -26,4 +28,6 @@ export class CreateCourseDto {
   @IsString()
   @IsNotEmpty()
   type: string
+
+  missions: Mission[]
 }

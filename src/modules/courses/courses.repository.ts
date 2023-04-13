@@ -13,12 +13,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   }
 
   //createmission function
-  async createMiss(courseId: string, missionDto: CreateMissionDto): Promise<string> {
-    const mission = await this.CourseModel.findOneAndUpdate(
+  async createMiss(courseId: string, missionDto: CreateMissionDto): Promise<Mission> {
+    const course = await this.CourseModel.findOneAndUpdate(
       { _id: courseId },
       { $push: { missions: missionDto } },
       { new: true }
     )
-    return 'hello'
+    return course.missions[course.missions.length - 1]
   }
 }

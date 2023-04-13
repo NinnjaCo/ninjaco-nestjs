@@ -105,7 +105,7 @@ export class CoursesController {
   })
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Post(':id/missions')
-  createMission(@Param('id') id: string, @Body() missionDto: CreateMissionDto): Promise<string> {
+  createMission(@Param('id') id: string, @Body() missionDto: CreateMissionDto): Promise<Mission> {
     return this.coursesService.createMission(id, missionDto)
   }
 }

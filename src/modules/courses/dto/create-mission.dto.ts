@@ -16,7 +16,4 @@ export class CreateMissionDto {
   @IsString()
   @IsNotEmpty()
   categoryId: string
-
-  @IsArray()
-  missions: Mission[]
 }

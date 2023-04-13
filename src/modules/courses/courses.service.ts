@@ -179,7 +179,7 @@ export class CoursesService {
     }
   }
 
-  async createMission(courseId: string, createMissionDto: CreateMissionDto): Promise<string> {
+  async createMission(courseId: string, createMissionDto: CreateMissionDto): Promise<Mission> {
     const mission = await this.courseRepository.createMiss(courseId, createMissionDto)
     return mission
   }
