@@ -39,4 +39,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     //return the missions array of the course
     return course[0].missions
   }
+
+  //find a mission by id
+  async findOneMission(courseId: string, missionId: string): Promise<Mission> {
+    //find the course having courseId
+    const course = await this.CourseModel.find({ _id: courseId })
+    //return the mission with missionId inside the courde
+    return course[0].missions.find((mission) => mission._id.toString() === missionId)
+  }
 }

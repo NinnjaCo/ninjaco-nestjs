@@ -112,14 +112,8 @@ export class CoursesService {
    */
   async findMissionById(courseId: string, missionId: string): Promise<Mission> {
     try {
-      // find the course with courseId
-      const course = await this.courseRepository.findOne({ _id: courseId })
-      // find the mission with missionId
-      const mission = course.missions.find(
-        (mission) => (mission._id as unknown as string) === missionId
-      )
-      // return the mission
-      return mission
+      const missions = await this.courseRepository.findOneMission(courseId, missionId)
+      return missions
     } catch (error) {
       // if error type is from mongodb
       if (error instanceof MongoServerError) {
