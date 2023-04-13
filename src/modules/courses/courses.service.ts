@@ -3,6 +3,7 @@ import { Categorie, CategorieDocument } from './schemas/categorie.schema'
 import { Course } from './schemas/course.schema'
 import { CoursesRepository } from './courses.repository'
 import { CreateCourseDto } from './dto/create-course.dto'
+import { CreateMissionDto } from './dto/create-mission.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Level, LevelDocument } from './schemas/level.schema'
 import { Mission } from './schemas/mission.schema'
@@ -10,7 +11,6 @@ import { Model } from 'mongoose'
 import { MongoServerError } from 'mongodb'
 import { RolesService } from 'modules/roles/roles.service'
 import { checkIfValidObjectId, handleMongoDuplicateKeyError } from 'common/shared'
-import { CreateMissionDto } from './dto/create-mission.dto'
 
 @Injectable()
 export class CoursesService {
@@ -146,5 +146,10 @@ export class CoursesService {
         throw new InternalServerErrorException(error)
       }
     }
+  }
+
+  async createMission(courseId: string, createMissionDto: CreateMissionDto): Promise<string> {
+    const mission = await this.courseRepository.createMiss(courseId, createMissionDto)
+    return mission
   }
 }

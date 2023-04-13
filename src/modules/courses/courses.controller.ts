@@ -6,6 +6,7 @@ import { Course } from './schemas/course.schema'
 import { CoursesService } from './courses.service'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { CreateCourseDto } from './dto/create-course.dto'
+import { CreateMissionDto } from './dto/create-mission.dto'
 import { Mission } from './schemas/mission.schema'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
@@ -96,5 +97,14 @@ export class CoursesController {
   @Delete(':id/missions/:missionId')
   removeMission(@Param('id') id: string, @Param('missionId') missionId: string): Promise<Mission> {
     return this.coursesService.deleteMission(id, missionId)
+  }
+
+  @ApiGlobalResponse(Mission, {
+    description: 'Create new mission | ADMIN and creator only',
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Post(':id/missions')
+  createMission(@Param('id') id: string, @Body() missionDto: CreateMissionDto): Promise<string> {
+    return this.coursesService.createMission(id, missionDto)
   }
 }
