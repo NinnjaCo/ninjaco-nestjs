@@ -147,17 +147,8 @@ export class CoursesService {
 
   async deleteMission(courseId: string, missionId: string): Promise<Mission> {
     try {
-      const course = await this.courseRepository.findOne({ _id: courseId })
-      // find the index of the mission with missionId
-      const missionIndex = course.missions.findIndex(
-        (mission) => (mission._id as unknown as string) === missionId
-      )
-      // delete the mission
-      const deletedMission = course.missions.splice(missionIndex, 1)
-      // save the course
-      await course.save()
-      // return the deleted mission
-      return deletedMission[0]
+      const mission = await this.courseRepository.findOneMissionAndDelete(courseId, missionId)
+      return mission
     } catch (error) {
       // if error type is from mongodb
       if (error instanceof MongoServerError) {

@@ -65,11 +65,19 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
           'missions.$.image': missionDto.image,
           'missions.$.categoryId': missionDto.categoryId,
         },
-      },
-      { new: true }
+      }
     )
     console.log(course)
     //return the mission with missionId inside the course
     return course[0].missions.find((mission) => mission._id.toString() === missionId)
+  }
+
+  //delete a mission inside a course
+  async findOneMissionAndDelete(courseId: string, missionId: string): Promise<Mission> {
+    const course = await this.CourseModel.findOneAndRemove(
+      { _id: courseId, 'missions._id': missionId },
+      { new: true }
+    )
+    return course.missions.find((mission) => mission._id.toString() === missionId)
   }
 }
