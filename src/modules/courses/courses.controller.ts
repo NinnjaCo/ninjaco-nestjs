@@ -1,7 +1,7 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { ArraySchema } from 'swagger/swagger-primitive-type'
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common'
 import { Course } from './schemas/course.schema'
 import { CoursesService } from './courses.service'
 import { CreateCategoryDto } from './dto/create-category.dto'
@@ -11,7 +11,6 @@ import { Mission } from './schemas/mission.schema'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateCourseDto } from './dto/update-course.dto'
-
 import { UpdateMissionDto } from './dto/update-mission.dto'
 
 @ApiTags('Courses')

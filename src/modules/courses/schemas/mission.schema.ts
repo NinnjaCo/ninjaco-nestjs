@@ -20,6 +20,7 @@ export class Mission extends BaseEntity {
   image: string
 
   @ApiProperty()
+  @Prop({ required: true })
   categoryId: string
 
   @ApiProperty()
