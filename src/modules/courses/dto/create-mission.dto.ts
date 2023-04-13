@@ -16,4 +16,6 @@ export class CreateMissionDto {
   @IsString()
   @IsNotEmpty()
   categoryId: string
+
+  levels: Mission[]
 }
