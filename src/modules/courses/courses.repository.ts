@@ -61,9 +61,13 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
 
   //delete a mission inside a course
   async findOneMissionAndDelete(courseId: string, missionId: string): Promise<Mission> {
-    return await this.CourseModel.findOneAndDelete({
-      _id: courseId,
-      'missions._id': missionId,
-    })
+    const course = await this.CourseModel.findOne({ _id: courseId })
+    const deletedMission = course?.missions.find((mission) => mission._id.toString() === missionId)
+    course.missions = (await course.missions.filter(
+      (mission) => mission._id.toString() !== missionId
+    )) as unknown as [Mission]
+    //save the deleted mission in a variable to return it
+    await course.save()
+    return deletedMission
   }
 }
