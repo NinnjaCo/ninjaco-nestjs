@@ -8,12 +8,8 @@ export type CategoryDocument = HydratedDocument<Category>
 @Schema({ collection: 'categories' })
 export class Category extends BaseEntity {
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   categoryName: string
-
-  @ApiProperty()
-  @Prop({ default: [], required: true })
-  missionId: [string]
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category)

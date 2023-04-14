@@ -6,7 +6,7 @@ import { Model } from 'mongoose'
 
 @Injectable()
 export class CategoryRepository extends EntityRepository<CategoryDocument> {
-  constructor(@InjectModel(Category.name) private readonly CategoryModel: Model<CategoryDocument>) {
-    super(CategoryModel)
+  constructor(@InjectModel(Category.name) private readonly categoryModel: Model<CategoryDocument>) {
+    super(categoryModel)
   }
 }

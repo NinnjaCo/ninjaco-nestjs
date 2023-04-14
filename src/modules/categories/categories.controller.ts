@@ -21,6 +21,7 @@ export class CategoriesController {
   findAll(): Promise<Category[]> {
     return this.categoriesService.findAll()
   }
+
   @ApiGlobalResponse(Category, {
     description: 'Get category by id',
   })
