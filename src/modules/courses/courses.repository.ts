@@ -10,6 +10,7 @@ import { Level } from './schemas/level.schema'
 import { Mission, MissionSchema } from './schemas/mission.schema'
 
 import { Model } from 'mongoose'
+import { UpdateLevelDto } from './dto/update-level.dto'
 
 @Injectable()
 export class CoursesRepository extends EntityRepository<CourseDocument> {
@@ -124,7 +125,7 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     id: string,
     missionId: string,
     levelId: string,
-    LevelDto: CreateLevelDto
+    LevelDto: UpdateLevelDto
   ): Promise<Level> {
     // find the mission using findoneMission function
     const updatedMission = await this.findOneMission(id, missionId)
@@ -153,6 +154,8 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   async findOneLevelAndDelete(id: string, missionId: string, levelId: string): Promise<Level> {
     // find the mission using findoneMission function
     const updatedMission = await this.findOneMission(id, missionId)
+    // get the level with levelId inside the mission
+    const deletedLevel = updatedMission.levels.find((level) => level._id.toString() === levelId)
     //delete the level with levelId inside the mission
     updatedMission.levels = updatedMission.levels.filter(
       (level) => level._id.toString() !== levelId
@@ -168,6 +171,6 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     await course.save()
 
     // return the eleted level
-    return updatedMission.levels.find((level) => level._id.toString() === levelId)
+    return deletedLevel
   }
 }
