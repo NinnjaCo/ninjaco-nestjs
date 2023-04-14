@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { Category } from './schemas/category.schema'
+import { CategoryRepository } from './categories.repository'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { MongoServerError } from 'mongodb'
 import { checkIfValidObjectId, handleMongoDuplicateKeyError } from 'common/shared'

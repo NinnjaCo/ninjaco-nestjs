@@ -3,7 +3,7 @@ import { BaseEntity } from 'database/base.entity'
 import { HydratedDocument } from 'mongoose'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
-export type CategorieDocument = HydratedDocument<Category>
+export type CategoryDocument = HydratedDocument<Category>
 
 @Schema({ collection: 'categories' })
 export class Category extends BaseEntity {
@@ -16,4 +16,4 @@ export class Category extends BaseEntity {
   missionId: string[]
 }
 
-export const CategorieSchema = SchemaFactory.createForClass(Categorie)
+export const CategorySchema = SchemaFactory.createForClass(Category)
