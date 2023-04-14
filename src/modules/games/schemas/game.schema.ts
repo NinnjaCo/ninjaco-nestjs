@@ -28,7 +28,7 @@ export class Game extends BaseEntity {
   goalLocation: Array<number>
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   wallsLocations: Array<Array<number>>
 }
 

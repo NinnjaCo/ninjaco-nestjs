@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 
-export class CreateGameDto {
+export class UpdateGameDto {
   @IsString()
   @IsNotEmpty()
   title: string
