@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
-import { Categorie, CategorieDocument } from './schemas/categorie.schema'
 import { Course } from './schemas/course.schema'
 import { CoursesRepository } from './courses.repository'
 import { CreateCourseDto } from './dto/create-course.dto'
