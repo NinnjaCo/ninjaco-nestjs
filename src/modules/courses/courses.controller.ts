@@ -128,9 +128,8 @@ export class CoursesController {
     @Param('id') id: string,
     @Param('missionId') missionId: string,
     @Param('levelId') levelId: string
-  ): string {
-    return 'hello'
-    // return this.coursesService.findLevelById(id, missionId, levelId)
+  ): Promise<Level> {
+    return this.coursesService.findLevelById(id, missionId, levelId)
   }
 
   @ApiGlobalResponse(ArraySchema, {
@@ -143,9 +142,8 @@ export class CoursesController {
     @Param('missionId') missionId: string,
     @Param('levelId') levelId: string,
     @Body() levelDto: Level
-  ): string {
-    return 'hello'
-    // return this.coursesService.updateLevel(id, missionId, levelId, levelDto)
+  ): Promise<Level> {
+    return this.coursesService.updateLevel(id, missionId, levelId, levelDto)
   }
 
   @ApiGlobalResponse(ArraySchema, {

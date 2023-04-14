@@ -181,4 +181,46 @@ export class CoursesService {
     const level = await this.courseRepository.createLevel(id, missionId, LevelDto)
     return level
   }
+
+  //find level by id
+  async findLevelById(id: string, missionId: string, levelId: string): Promise<Level> {
+    try {
+      const level = await this.courseRepository.findOneLevel(id, missionId, levelId)
+      return level
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
+  }
+
+  //update level by id
+  async updateLevel(
+    id: string,
+    missionId: string,
+    levelId: string,
+    LevelDto: CreateLevelDto
+  ): Promise<Level> {
+    try {
+      const level = await this.courseRepository.findOneLevelAndUpdate(
+        id,
+        missionId,
+        levelId,
+        LevelDto
+      )
+      return level
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
+  }
 }

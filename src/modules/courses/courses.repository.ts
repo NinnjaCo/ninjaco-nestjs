@@ -110,4 +110,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
 
     return level
   }
+
+  //find a level by id
+  async findOneLevel(courseId: string, missionId: string, levelId: string): Promise<Level> {
+    // find the mission using findoneMission function
+    const mission = await this.findOneMission(courseId, missionId)
+    //return the level with levelId inside the mission
+    return mission.levels.find((level) => level._id.toString() === levelId)
+  }
 }
