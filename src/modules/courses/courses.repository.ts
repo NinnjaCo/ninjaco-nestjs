@@ -17,13 +17,13 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   }
 
   //createmission function and add an _id, createdAt , updatedAt fields
-  async createMiss(courseId: string, missionDto: CreateMissionDto): Promise<Mission> {
+  async createMission(courseId: string, missionDto: CreateMissionDto): Promise<Mission> {
     const mission = new this.MissionModel()
     mission.title = missionDto.title
     mission.description = missionDto.description
     mission.image = missionDto.image
     mission.categoryId = missionDto.categoryId
-    mission.levels = missionDto.levels
+    mission.levels = []
 
     const course = await this.CourseModel.findOneAndUpdate(
       { _id: courseId },
@@ -55,22 +55,17 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     missionId: string,
     missionDto: UpdateMissionDto
   ): Promise<Mission> {
-    //update the mission
-    const course = await this.CourseModel.findOneAndUpdate(
-      { _id: courseId, 'missions._id': missionId },
-      {
-        $set: {
-          'missions.$.title': missionDto.title,
-          'missions.$.description': missionDto.description,
-          'missions.$.image': missionDto.image,
-          'missions.$.categoryId': missionDto.categoryId,
-        },
-      },
-      { new: true }
-    )
-    console.log(course)
-    //return the mission with missionId inside the course
-    return course[0].missions.find((mission) => mission._id.toString() === missionId)
+    const course = await this.CourseModel.findOne({ _id: courseId })
+    for (let i = 0; i < course.missions.length; i++) {
+      if (course.missions[i]._id.toString() === missionId) {
+        course.missions[i].title = missionDto.title ?? course.missions[i].title
+        course.missions[i].description = missionDto.description ?? course.missions[i].description
+        course.missions[i].image = missionDto.image ?? course.missions[i].image
+        course.missions[i].categoryId = missionDto.categoryId ?? course.missions[i].categoryId
+      }
+    }
+    const updatedCourse = await course.save()
+    return updatedCourse.missions.find((mission) => mission._id.toString() === missionId)
   }
 
   //delete a mission inside a course
