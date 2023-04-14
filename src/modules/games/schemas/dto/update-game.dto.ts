@@ -5,6 +5,9 @@ export class UpdateGameDto {
   @IsNotEmpty()
   title: string
 
+  @IsString()
+  image: string
+
   @IsNumber()
   @IsOptional()
   numOfBlocks?: number

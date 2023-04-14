@@ -30,6 +30,10 @@ export class Game extends BaseEntity {
   @ApiProperty()
   @Prop()
   wallsLocations: Array<Array<number>>
+
+  @ApiProperty()
+  @Prop()
+  image: string
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game)

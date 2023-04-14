@@ -4,6 +4,9 @@ export class CreateGameDto {
   @IsString()
   @IsNotEmpty()
   title: string
+  @IsString()
+  @IsNotEmpty()
+  image: string
 
   @IsNumber()
   @IsOptional()
