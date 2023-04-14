@@ -12,8 +12,8 @@ export class Category extends BaseEntity {
   categoryName: string
 
   @ApiProperty()
-  @Prop({ required: true })
-  missionId: string[]
+  @Prop({ default: [], required: true })
+  missionId: [string]
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category)
