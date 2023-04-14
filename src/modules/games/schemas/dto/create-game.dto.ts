@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateGameDto {
   @IsString()
@@ -14,10 +14,15 @@ export class CreateGameDto {
   sizeOfGrid: number
 
   @IsNotEmpty()
-  playerLocation: Array<number>
+  @IsNumber({}, { each: true })
+  @IsArray()
+  playerLocation: number[]
 
   @IsNotEmpty()
-  goalLocation: Array<number>
+  @IsNumber({}, { each: true })
+  @IsArray()
+  goalLocation: number[]
 
-  wallsLocations: Array<Array<number>>
+  @IsArray()
+  wallsLocations: number[][]
 }

@@ -14,10 +14,10 @@ export class UpdateGameDto {
   sizeOfGrid: number
 
   @IsNotEmpty()
-  playerLocation: Array<number>
+  playerLocation: number[]
 
   @IsNotEmpty()
-  goalLocation: Array<number>
+  goalLocation: number[]
 
-  wallsLocations: Array<Array<number>>
+  wallsLocations: number[][]
 }
