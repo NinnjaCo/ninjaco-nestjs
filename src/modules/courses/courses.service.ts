@@ -49,7 +49,7 @@ export class CoursesService {
   async findCourseById(courseId: string): Promise<Course> {
     // check if courseId is of type ObjectId
     if (!checkIfValidObjectId(courseId)) {
-      throw new BadRequestException('Invalid user id')
+      throw new BadRequestException('Invalid course id')
     }
     return await this.courseRepository.findOne({ _id: courseId })
   }
