@@ -223,4 +223,21 @@ export class CoursesService {
       }
     }
   }
+
+  //delete level by id
+
+  async deleteLevel(id: string, missionId: string, levelId: string): Promise<Level> {
+    try {
+      const level = await this.courseRepository.findOneLevelAndDelete(id, missionId, levelId)
+      return level
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
+  }
 }

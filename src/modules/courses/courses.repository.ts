@@ -148,4 +148,26 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
 
     return updatedMission.levels.find((level) => level._id.toString() === levelId)
   }
+
+  //delete a level inside a mission inside a course
+  async findOneLevelAndDelete(id: string, missionId: string, levelId: string): Promise<Level> {
+    // find the mission using findoneMission function
+    const updatedMission = await this.findOneMission(id, missionId)
+    //delete the level with levelId inside the mission
+    updatedMission.levels = updatedMission.levels.filter(
+      (level) => level._id.toString() !== levelId
+    ) as unknown as [Level]
+    const course = await this.CourseModel.findOne({ _id: id })
+
+    course.missions = course.missions.map((mission) => {
+      if (mission._id.toString() === missionId) {
+        return updatedMission
+      }
+      return mission
+    }) as unknown as [Mission]
+    await course.save()
+
+    // return the eleted level
+    return updatedMission.levels.find((level) => level._id.toString() === levelId)
+  }
 }

@@ -156,9 +156,8 @@ export class CoursesController {
     @Param('id') id: string,
     @Param('missionId') missionId: string,
     @Param('levelId') levelId: string
-  ): string {
-    return 'hello'
-    // return this.coursesService.deleteLevel(id, missionId, levelId)
+  ): Promise<Level> {
+    return this.coursesService.deleteLevel(id, missionId, levelId)
   }
 
   @ApiGlobalResponse(ArraySchema, {
