@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
-import { Categorie, CategorieDocument } from './schemas/categorie.schema'
 import { Course } from './schemas/course.schema'
 import { CoursesRepository } from './courses.repository'
 import { CreateCourseDto } from './dto/create-course.dto'
@@ -101,7 +100,7 @@ export class CoursesService {
     if (!checkIfValidObjectId(courseId)) {
       throw new BadRequestException('Invalid course id')
     }
-    const missions = await this.courseRepository.findAll(courseId)
+    const missions = await this.courseRepository.findAllMissions(courseId)
     return missions
   }
 
@@ -162,7 +161,7 @@ export class CoursesService {
   }
 
   async createMission(courseId: string, createMissionDto: CreateMissionDto): Promise<Mission> {
-    const mission = await this.courseRepository.createMiss(courseId, createMissionDto)
+    const mission = await this.courseRepository.createMission(courseId, createMissionDto)
     return mission
   }
 

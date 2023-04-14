@@ -24,9 +24,8 @@ export class Mission extends BaseEntity {
   categoryId: string
 
   @ApiProperty()
-  @Prop({ default: [] })
-  @Prop({ required: true })
-  levels: Level[]
+  @Prop({ default: [], required: true })
+  levels: [Level]
 }
 
 export const MissionSchema = SchemaFactory.createForClass(Mission)

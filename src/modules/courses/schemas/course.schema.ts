@@ -37,8 +37,8 @@ export class Course extends BaseEntity {
   type: string
 
   @ApiProperty()
-  @Prop({ default: [] })
-  missions: Mission[]
+  @Prop({ default: [], required: true })
+  missions: [Mission]
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course)
