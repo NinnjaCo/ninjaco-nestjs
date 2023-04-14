@@ -16,16 +16,4 @@ export class FileUploadController {
   async uploadSingle(@UploadedFile() image: BufferedFile) {
     return await this.fileUploadService.uploadSingle(image)
   }
-
-  @Post('many')
-  @Throttle(5, 60) // 5 requests per minute
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'image1', maxCount: 1 },
-      { name: 'image2', maxCount: 1 },
-    ])
-  )
-  async uploadMany(@UploadedFiles() files: BufferedFile) {
-    return this.fileUploadService.uploadMany(files)
-  }
 }

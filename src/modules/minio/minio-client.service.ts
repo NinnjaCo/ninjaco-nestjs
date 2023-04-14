@@ -10,6 +10,14 @@ export class MinioClientService {
   private readonly baseBucket: string
   private readonly client: MinioClient
 
+  /**
+   * Creates a new MinioClientService instance and sets the bucket policy
+   * @param minioService
+   * @param configService
+   * @constructor
+   * @todo: Create a bucket first if it doesn't exist
+   * @throws {HttpException}
+   */
   constructor(private readonly minio: MinioService, private readonly config: ConfigService) {
     this.baseBucket = this.config.get('BUCKET_NAME')
     this.client = this.minio.client
@@ -48,6 +56,15 @@ export class MinioClientService {
     })
   }
 
+  /**
+   * Uploads a file to MinIO S3 and returns the URL
+   * @param file
+   * @param baseBucket
+   * @returns {Promise<{url: string}>}
+   * @description hash the filename to avoid duplicate filenames and to make it harder to guess the filename
+   * @description used in the file-upload.service.ts
+   * @throws {HttpException}
+   */
   public async upload(file: BufferedFile, baseBucket: string = this.baseBucket) {
     this.logger.log('Uploading file to minio')
 
@@ -80,6 +97,13 @@ export class MinioClientService {
     }
   }
 
+  /**
+   * Deletes a file from MinIO S3
+   * @param objetName
+   * @param baseBucket
+   * @description used in the file-upload.service.ts
+   * @throws {HttpException}
+   */
   async delete(objetName: string, baseBucket: string = this.baseBucket) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.client.removeObject(baseBucket, objetName, function (err, res) {

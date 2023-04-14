@@ -11,6 +11,14 @@ export class MailService {
     this.APP_URL = this.configService.get('APP_URL')
   }
 
+  /**
+   * Sends a forgot password email to the user
+   * @param user
+   * @param token
+   * @returns {Promise<boolean>}
+   * @memberof MailService
+   * @description This method is called from the auth.service.ts to send a forgot password email to the user
+   */
   async sendForgotPasswordMail(user: User, token: string) {
     const url = `${this.APP_URL}/auth/reset-password/${token}`
     try {
@@ -36,6 +44,14 @@ export class MailService {
     }
   }
 
+  /**
+   * Sends a verify email to the user
+   * @param user
+   * @param token
+   * @returns {Promise<boolean>}
+   * @memberof MailService
+   * @description This method is called from the auth.service.ts to send a verify email to the user
+   */
   async sendVerifyEmail(user: User, token: string) {
     const url = `${this.APP_URL}/auth/verify-email/${token}`
     try {
@@ -61,6 +77,14 @@ export class MailService {
     }
   }
 
+  /**
+   * Retrieve the template name and subject from the email type
+   * @param emailType
+   * @private
+   * @returns {templateName: string, subject: string}
+   * @memberof MailService
+   * @description This method is called from the sendEmail method to retrieve the template name and subject from the email type
+   */
   private getTempalteNameFromEmailType(emailType: EmailEnum) {
     switch (emailType) {
       case EmailEnum.NOTIFY:
@@ -81,6 +105,13 @@ export class MailService {
     }
   }
 
+  /**
+   * Sends an email to the user
+   * @param sendDto
+   * @returns {Promise<boolean>}
+   * @memberof MailService
+   * @description This method is called from the mail.controller.ts to send an email to the user, usually from the admin
+   */
   async sendEmail(sendDto: sendEmailDto) {
     const tempalteNameAndSubject = this.getTempalteNameFromEmailType(sendDto.emailType)
     try {
