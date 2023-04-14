@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { Course } from './schemas/course.schema'
 import { CoursesRepository } from './courses.repository'
 import { CreateCourseDto } from './dto/create-course.dto'
+import { CreateLevelDto } from './dto/create-level.dto'
 import { CreateMissionDto } from './dto/create-mission.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Level, LevelDocument } from './schemas/level.schema'
@@ -162,5 +163,21 @@ export class CoursesService {
   async createMission(courseId: string, createMissionDto: CreateMissionDto): Promise<Mission> {
     const mission = await this.courseRepository.createMission(courseId, createMissionDto)
     return mission
+  }
+
+  //levels:
+
+  async findAllLevels(id: string, missionId: string): Promise<Level[]> {
+    if (!checkIfValidObjectId(id)) {
+      throw new BadRequestException('Invalid course id')
+    }
+    const levels = await this.courseRepository.findAllLevels(id, missionId)
+    return levels
+  }
+
+  //create level
+  async createLevel(id: string, missionId: string, LevelDto: CreateLevelDto): Promise<Level> {
+    const level = await this.courseRepository.createLevel(id, missionId, LevelDto)
+    return level
   }
 }

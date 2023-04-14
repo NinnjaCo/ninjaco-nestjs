@@ -1,17 +1,23 @@
 import { Course, CourseDocument } from './schemas/course.schema'
+import { CreateLevelDto } from './dto/create-level.dto'
 import { CreateMissionDto } from './dto/create-mission.dto'
 import { EntityRepository } from 'database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
-import { Mission } from './schemas/mission.schema'
+
+import { Level } from './schemas/level.schema'
+import { Mission, MissionSchema } from './schemas/mission.schema'
+
 import { Model } from 'mongoose'
+
 import { UpdateMissionDto } from './dto/update-mission.dto'
 
 @Injectable()
 export class CoursesRepository extends EntityRepository<CourseDocument> {
   constructor(
     @InjectModel(Course.name) private readonly CourseModel: Model<CourseDocument>,
-    @InjectModel(Mission.name) private readonly MissionModel: Model<Mission>
+    @InjectModel(Mission.name) private readonly MissionModel: Model<Mission>,
+    @InjectModel(Level.name) private readonly LevelModel: Model<Level>
   ) {
     super(CourseModel)
   }
@@ -69,5 +75,32 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     //save the deleted mission in a variable to return it
     await course.save()
     return deletedMission
+  }
+
+  //find all levels in a mission inside a course
+  async findAllLevels(courseId: string, missionId: string): Promise<Level[]> {
+    //find the course having courseId
+    const course = await this.CourseModel.find({ _id: courseId })
+    // find the missions inside the course having the mission id
+    const mission = course[0].missions.find((mission) => mission._id.toString() === missionId)
+    //return the levels array of the mission
+    return mission.levels
+  }
+
+  //create level
+  async createLevel(courseId: string, missionId: string, levelDto: CreateLevelDto): Promise<Level> {
+    const level = new this.LevelModel()
+    level.levelNumber = levelDto.levelNumber
+    level.buldingPartsImages = levelDto.buildingParts
+    level.stepGuideImages = levelDto.stepGuideImage
+
+    //find the mission by using the findOnemissoin function
+    const mission = await this.findOneMission(courseId, missionId)
+    //push the level to the levels array of the mission
+    mission.levels.push(level)
+    //save the mission
+
+    //return the last level of the mission
+    return mission.levels[mission.levels.length - 1]
   }
 }
