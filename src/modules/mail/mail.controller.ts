@@ -8,7 +8,7 @@ import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
 
-@ApiTags('emails')
+@ApiTags('Emails')
 @Controller('send-email')
 export class MailController {
   constructor(private readonly mailService: MailService) {}
