@@ -18,7 +18,4 @@ export class CreateMissionDto {
   @IsString()
   @IsNotEmpty()
   categoryId: string
-
-  @Prop({ default: [] })
-  levels: Level[]
 }

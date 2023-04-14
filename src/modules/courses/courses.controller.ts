@@ -6,6 +6,7 @@ import { Course } from './schemas/course.schema'
 import { CoursesService } from './courses.service'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { CreateCourseDto } from './dto/create-course.dto'
+import { CreateLevelDto } from './dto/create-level.dto'
 import { CreateMissionDto } from './dto/create-mission.dto'
 import { Level } from './schemas/level.schema'
 import { Mission } from './schemas/mission.schema'
@@ -116,9 +117,8 @@ export class CoursesController {
     isArray: true,
   })
   @Get(':id/missions/:missionId/levels')
-  findAllLevels(@Param('id') id: string, @Param('missionId') missionId: string): string {
-    return 'hello'
-    // return this.coursesService.findAllLevels(id, missionId)
+  findAllLevels(@Param('id') id: string, @Param('missionId') missionId: string): Promise<Level[]> {
+    return this.coursesService.findAllLevels(id, missionId)
   }
 
   @ApiGlobalResponse(ArraySchema, {
@@ -171,9 +171,8 @@ export class CoursesController {
   createLevel(
     @Param('id') id: string,
     @Param('missionId') missionId: string,
-    @Body() levelDto: Level
-  ): string {
-    return 'hello'
-    // return this.coursesService.createLevel(id, missionId, levelDto)
+    @Body() levelDto: CreateLevelDto
+  ): Promise<Level> {
+    return this.coursesService.createLevel(id, missionId, levelDto)
   }
 }

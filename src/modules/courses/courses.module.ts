@@ -5,6 +5,7 @@ import { CoursesService } from './courses.service'
 
 import { Mission, MissionSchema } from './schemas/mission.schema'
 
+import { Level, LevelSchema } from './schemas/level.schema'
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { RolesModule } from 'modules/roles/roles.module'
@@ -14,6 +15,7 @@ import { RolesModule } from 'modules/roles/roles.module'
     MongooseModule.forFeature([{ name: Course.name, schema: CourseSchema }]),
     RolesModule,
     MongooseModule.forFeature([{ name: Mission.name, schema: MissionSchema }]),
+    MongooseModule.forFeature([{ name: Level.name, schema: LevelSchema }]),
   ],
   controllers: [CoursesController],
   providers: [CoursesService, CoursesRepository],
