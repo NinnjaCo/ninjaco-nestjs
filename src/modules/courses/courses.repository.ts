@@ -118,4 +118,34 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     //return the level with levelId inside the mission
     return mission.levels.find((level) => level._id.toString() === levelId)
   }
+
+  //update a level
+  async findOneLevelAndUpdate(
+    id: string,
+    missionId: string,
+    levelId: string,
+    LevelDto: CreateLevelDto
+  ): Promise<Level> {
+    // find the mission using findoneMission function
+    const updatedMission = await this.findOneMission(id, missionId)
+    //update the level with levelId inside the mission
+    updatedMission.levels = updatedMission.levels.map((level) => {
+      if (level._id.toString() === levelId) {
+        return { ...level, ...LevelDto }
+      }
+      return level
+    }) as unknown as [Level]
+
+    const course = await this.CourseModel.findOne({ _id: id })
+
+    course.missions = course.missions.map((mission) => {
+      if (mission._id.toString() === missionId) {
+        return updatedMission
+      }
+      return mission
+    }) as unknown as [Mission]
+    await course.save()
+
+    return updatedMission.levels.find((level) => level._id.toString() === levelId)
+  }
 }
