@@ -1,7 +1,7 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { ArraySchema } from 'swagger/swagger-primitive-type'
-import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { Course } from './schemas/course.schema'
 import { CoursesService } from './courses.service'
 import { CreateCourseDto } from './dto/create-course.dto'
