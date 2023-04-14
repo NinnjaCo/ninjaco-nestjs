@@ -10,6 +10,7 @@ import { Mission } from './schemas/mission.schema'
 import { Model } from 'mongoose'
 import { MongoServerError } from 'mongodb'
 import { RolesService } from 'modules/roles/roles.service'
+import { UpdateMissionDto } from './dto/update-mission.dto'
 import { checkIfValidObjectId, handleMongoDuplicateKeyError } from 'common/shared'
 
 @Injectable()

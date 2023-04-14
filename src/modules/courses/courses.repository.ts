@@ -4,13 +4,12 @@ import { CreateMissionDto } from './dto/create-mission.dto'
 import { EntityRepository } from 'database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
+import { UpdateMissionDto } from './dto/update-mission.dto'
 
 import { Level } from './schemas/level.schema'
 import { Mission, MissionSchema } from './schemas/mission.schema'
 
 import { Model } from 'mongoose'
-
-import { UpdateMissionDto } from './dto/update-mission.dto'
 
 @Injectable()
 export class CoursesRepository extends EntityRepository<CourseDocument> {
@@ -90,13 +89,25 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     level.buldingPartsImages = levelDto.buildingParts
     level.stepGuideImages = levelDto.stepGuideImage
 
-    //find the mission by using the findOnemissoin function
-    const mission = await this.findOneMission(courseId, missionId)
+    // find the mission using findoneMission function
+    const updatedMission = await this.findOneMission(courseId, missionId)
     //push the level to the levels array of the mission
-    mission.levels.push(level)
-    //save the mission
+    updatedMission.levels.push(level)
 
-    //return the last level of the mission
-    return mission.levels[mission.levels.length - 1]
+    // get the course and replace the mission with the updated mission
+    const course = await this.CourseModel.findOne({ _id: courseId })
+
+    //save the level inside the mission
+    course.missions = course.missions.map((mission) => {
+      if (mission._id.toString() === missionId) {
+        return updatedMission
+      }
+      return mission
+    }) as unknown as [Mission]
+    await course.save()
+
+    //return the level
+
+    return level
   }
 }
