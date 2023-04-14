@@ -2,6 +2,7 @@ import { APP_GUARD } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { AtGuard } from '../auth/guards/at.guard'
 import { AuthModule } from '../auth/auth.module'
+import { CategoriesModule } from 'modules/category/categories.module'
 import { ConfigModule } from '@nestjs/config'
 import { CoursesModule } from 'modules/courses/courses.module'
 import { DatabaseModule } from '../../database/database.module'
@@ -38,6 +39,7 @@ import { validateConfig } from '../config'
     UsersModule,
     RolesModule,
     CoursesModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [
