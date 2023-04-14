@@ -1,15 +1,19 @@
-import { IsArray, IsNotEmpty, IsNumber } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator'
 
 export class CreateLevelDto {
+  @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
   levelNumber: number
 
-  @IsArray()
+  @ApiProperty()
+  @IsString({ each: true })
   @IsNotEmpty()
-  buildingParts: string[]
+  buildingPartsImages: string[]
 
-  @IsArray()
+  @ApiProperty()
+  @IsString({ each: true })
   @IsNotEmpty()
-  stepGuideImage: string[]
+  stepGuideImages: string[]
 }

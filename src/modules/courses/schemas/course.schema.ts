@@ -6,6 +6,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type CourseDocument = HydratedDocument<Course>
 
+export enum CourseType {
+  'ARDUINO' = 'ARDUINO',
+  'HTML' = 'HTML',
+}
+
 @Schema({ collection: 'courses' })
 export class Course extends BaseEntity {
   @ApiProperty()
@@ -22,19 +27,19 @@ export class Course extends BaseEntity {
 
   @ApiProperty()
   @Prop({ required: true })
-  ageRange: string
+  ageRange: string[]
 
   @ApiProperty()
   @Prop({ required: false })
-  preRequisites: string
+  preRequisites: string[]
 
   @ApiProperty()
   @Prop({ required: true })
-  objectives: string
+  objectives: string[]
 
   @ApiProperty()
   @Prop({ required: true })
-  type: string
+  type: CourseType
 
   @ApiProperty()
   @Prop({ default: [], required: true })

@@ -50,10 +50,17 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     missionId: string,
     missionDto: UpdateMissionDto
   ): Promise<Mission> {
+    const cleanMissionDto = Object.keys(missionDto).reduce((acc, key) => {
+      if (missionDto[key] !== undefined) {
+        acc[key] = missionDto[key]
+      }
+      return acc
+    }, {})
+
     const course = await this.courseModel.findOne({ _id: courseId })
     course.missions = course.missions.map((mission) => {
       if (mission._id.toString() === missionId) {
-        return { ...mission, ...missionDto }
+        mission = { ...mission, ...cleanMissionDto }
       }
       return mission
     }) as unknown as [Mission]
@@ -85,10 +92,7 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
 
   //create level
   async createLevel(courseId: string, missionId: string, levelDto: CreateLevelDto): Promise<Level> {
-    const level = new this.levelModel()
-    level.levelNumber = levelDto.levelNumber
-    level.buldingPartsImages = levelDto.buildingParts
-    level.stepGuideImages = levelDto.stepGuideImage
+    const level = new this.levelModel(levelDto)
 
     // find the mission using findoneMission function
     const updatedMission = await this.findOneMission(courseId, missionId)
@@ -125,14 +129,22 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     id: string,
     missionId: string,
     levelId: string,
-    LevelDto: UpdateLevelDto
+    levelDto: UpdateLevelDto
   ): Promise<Level> {
     // find the mission using findoneMission function
     const updatedMission = await this.findOneMission(id, missionId)
+
+    const clearLevelDto = Object.keys(levelDto).reduce((acc, key) => {
+      if (levelDto[key] !== undefined) {
+        acc[key] = levelDto[key]
+      }
+      return acc
+    }, {})
+
     //update the level with levelId inside the mission
     updatedMission.levels = updatedMission.levels.map((level) => {
       if (level._id.toString() === levelId) {
-        return { ...level, ...LevelDto }
+        return { ...level, ...clearLevelDto }
       }
       return level
     }) as unknown as [Level]

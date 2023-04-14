@@ -13,7 +13,7 @@ export class Level extends BaseEntity {
 
   @ApiProperty()
   @Prop({ required: true })
-  buldingPartsImages: string[]
+  buildingPartsImages: string[]
 
   @ApiProperty()
   @Prop({ required: true })

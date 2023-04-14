@@ -1,32 +1,42 @@
-import { IsNotEmpty, IsString } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import { CourseType } from '../schemas/course.schema'
+import { IsArray, IsEnum, IsNotEmpty, IsString } from 'class-validator'
 import { Mission } from '../schemas/mission.schema'
 
 export class CreateCourseDto {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   title: string
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   description: string
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   image: string
 
-  @IsString()
+  @ApiProperty()
+  @IsString({ each: true })
   @IsNotEmpty()
-  ageRange: string
+  ageRange: string[]
 
-  @IsString()
+  @ApiProperty()
+  @IsString({ each: true })
   @IsNotEmpty()
-  preRequisites: string
+  preRequisites: string[]
 
-  @IsString()
+  @ApiProperty()
+  @IsString({ each: true })
   @IsNotEmpty()
-  objectives: string
+  objectives: string[]
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  type: string
+  @IsEnum(CourseType)
+  type: CourseType
 }

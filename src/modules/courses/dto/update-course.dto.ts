@@ -1,37 +1,44 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import { CourseType } from '../schemas/course.schema'
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class UpdateCourseDto {
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
   title: string
 
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   description: string
 
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   image: string
 
-  @IsString()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
   @IsOptional()
-  ageRange: string
+  @IsString({ each: true })
+  ageRange: string[]
 
-  @IsString()
+  @ApiProperty({ required: false })
   @IsOptional()
-  preRequisites: string
+  @IsString({ each: true })
+  preRequisites: string[]
 
-  @IsString()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
   @IsOptional()
-  objectives: string
+  @IsString({ each: true })
+  objectives: string[]
 
-  @IsString()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
   @IsOptional()
-  type: string
+  @IsString()
+  @IsEnum(CourseType)
+  type: CourseType
 }

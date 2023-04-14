@@ -24,7 +24,7 @@ export const SwaggerConfig = (app: INestApplication, apiVersion: string) => {
         scheme: 'Bearer',
         description: 'JWT Access Token',
       },
-      'access-token'
+      'JWT'
     )
     .build()
 

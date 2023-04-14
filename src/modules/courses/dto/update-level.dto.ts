@@ -1,18 +1,22 @@
-import { IsArray, IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class UpdateLevelDto {
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   @IsNotEmpty()
   levelNumber: number
 
+  @ApiProperty({ required: false })
   @IsOptional()
-  @IsArray()
+  @IsString({ each: true })
   @IsNotEmpty()
-  buildingParts: string[]
+  buildingPartsImages: string[]
 
+  @ApiProperty({ required: false })
   @IsOptional()
-  @IsArray()
+  @IsString({ each: true })
   @IsNotEmpty()
-  stepGuideImage: string[]
+  stepGuideImages: string[]
 }

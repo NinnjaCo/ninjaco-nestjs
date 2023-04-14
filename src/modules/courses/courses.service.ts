@@ -7,6 +7,7 @@ import { CreateMissionDto } from './dto/create-mission.dto'
 import { Level } from './schemas/level.schema'
 import { Mission } from './schemas/mission.schema'
 import { MongoServerError } from 'mongodb'
+import { UpdateLevelDto } from './dto/update-level.dto'
 import { checkIfValidObjectId, handleMongoDuplicateKeyError } from 'common/shared'
 
 @Injectable()
@@ -236,14 +237,14 @@ export class CoursesService {
     courseId: string,
     missionId: string,
     levelId: string,
-    LevelDto: CreateLevelDto
+    levelDto: UpdateLevelDto
   ): Promise<Level> {
     try {
       const level = await this.courseRepository.findOneLevelAndUpdate(
         courseId,
         missionId,
         levelId,
-        LevelDto
+        levelDto
       )
       return level
     } catch (error) {
