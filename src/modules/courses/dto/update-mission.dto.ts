@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
-import { Level } from '../schemas/level.schema'
+
 export class UpdateMissionDto {
   @IsOptional()
   @IsString()

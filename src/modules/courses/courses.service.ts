@@ -4,35 +4,28 @@ import { CoursesRepository } from './courses.repository'
 import { CreateCourseDto } from './dto/create-course.dto'
 import { CreateLevelDto } from './dto/create-level.dto'
 import { CreateMissionDto } from './dto/create-mission.dto'
-import { InjectModel } from '@nestjs/mongoose'
-import { Level, LevelDocument } from './schemas/level.schema'
+import { Level } from './schemas/level.schema'
 import { Mission } from './schemas/mission.schema'
-import { Model } from 'mongoose'
 import { MongoServerError } from 'mongodb'
-import { RolesService } from 'modules/roles/roles.service'
-import { UpdateMissionDto } from './dto/update-mission.dto'
 import { checkIfValidObjectId, handleMongoDuplicateKeyError } from 'common/shared'
 
 @Injectable()
 export class CoursesService {
-  constructor(
-    private readonly courseRepository: CoursesRepository,
-    private readonly roleService: RolesService
-  ) {}
+  constructor(private readonly courseRepository: CoursesRepository) {}
+
   /**
    * Find all courses
    * @returns Promise <Course[]> if users are found, otherwise empty array
    */
-
   async findAll(): Promise<Course[]> {
     return await this.courseRepository.find({})
   }
+
   /**
    * Create new course
    * @param CreateCourseDto
    * @returns Promise<course>
    */
-
   async createCourse(courseDto: CreateCourseDto): Promise<Course> {
     try {
       const course = await this.courseRepository.create(courseDto)
@@ -53,7 +46,6 @@ export class CoursesService {
    * @param courseId
    * @returns Promise<Course> if course is found, otherwise null
    */
-
   async findCourseById(courseId: string): Promise<Course> {
     // check if courseId is of type ObjectId
     if (!checkIfValidObjectId(courseId)) {
@@ -61,13 +53,13 @@ export class CoursesService {
     }
     return await this.courseRepository.findOne({ _id: courseId })
   }
+
   /**
    * Update course by id
    * @param courseId
    * @param updateCourseDto
    * @returns Promise<Course> if user is found, otherwise null
    */
-
   async updateCourse(courseId: string, CreateCourseDto): Promise<Course> {
     try {
       return await this.courseRepository.findOneAndUpdate({ _id: courseId }, CreateCourseDto)
@@ -81,12 +73,12 @@ export class CoursesService {
       }
     }
   }
+
   /**
    * Delete course by id
    * @param courseId
    * @returns Promise<course> if user is found, otherwise null
    */
-
   async deleteCourse(courseId: string): Promise<Course> {
     return await this.courseRepository.findOneAndDelete({ _id: courseId })
   }
@@ -96,7 +88,6 @@ export class CoursesService {
    * @param courseId
    * @returns Promise <Missions[]> if missions are found, otherwise empty array
    */
-
   async findAllMissions(courseId: string): Promise<Mission[]> {
     if (!checkIfValidObjectId(courseId)) {
       throw new BadRequestException('Invalid course id')
@@ -126,6 +117,13 @@ export class CoursesService {
     }
   }
 
+  /**
+   * Update a specific mission in a specifique course by id
+   * @param courseId
+   * @param missionId
+   * @param updateMissionDto
+   * @returns Promise <Mission> if mission is found, otherwise null
+   */
   async updateMission(courseId: string, missionId: string, updateMissionDto): Promise<Mission> {
     try {
       const mission = await this.courseRepository.findOneMisionAndUpdate(
@@ -146,6 +144,12 @@ export class CoursesService {
     }
   }
 
+  /**
+   * Delete a specific mission in a specifique course by id
+   * @param courseId
+   * @param missionId
+   * @returns Promise <Mission> if mission is found, otherwise null
+   */
   async deleteMission(courseId: string, missionId: string): Promise<Mission> {
     try {
       const mission = await this.courseRepository.findOneMissionAndDelete(courseId, missionId)
@@ -161,31 +165,53 @@ export class CoursesService {
     }
   }
 
+  /**
+   * Create a new mission in a specifique course by id
+   * @param courseId
+   * @param createMissionDto
+   * @returns Promise <Mission> if mission is found, otherwise null
+   */
   async createMission(courseId: string, createMissionDto: CreateMissionDto): Promise<Mission> {
     const mission = await this.courseRepository.createMission(courseId, createMissionDto)
     return mission
   }
 
-  //levels:
-
-  async findAllLevels(id: string, missionId: string): Promise<Level[]> {
-    if (!checkIfValidObjectId(id)) {
+  /**
+   * Find all levels in a specifique course by id
+   * @param courseId
+   * @param missionId
+   * @returns Promise <Levels[]> if levels are found, otherwise empty array
+   */
+  async findAllLevels(courseId: string, missionId: string): Promise<Level[]> {
+    if (!checkIfValidObjectId(courseId)) {
       throw new BadRequestException('Invalid course id')
     }
-    const levels = await this.courseRepository.findAllLevels(id, missionId)
+    const levels = await this.courseRepository.findAllLevels(courseId, missionId)
     return levels
   }
 
-  //create level
-  async createLevel(id: string, missionId: string, LevelDto: CreateLevelDto): Promise<Level> {
-    const level = await this.courseRepository.createLevel(id, missionId, LevelDto)
+  /**
+   * Create a new level in a specifique course by id
+   * @param courseId
+   * @param missionId
+   * @param createLevelDto
+   * @returns Promise <Level> if level is found, otherwise null
+   */
+  async createLevel(courseId: string, missionId: string, LevelDto: CreateLevelDto): Promise<Level> {
+    const level = await this.courseRepository.createLevel(courseId, missionId, LevelDto)
     return level
   }
 
-  //find level by id
-  async findLevelById(id: string, missionId: string, levelId: string): Promise<Level> {
+  /**
+   * Find a specific level in a specifique course by id
+   * @param courseId
+   * @param missionId
+   * @param levelId
+   * @returns Promise <Level> if level is found, otherwise null
+   */
+  async findLevelById(courseId: string, missionId: string, levelId: string): Promise<Level> {
     try {
-      const level = await this.courseRepository.findOneLevel(id, missionId, levelId)
+      const level = await this.courseRepository.findOneLevel(courseId, missionId, levelId)
       return level
     } catch (error) {
       // if error type is from mongodb
@@ -198,16 +224,23 @@ export class CoursesService {
     }
   }
 
-  //update level by id
+  /**
+   * Update a specific level in a specifique course by id
+   * @param courseId
+   * @param missionId
+   * @param levelId
+   * @param updateLevelDto
+   * @returns Promise <Level> if level is found, otherwise null
+   */
   async updateLevel(
-    id: string,
+    courseId: string,
     missionId: string,
     levelId: string,
     LevelDto: CreateLevelDto
   ): Promise<Level> {
     try {
       const level = await this.courseRepository.findOneLevelAndUpdate(
-        id,
+        courseId,
         missionId,
         levelId,
         LevelDto
@@ -224,8 +257,13 @@ export class CoursesService {
     }
   }
 
-  //delete level by id
-
+  /**
+   * Delete a specific level in a specifique course by id
+   * @param courseId
+   * @param missionId
+   * @param levelId
+   * @returns Promise <Level> if level is found, otherwise null
+   */
   async deleteLevel(id: string, missionId: string, levelId: string): Promise<Level> {
     try {
       const level = await this.courseRepository.findOneLevelAndDelete(id, missionId, levelId)

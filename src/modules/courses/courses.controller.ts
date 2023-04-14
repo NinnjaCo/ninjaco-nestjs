@@ -27,6 +27,7 @@ export class CoursesController {
   findAll(): Promise<Course[]> {
     return this.coursesService.findAll()
   }
+
   @ApiGlobalResponse(Course, {
     description: 'Get course by id',
   })

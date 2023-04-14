@@ -1,4 +1,5 @@
 import { IsArray, IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
+
 export class UpdateLevelDto {
   @IsOptional()
   @IsNumber()

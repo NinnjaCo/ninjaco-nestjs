@@ -29,6 +29,4 @@ export class CreateCourseDto {
   @IsString()
   @IsNotEmpty()
   type: string
-
-  missions: Mission[]
 }

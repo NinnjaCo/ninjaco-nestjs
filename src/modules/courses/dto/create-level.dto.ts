@@ -1,4 +1,5 @@
 import { IsArray, IsNotEmpty, IsNumber } from 'class-validator'
+
 export class CreateLevelDto {
   @IsNumber()
   @IsNotEmpty()
