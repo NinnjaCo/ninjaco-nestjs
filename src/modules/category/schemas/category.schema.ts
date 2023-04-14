@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { BaseEntity } from 'database/base.entity'
 import { HydratedDocument } from 'mongoose'
-import { Level } from './level.schema'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type CategorieDocument = HydratedDocument<Categorie>
