@@ -1,8 +1,8 @@
-import { CreateGameDto } from './schemas/dto/create-game.dto'
+import { CreateGameDto } from './dto/create-game.dto'
 import { Game } from './schemas/game.schema'
 import { GamesRepository } from './games.repository'
 import { Injectable } from '@nestjs/common'
-import { UpdateGameDto } from './schemas/dto/update-game.dto'
+import { UpdateGameDto } from './dto/update-game.dto'
 
 @Injectable()
 export class GamesService {
