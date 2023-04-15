@@ -235,12 +235,17 @@ export class AuthService {
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<boolean> {
     const user = await this.usersService.findOne(resetPasswordDto.userId)
 
+    console.log(resetPasswordDto)
+
     if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
     const tokenMatches = await isHashMatched(resetPasswordDto.token, user.resetPasswordToken)
     if (!tokenMatches) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
 
-    const password = await hashData(resetPasswordDto.password)
-    await this.usersService.update(user._id.toString(), { password, resetPasswordToken: null })
+    // the usersService will hash the password
+    await this.usersService.update(user._id.toString(), {
+      password: resetPasswordDto.password,
+      resetPasswordToken: null,
+    })
 
     return true
   }
