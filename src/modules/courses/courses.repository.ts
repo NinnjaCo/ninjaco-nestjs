@@ -24,6 +24,8 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
 
   async createMission(courseId: string, missionDto: CreateMissionDto): Promise<Mission> {
     const mission = new this.missionModel(missionDto)
+    mission.createdAt = new Date().toISOString()
+    mission.updatedAt = new Date().toISOString()
 
     const course = await this.courseModel.findOne({ _id: courseId })
     course.missions.push(mission)
@@ -98,6 +100,8 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   //create level
   async createLevel(courseId: string, missionId: string, levelDto: CreateLevelDto): Promise<Level> {
     const level = new this.levelModel(levelDto)
+    level.createdAt = new Date().toISOString()
+    level.updatedAt = new Date().toISOString()
 
     // find the mission using findoneMission function
     const updatedMission = await this.findOneMission(courseId, missionId)
