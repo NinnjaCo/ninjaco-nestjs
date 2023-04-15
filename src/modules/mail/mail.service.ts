@@ -6,11 +6,19 @@ import { User } from 'modules/users/schemas/user.schema'
 import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
 @Injectable()
 export class MailService {
-  private readonly APP_URL
+  private readonly APP_URL: string
   constructor(private mailerService: MailerService, private configService: ConfigService) {
     this.APP_URL = this.configService.get('APP_URL')
   }
 
+  /**
+   * Sends a forgot password email to the user
+   * @param user
+   * @param token
+   * @returns {Promise<boolean>}
+   * @memberof MailService
+   * @description This method is called from the auth.service.ts to send a forgot password email to the user
+   */
   async sendForgotPasswordMail(user: User, token: string) {
     const url = `${this.APP_URL}/auth/reset-password/${token}`
     try {
@@ -21,13 +29,6 @@ export class MailService {
         context: {
           url,
         },
-        attachments: [
-          {
-            filename: 'logo.svg',
-            path: __dirname + '/templates/logo.svg',
-            cid: 'logo',
-          },
-        ],
       })
       return true
     } catch (error) {
@@ -36,6 +37,14 @@ export class MailService {
     }
   }
 
+  /**
+   * Sends a verify email to the user
+   * @param user
+   * @param token
+   * @returns {Promise<boolean>}
+   * @memberof MailService
+   * @description This method is called from the auth.service.ts to send a verify email to the user
+   */
   async sendVerifyEmail(user: User, token: string) {
     const url = `${this.APP_URL}/auth/verify-email/${token}`
     try {
@@ -46,13 +55,6 @@ export class MailService {
         context: {
           url,
         },
-        attachments: [
-          {
-            filename: 'logo.svg',
-            path: __dirname + '/templates/logo.svg',
-            cid: 'logo',
-          },
-        ],
       })
       return true
     } catch (error) {
@@ -61,6 +63,14 @@ export class MailService {
     }
   }
 
+  /**
+   * Retrieve the template name and subject from the email type
+   * @param emailType
+   * @private
+   * @returns {templateName: string, subject: string}
+   * @memberof MailService
+   * @description This method is called from the sendEmail method to retrieve the template name and subject from the email type
+   */
   private getTempalteNameFromEmailType(emailType: EmailEnum) {
     switch (emailType) {
       case EmailEnum.NOTIFY:
@@ -81,6 +91,13 @@ export class MailService {
     }
   }
 
+  /**
+   * Sends an email to the user
+   * @param sendDto
+   * @returns {Promise<boolean>}
+   * @memberof MailService
+   * @description This method is called from the mail.controller.ts to send an email to the user, usually from the admin
+   */
   async sendEmail(sendDto: sendEmailDto) {
     const tempalteNameAndSubject = this.getTempalteNameFromEmailType(sendDto.emailType)
     try {
@@ -89,13 +106,6 @@ export class MailService {
         subject: tempalteNameAndSubject.subject,
         template: tempalteNameAndSubject.templateName,
         context: { email: sendDto.receiverEmail, message: sendDto.message },
-        attachments: [
-          {
-            filename: 'logo.svg',
-            path: __dirname + '/templates/logo.svg',
-            cid: 'logo',
-          },
-        ],
       })
       return true
     } catch (error) {

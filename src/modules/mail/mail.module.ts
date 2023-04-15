@@ -14,8 +14,8 @@ import { join } from 'path'
         transport: {
           host: configService.get('MAIL_HOST'),
           port: configService.get('MAIL_PORT'),
-          ignoreTLS: configService.get('MAIL_IGNORE_TLS'),
-          secure: configService.get('MAIL_SECURE'),
+          // ignoreTLS: configService.get('MAIL_IGNORE_TLS'),
+          // secure: configService.get('MAIL_SECURE'),
           auth: {
             user: configService.get('MAIL_USERNAME') || '',
             pass: configService.get('MAIL_PASSWORD') || '',

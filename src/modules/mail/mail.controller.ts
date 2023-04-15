@@ -1,4 +1,5 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
+import { ApiTags } from '@nestjs/swagger'
 import { Body, Post } from '@nestjs/common'
 import { BooleanSchema } from 'swagger/swagger-primitive-type'
 import { Controller } from '@nestjs/common'
@@ -7,6 +8,7 @@ import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
 
+@ApiTags('Emails')
 @Controller('send-email')
 export class MailController {
   constructor(private readonly mailService: MailService) {}

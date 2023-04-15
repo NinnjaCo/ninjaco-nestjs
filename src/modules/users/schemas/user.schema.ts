@@ -6,7 +6,7 @@ import { Role } from 'modules/roles/schemas/role.schema'
 
 export type UserDocument = HydratedDocument<User>
 
-@Schema({ collection: 'users' })
+@Schema({ collection: 'users', timestamps: true })
 export class User extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
@@ -51,6 +51,10 @@ export class User extends BaseEntity {
   @ApiProperty()
   @Prop({ default: 0 })
   points: number
+
+  @ApiProperty()
+  @Prop()
+  profilePicture: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
