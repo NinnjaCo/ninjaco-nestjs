@@ -6,7 +6,7 @@ import { User } from 'modules/users/schemas/user.schema'
 import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
 @Injectable()
 export class MailService {
-  private readonly APP_URL
+  private readonly APP_URL: string
   constructor(private mailerService: MailerService, private configService: ConfigService) {
     this.APP_URL = this.configService.get('APP_URL')
   }
@@ -29,13 +29,6 @@ export class MailService {
         context: {
           url,
         },
-        attachments: [
-          {
-            filename: 'logo.svg',
-            path: __dirname + '/templates/logo.svg',
-            cid: 'logo',
-          },
-        ],
       })
       return true
     } catch (error) {
@@ -62,13 +55,6 @@ export class MailService {
         context: {
           url,
         },
-        attachments: [
-          {
-            filename: 'logo.svg',
-            path: __dirname + '/templates/logo.svg',
-            cid: 'logo',
-          },
-        ],
       })
       return true
     } catch (error) {
@@ -120,13 +106,6 @@ export class MailService {
         subject: tempalteNameAndSubject.subject,
         template: tempalteNameAndSubject.templateName,
         context: { email: sendDto.receiverEmail, message: sendDto.message },
-        attachments: [
-          {
-            filename: 'logo.svg',
-            path: __dirname + '/templates/logo.svg',
-            cid: 'logo',
-          },
-        ],
       })
       return true
     } catch (error) {
