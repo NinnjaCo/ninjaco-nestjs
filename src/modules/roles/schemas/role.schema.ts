@@ -6,7 +6,7 @@ import { RoleEnum } from '../roles.enum'
 
 export type RoleDocument = HydratedDocument<Role>
 
-@Schema({ collection: 'roles' })
+@Schema({ collection: 'roles', timestamps: true })
 export class Role extends BaseEntity {
   @ApiProperty({ enum: RoleEnum })
   @Prop({ required: true })

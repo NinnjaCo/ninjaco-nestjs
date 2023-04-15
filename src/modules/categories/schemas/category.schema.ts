@@ -5,7 +5,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type CategoryDocument = HydratedDocument<Category>
 
-@Schema({ collection: 'categories' })
+@Schema({ collection: 'categories', timestamps: true })
 export class Category extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true, unique: true })

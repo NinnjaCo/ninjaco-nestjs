@@ -60,7 +60,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     const course = await this.courseModel.findOne({ _id: courseId })
     course.missions = course.missions.map((mission) => {
       if (mission._id.toString() === missionId) {
-        mission = { ...mission, ...cleanMissionDto }
+        mission = {
+          ...mission,
+          ...cleanMissionDto,
+          createdAt: mission.createdAt,
+          updatedAt: new Date().toISOString(),
+        }
       }
       return mission
     }) as unknown as [Mission]
@@ -144,7 +149,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     //update the level with levelId inside the mission
     updatedMission.levels = updatedMission.levels.map((level) => {
       if (level._id.toString() === levelId) {
-        return { ...level, ...clearLevelDto }
+        return {
+          ...level,
+          ...clearLevelDto,
+          createdAt: level.createdAt,
+          updatedAt: new Date().toISOString(),
+        }
       }
       return level
     }) as unknown as [Level]
