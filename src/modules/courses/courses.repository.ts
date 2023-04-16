@@ -24,6 +24,8 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
 
   async createMission(courseId: string, missionDto: CreateMissionDto): Promise<Mission> {
     const mission = new this.missionModel(missionDto)
+    mission.createdAt = new Date().toISOString()
+    mission.updatedAt = new Date().toISOString()
 
     const course = await this.courseModel.findOne({ _id: courseId })
     course.missions.push(mission)
@@ -60,7 +62,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     const course = await this.courseModel.findOne({ _id: courseId })
     course.missions = course.missions.map((mission) => {
       if (mission._id.toString() === missionId) {
-        mission = { ...mission, ...cleanMissionDto }
+        mission = {
+          ...mission,
+          ...cleanMissionDto,
+          createdAt: mission.createdAt,
+          updatedAt: new Date().toISOString(),
+        }
       }
       return mission
     }) as unknown as [Mission]
@@ -93,6 +100,8 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   //create level
   async createLevel(courseId: string, missionId: string, levelDto: CreateLevelDto): Promise<Level> {
     const level = new this.levelModel(levelDto)
+    level.createdAt = new Date().toISOString()
+    level.updatedAt = new Date().toISOString()
 
     // find the mission using findoneMission function
     const updatedMission = await this.findOneMission(courseId, missionId)
@@ -144,7 +153,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     //update the level with levelId inside the mission
     updatedMission.levels = updatedMission.levels.map((level) => {
       if (level._id.toString() === levelId) {
-        return { ...level, ...clearLevelDto }
+        return {
+          ...level,
+          ...clearLevelDto,
+          createdAt: level.createdAt,
+          updatedAt: new Date().toISOString(),
+        }
       }
       return level
     }) as unknown as [Level]

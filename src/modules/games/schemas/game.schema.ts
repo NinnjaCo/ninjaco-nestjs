@@ -5,7 +5,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type GameDocument = HydratedDocument<Game>
 
-@Schema({ collection: 'games' })
+@Schema({ collection: 'games', timestamps: true })
 export class Game extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })

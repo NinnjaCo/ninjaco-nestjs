@@ -11,7 +11,7 @@ export enum CourseType {
   'HTML' = 'HTML',
 }
 
-@Schema({ collection: 'courses' })
+@Schema({ collection: 'courses', timestamps: true })
 export class Course extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })

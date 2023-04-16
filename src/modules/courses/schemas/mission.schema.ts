@@ -5,7 +5,7 @@ import { Level } from './level.schema'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type MissionDocument = HydratedDocument<Mission>
-@Schema({ collection: 'missions' })
+@Schema({ collection: 'missions', timestamps: true })
 export class Mission extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
