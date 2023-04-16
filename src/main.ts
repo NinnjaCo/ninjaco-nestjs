@@ -107,7 +107,7 @@ async function bootstrap() {
   SwaggerConfig(app, '1.0.0')
 
   // Main entry point
-  const port = 3200
+  const port = process.env.PORT || 3200
   await app.listen(port)
   Logger.log(`🚀 Application is running on: http://localhost:${port}/api`, 'Bootstrap')
 }
