@@ -1,4 +1,4 @@
-import { User } from 'modules/users/schemas/user.schema'
+import { User } from '../../users/schemas/user.schema'
 
 export type Tokens = {
   access_token: string

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { User } from 'modules/users/schemas/user.schema'
+import { User } from '../../users/schemas/user.schema'
 
 // Use Class instead of Interface because of the @ApiProperty decorator
 

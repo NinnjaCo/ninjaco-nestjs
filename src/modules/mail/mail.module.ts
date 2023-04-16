@@ -4,7 +4,7 @@ import { MailController } from './mail.controller'
 import { MailService } from './mail.service'
 import { MailerModule } from '@nestjs-modules/mailer'
 import { Module } from '@nestjs/common'
-import { UsersModule } from 'modules/users/users.module'
+import { UsersModule } from '../users/users.module'
 import { join } from 'path'
 
 @Module({

@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { CreateUsersDto } from './dto/create-user.dto'
 import { MongoServerError } from 'mongodb'
-import { RoleEnum } from 'modules/roles/roles.enum'
-import { RolesService } from 'modules/roles/roles.service'
+import { RoleEnum } from '../roles/roles.enum'
+import { RolesService } from '../roles/roles.service'
 import { User } from './schemas/user.schema'
 import { UsersRepository } from './users.repository'
-import { checkIfValidObjectId, handleMongoDuplicateKeyError, hashData } from 'common/shared'
+import { checkIfValidObjectId, handleMongoDuplicateKeyError, hashData } from '../../common/shared'
 
 @Injectable()
 export class UsersService {

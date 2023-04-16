@@ -1,11 +1,11 @@
-import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
+import { ApiGlobalResponse } from '../../common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CreateGameDto } from './dto/create-game.dto'
 import { Game } from './schemas/game.schema'
 import { GamesService } from './games.service'
-import { RoleEnum } from 'modules/roles/roles.enum'
-import { Roles } from 'modules/roles/roles.decorator'
+import { RoleEnum } from '../roles/roles.enum'
+import { Roles } from '../roles/roles.decorator'
 import { UpdateGameDto } from './dto/update-game.dto'
 
 @ApiTags('Games')
