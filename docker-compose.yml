@@ -53,8 +53,8 @@ services:
       - ${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}
       - ${MINIO_API_PORT}:${MINIO_API_PORT}
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: ${STACKHERO_MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${STACKHERO_MINIO_SECRET_KEY}
     command: minio server --console-address ":${MINIO_CONSOLE_PORT}" /data
     volumes:
       - miniodata:/data

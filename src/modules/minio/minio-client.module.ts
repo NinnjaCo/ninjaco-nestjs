@@ -6,11 +6,14 @@ import { Module } from '@nestjs/common'
   imports: [
     MinioModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
-        endPoint: configService.get('MINIO_ENDPOINT'),
-        port: parseInt(configService.get('MINIO_API_PORT')),
-        useSSL: false,
-        accessKey: configService.get('MINIO_ROOT_USER'),
-        secretKey: configService.get('MINIO_ROOT_PASSWORD'),
+        endPoint:
+          configService.get('PROVIDER') === 'local'
+            ? configService.get('STACKHERO_MINIO_HOST')
+            : 'https://' + configService.get('STACKHERO_MINIO_HOST'),
+        port: configService.get('PROVIDER') === 'local' ? configService.get('MINIO_API_PORT') : 443,
+        useSSL: configService.get('PROVIDER') === 'local' ? false : true,
+        accessKey: configService.get('STACKHERO_MINIO_ACCESS_KEY'),
+        secretKey: configService.get('STACKHERO_MINIO_SECRET_KEY'),
       }),
       inject: [ConfigService],
     }),
