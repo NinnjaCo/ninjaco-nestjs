@@ -9,6 +9,8 @@ export class MinioClientService {
   private readonly logger = new Logger(MinioClientService.name)
   private readonly baseBucket: string
   private readonly client: MinioClient
+  private readonly minioEndpoint: string
+  private readonly minioPort: number
 
   /**
    * Creates a new MinioClientService instance and sets the bucket policy
@@ -21,6 +23,12 @@ export class MinioClientService {
   constructor(private readonly minio: MinioService, private readonly config: ConfigService) {
     this.baseBucket = this.config.get('BUCKET_NAME')
     this.client = this.minio.client
+    this.minioEndpoint =
+      this.config.get('PROVIDER') === 'local'
+        ? 'http://localhost'
+        : 'https://' + this.config.get('STACKHERO_MINIO_HOST')
+    this.minioPort =
+      this.config.get('PROVIDER') === 'local' ? this.config.get('MINIO_API_PORT') : 443
 
     const policy = {
       Version: '2012-10-17',
@@ -90,10 +98,8 @@ export class MinioClientService {
       if (err) throw new HttpException('Error uploading file' + err, HttpStatus.BAD_REQUEST)
     })
 
-    const minioEndpoint = 'http://localhost'
-    const minioPort = this.config.get('MINIO_API_PORT')
     return {
-      url: `${minioEndpoint}:${minioPort}/${baseBucket}/${filename}`,
+      url: `${this.minioEndpoint}:${this.minioPort}/${baseBucket}/${filename}`,
     }
   }
 

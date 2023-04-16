@@ -9,12 +9,13 @@ const configSchema = Joi.object({
   MONGODB_USERNAME: Joi.string().required(),
   MONGODB_PASSWORD: Joi.string().required(),
 
+  PROVIDER: Joi.string().required().default('local'),
   BUCKET_NAME: Joi.string().required(),
-  MINIO_ENDPOINT: Joi.string().required(),
-  MINIO_CONSOLE_PORT: Joi.number().required().default(9001),
+  STACKHERO_MINIO_HOST: Joi.string().required(),
+  MINIO_CONSOLE_PORT: Joi.number().default(9001),
   MINIO_API_PORT: Joi.number().required().default(9000),
-  MINIO_ROOT_USER: Joi.string().required(),
-  MINIO_ROOT_PASSWORD: Joi.string().required(),
+  STACKHERO_MINIO_ACCESS_KEY: Joi.string().required(),
+  STACKHERO_MINIO_SECRET_KEY: Joi.string().required(),
 
   MAIL_HOST: Joi.string().required(),
   MAIL_PORT: Joi.number().required(),
