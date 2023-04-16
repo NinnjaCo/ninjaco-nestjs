@@ -9,7 +9,7 @@ import { Module } from '@nestjs/common'
         endPoint:
           configService.get('PROVIDER') === 'local'
             ? configService.get('STACKHERO_MINIO_HOST')
-            : 'https://' + configService.get('STACKHERO_MINIO_HOST'),
+            : configService.get('STACKHERO_MINIO_HOST'),
         port: configService.get('PROVIDER') === 'local' ? configService.get('MINIO_API_PORT') : 443,
         useSSL: configService.get('PROVIDER') === 'local' ? false : true,
         accessKey: configService.get('STACKHERO_MINIO_ACCESS_KEY'),
