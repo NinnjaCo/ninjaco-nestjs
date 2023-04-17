@@ -9,7 +9,7 @@ export type LevelManagementDocument = HydratedDocument<LevelManagement>
 export class LevelManagement extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
-  levelId: string
+  levelId: string // levelId from the levels table
 
   @ApiProperty()
   @Prop({ required: true })
@@ -18,6 +18,8 @@ export class LevelManagement extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
   completed: boolean
+
+  // startedAt will be auto generated  (createdAt)
 }
 
 export const LevelManagementSchema = SchemaFactory.createForClass(LevelManagement)
