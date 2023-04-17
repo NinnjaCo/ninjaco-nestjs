@@ -59,6 +59,7 @@ export class GamesController {
   @Post(':id')
   @Public()
   async play(@Body() playDto: PlayGameDto): Promise<GameProgress> {
+    console.log('HELLO')
     return await this.gamesService.play(playDto)
   }
 

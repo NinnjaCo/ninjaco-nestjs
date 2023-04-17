@@ -6,10 +6,14 @@ import { Injectable } from '@nestjs/common'
 import { PlayGameDto } from './dto/play-game.dto'
 import { UpdateGameDto } from './dto/update-game.dto'
 import { UserPlayGame } from './schemas/user-play-game.schema'
+import { UsersPlayGamesRepository } from './user-play-game.repository'
 
 @Injectable()
 export class GamesService {
-  constructor(private readonly gamesRepository: GamesRepository) {}
+  constructor(
+    private readonly gamesRepository: GamesRepository,
+    private readonly usersPlayGamesRepository: UsersPlayGamesRepository
+  ) {}
 
   async create(createDto: CreateGameDto): Promise<Game> {
     const createdGame = await this.gamesRepository.create(createDto)
@@ -44,6 +48,16 @@ export class GamesService {
   }
 
   async getCompletedGames(): Promise<Game[]> {
-    return await this.gamesRepository.find({ isCompleted: true })
+    const games = await this.gamesRepository.find({})
+    const newGames = []
+    games.forEach(async (game) => {
+      const userPlayGame = await this.usersPlayGamesRepository.findOne({ gameId: game._id })
+      if (userPlayGame && userPlayGame.completed) {
+        newGames.push({ ...game.toObject(), completed: true })
+      } else {
+        newGames.push({ ...game.toObject(), completed: false })
+      }
+    })
+    return newGames
   }
 }
