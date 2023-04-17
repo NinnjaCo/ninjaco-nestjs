@@ -6,9 +6,6 @@ export class CreateGameDto {
   @IsString()
   @IsNotEmpty()
   title: string
-  @IsString()
-  @IsNotEmpty()
-  image: string
 
   @ApiProperty()
   @IsString()
