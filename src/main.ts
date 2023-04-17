@@ -78,8 +78,9 @@ async function bootstrap() {
 
   // localhost:3000 is NextJS frontend
   // TODO replace it with list of allowed cros origin from .env
+  const APP_URL = process.env.APP_URL || 'http://localhost:3000'
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: APP_URL,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization, Accept',
     credentials: true,
