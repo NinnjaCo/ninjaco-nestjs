@@ -24,7 +24,7 @@ export class User_enroll_course extends BaseEntity {
   completed: boolean
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ default: [], required: true })
   missions: MissionManagement[]
 }
 
