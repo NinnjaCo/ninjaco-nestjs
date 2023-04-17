@@ -19,7 +19,9 @@ export class MissionManagement extends BaseEntity {
   @ApiProperty()
   levels: LevelManagement[]
 
-  // startedAt will be auto generated  (createdAt)
+  @ApiProperty()
+  @Prop({ required: true })
+  startedAt: string
 }
 
 export const MissionManagementSchema = SchemaFactory.createForClass(MissionManagement)

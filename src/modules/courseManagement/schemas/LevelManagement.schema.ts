@@ -19,7 +19,9 @@ export class LevelManagement extends BaseEntity {
   @Prop({ required: true })
   completed: boolean
 
-  // startedAt will be auto generated  (createdAt)
+  @ApiProperty()
+  @Prop({ required: true })
+  startedAt: string
 }
 
 export const LevelManagementSchema = SchemaFactory.createForClass(LevelManagement)
