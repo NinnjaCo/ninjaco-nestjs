@@ -27,10 +27,10 @@ import { validateConfig } from '../config'
         return validateConfig(config)
       },
     }),
-    // ratelimits each IP to 50 requests per minute for a single endpoint
+    // ratelimits each IP to 120 requests per minute for a single endpoint
     ThrottlerModule.forRoot({
       ttl: 60, // 60 seconds
-      limit: 50, // 50 requests
+      limit: 120, // 120 requests
     }),
     MailModule,
     MinioClientModule,

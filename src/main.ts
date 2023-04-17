@@ -78,8 +78,9 @@ async function bootstrap() {
 
   // localhost:3000 is NextJS frontend
   // TODO replace it with list of allowed cros origin from .env
+  const APP_URL = process.env.APP_URL || 'http://localhost:3000'
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: APP_URL,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization, Accept',
     credentials: true,
@@ -90,7 +91,7 @@ async function bootstrap() {
   // limit 1 ip for 100 request under 15 minutes
   // this is for preventing brute force attack
   // routes with @Throttle() decorator will be ignored
-  const maxAllowedRequest = 100
+  const maxAllowedRequest = 1000
   const durationForMaxAllowedRequest = 15 * 60 * 1000
   app.use(
     rateLimit({
@@ -107,7 +108,7 @@ async function bootstrap() {
   SwaggerConfig(app, '1.0.0')
 
   // Main entry point
-  const port = 3200
+  const port = process.env.PORT || 3200
   await app.listen(port)
   Logger.log(`🚀 Application is running on: http://localhost:${port}/api`, 'Bootstrap')
 }

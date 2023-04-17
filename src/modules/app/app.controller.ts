@@ -12,7 +12,7 @@ export class AppController {
   @ApiGlobalResponse(StringSchema, {
     description: 'OK',
   })
-  @Throttle(100, 60) // 100 requests per minute
+  @Throttle(200, 60) // 100 requests per minute
   @Get('health')
   health() {
     return 'OK'

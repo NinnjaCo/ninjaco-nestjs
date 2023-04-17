@@ -22,7 +22,7 @@ import { join } from 'path'
           },
         },
         defaults: {
-          from: '"NinjaCo" <noreply@ninjaco.com>',
+          from: '"NinjaCo" <noreply@ninja-co.live>',
         },
         template: {
           dir: join(__dirname, 'templates'),
