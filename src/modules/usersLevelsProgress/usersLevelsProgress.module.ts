@@ -11,4 +11,4 @@ import { UsersLevelsProgressService } from './usersLevelsProgress.service'
   providers: [UsersLevelsProgressService, UsersLevelsProgressRepository],
   exports: [UsersLevelsProgressService],
 })
-export class CoursesModule {}
+export class UserLevelProgressModule {}
