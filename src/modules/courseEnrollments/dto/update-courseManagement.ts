@@ -1,34 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { Course } from 'modules/courses/schemas/course.schema'
+import { IsBoolean, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator'
+import { User } from 'modules/users/schemas/user.schema'
 
 export class UpdateCourseMangementDto {
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  userId: string
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  courseId: string
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  enrolledAt: string
-
   @ApiProperty({ required: false })
   @IsOptional()
   @IsBoolean()
   @IsNotEmpty()
   completed: boolean
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  missionId: string
 }

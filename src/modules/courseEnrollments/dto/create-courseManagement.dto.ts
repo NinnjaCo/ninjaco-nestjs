@@ -1,16 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator'
+import { Course } from 'modules/courses/schemas/course.schema'
+import { IsBoolean, IsNotEmpty, IsObject, IsString } from 'class-validator'
+import { User } from 'modules/users/schemas/user.schema'
 
 export class CreateCourseManagementDto {
   @ApiProperty()
-  @IsString()
+  @IsObject()
   @IsNotEmpty()
-  userId: string
+  user: User
 
   @ApiProperty()
-  @IsString()
+  @IsObject()
   @IsNotEmpty()
-  courseId: string
+  course: Course
 
   @ApiProperty()
   @IsString()
