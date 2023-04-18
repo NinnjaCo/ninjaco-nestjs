@@ -3,10 +3,8 @@ import { ApiTags } from '@nestjs/swagger'
 import { ArraySchema } from 'swagger/swagger-primitive-type'
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CourseEnrollment } from './schemas/courseEnrollment.schema'
-import { CourseManagementService } from './courseManagement.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
-import { LevelManagement } from './schemas/LevelManagement.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
@@ -16,7 +14,7 @@ import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 @ApiTags('Course-Enrollements')
 @Controller('course-enrollements')
 export class CourseEnrollmentsController {
-  constructor(private readonly courseManagementService: CourseManagementService) {}
+  constructor(private readonly courseManagementService: CourseEnrollment) {}
   @ApiGlobalResponse(ArraySchema, {
     description: 'Get all courses user enrolled in  ',
     isArray: true,
