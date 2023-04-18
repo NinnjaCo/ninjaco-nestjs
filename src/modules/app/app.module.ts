@@ -8,6 +8,7 @@ import { CoursesModule } from '../courses/courses.module'
 import { DatabaseModule } from '../../database/database.module'
 import { FileUploadModule } from '../files/file-upload.module'
 import { GamesModule } from '../games/games.module'
+import { LevelProgressController } from 'modules/courseManagement/levelProgress.controller'
 import { LoggerMiddleware } from '../../common/middleware/logger.middleware'
 import { MailModule } from '../mail/mail.module'
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
@@ -42,6 +43,7 @@ import { validateConfig } from '../config'
     CoursesModule,
     CategoriesModule,
     GamesModule,
+    LevelProgressController,
   ],
   controllers: [AppController],
   providers: [
