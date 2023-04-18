@@ -1,3 +1,4 @@
+import { Course } from 'modules/courses/schemas/course.schema'
 import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
@@ -10,9 +11,19 @@ export class CourseEnrollmentsService {
     private readonly coursesService: CoursesService
   ) {}
 
-  //   async findAll(): Promise<CourseEnrollment[]> {
-  //     //return the all the courses using the findAll function in the course Service
-  //     const courses = await this.coursesService.findAll()
-  //     return await this.courseEnrollmentRepository.findCourseMangement(courses)
-  //   }
+  async findAllCourses(userId: string): Promise<Course[] | CourseEnrollment[]> {
+    //return the all the courses using the findAll function in the course Service
+    const courses = await this.coursesService.findAll()
+    const result = courses.map((course) => {
+      const CourseEnrollment = this.courseEnrollmentRepository.findOne({
+        courseId: course._id,
+        userId,
+      })
+      if (CourseEnrollment) {
+        return CourseEnrollment
+      }
+      return course
+    }) as unknown as Course[]
+    return result
+  }
 }
