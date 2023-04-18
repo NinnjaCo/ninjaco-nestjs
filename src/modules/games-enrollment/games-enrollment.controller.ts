@@ -7,12 +7,12 @@ import { GamesEnrollmentService } from './games-enrollment.service'
 import { UpdateGameProgressDto } from './dto/update-game-progress.dto'
 
 @ApiTags('Games Enrollment')
-@Controller('/games-enrollment')
+@Controller('games-enrollment')
 export class GamesEnrollmentController {
   constructor(private readonly gamesEnrollmentService: GamesEnrollmentService) {}
 
   @ApiGlobalResponse(GameProgress, {
-    description: 'Get game progress by user ID',
+    description: 'Create new game progress',
   })
   @Post()
   async createGameProgress(@Body() playDto: CreateGameProgressDto): Promise<GameProgress> {
@@ -27,6 +27,9 @@ export class GamesEnrollmentController {
     return await this.gamesEnrollmentService.getCompletedGames()
   }
 
+  @ApiGlobalResponse(GameProgress, {
+    description: 'Update game progress',
+  })
   @Put(':id')
   async updateGameProgress(@Body() updateDto: UpdateGameProgressDto): Promise<GameProgress> {
     return await this.gamesEnrollmentService.updateGameProgress(updateDto)
