@@ -5,8 +5,8 @@ import { Controller, Delete, Get, Param } from '@nestjs/common'
 import { Course } from 'modules/courses/schemas/course.schema'
 import { LevelProgress } from './schemas/LevelProgress.schema'
 import { LevelProgressService } from './levelProgress.service'
-import { Roles } from 'modules/roles/roles.decorator'
 import { RoleEnum } from 'modules/roles/roles.enum'
+import { Roles } from 'modules/roles/roles.decorator'
 
 @ApiTags('LeveLProgress')
 @Controller('levelProgress')
