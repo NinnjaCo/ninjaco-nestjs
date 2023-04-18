@@ -11,4 +11,25 @@ export class UsersPlayGamesRepository extends EntityRepository<UserPlayGameDocum
   ) {
     super(userPlayGameModel)
   }
+  async createGameProgressEntry({
+    game,
+    user,
+    gameProgressId,
+    completed,
+    startedAt,
+  }): Promise<UserPlayGame> {
+    return (
+      await (
+        await (
+          await this.userPlayGameModel.create({
+            game,
+            user,
+            gameProgressId,
+            completed,
+            startedAt,
+          })
+        ).populate('game')
+      ).populate('user')
+    ).populate('gameProgress')
+  }
 }
