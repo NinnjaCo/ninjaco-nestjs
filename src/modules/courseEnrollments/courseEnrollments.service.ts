@@ -15,6 +15,7 @@ export class CourseEnrollmentsService {
   async findAllCourses(userId: string): Promise<Course[] | CourseEnrollment[]> {
     //return the all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
+    console.log(courses)
     const result = courses.map((course) => {
       const CourseEnrollment = this.courseEnrollmentRepository.findOne({
         courseId: course._id,
@@ -24,7 +25,7 @@ export class CourseEnrollmentsService {
         return CourseEnrollment
       }
       return course
-    }) as unknown as Course[]
+    }) as unknown as Course[] | CourseEnrollment[]
     return result
   }
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
