@@ -7,7 +7,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type MissionManagementDocument = HydratedDocument<MissionManagement>
 
-@Schema({ collection: 'MissionManagement', timestamps: true })
+@Schema({ collection: 'missionManagements', timestamps: true })
 export class MissionManagement extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true, type: 'ObjectId', ref: Mission.name })

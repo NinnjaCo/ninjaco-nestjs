@@ -7,7 +7,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type LevelManagementDocument = HydratedDocument<LevelManagement>
 
-@Schema({ collection: 'LevelManagement', timestamps: true })
+@Schema({ collection: 'levelManagements', timestamps: true })
 export class LevelManagement extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true, type: 'ObjectId', ref: Level.name })
