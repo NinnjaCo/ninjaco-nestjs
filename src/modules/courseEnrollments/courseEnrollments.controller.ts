@@ -62,9 +62,14 @@ export class CourseEnrollmentsController {
   @Post(':courseId')
   create(
     @Param('courseId') courseId: string,
-    @Body() courseMnagementDto: CreateCourseManagementDto
+    @Body() courseMnagementDto: CreateCourseManagementDto,
+    userId: string
   ): Promise<CourseEnrollment> {
-    return this.CourseEnrollmentService.createCourseEnrollement(courseMnagementDto)
+    return this.CourseEnrollmentService.createCourseEnrollement(
+      courseMnagementDto,
+      userId,
+      courseId
+    )
   }
 
   //   // mission management crud
