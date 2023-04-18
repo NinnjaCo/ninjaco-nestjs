@@ -40,7 +40,7 @@ export class CourseEnrollmentsController {
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<CourseEnrollment> {
-    return this.courseManagementService.deleteCourse(id)
+    return this.CourseEnrollmentService.deleteCourse(id)
   }
 
   // @ApiGlobalResponse(CourseEnrollment, {
