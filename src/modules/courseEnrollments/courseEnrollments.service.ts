@@ -30,7 +30,7 @@ export class CourseEnrollmentsService {
     }) as unknown as Course[] | CourseEnrollment[]
     return result
   }
-  async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto, courseId: string) {
+  async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
     // user from the courseManagmentDto
     const { userId } = courseMnagementDto
     // get the user Object from the user service
