@@ -11,7 +11,7 @@ export class CourseEnrollmentsService {
   constructor(
     private readonly courseEnrollmentRepository: CourseEnrollmentsRepository,
     private readonly coursesService: CoursesService,
-    private readonly usersService: UsersService
+    private readonly userService: UsersService
   ) {}
 
   async findAllCourses(userId: string): Promise<Course[] | CourseEnrollment[]> {
@@ -30,17 +30,12 @@ export class CourseEnrollmentsService {
     }) as unknown as Course[] | CourseEnrollment[]
     return result
   }
-  async createCourseEnrollement(
-    courseMnagementDto: CreateCourseManagementDto,
-    userId: string,
-    courseId: string
-  ) {
-    // find the user and course
-    const course = await this.coursesService.findCourseById(courseId)
-    // find user
-    const user = await this.usersService.findOne(userId)
-    courseMnagementDto.course = course
-    courseMnagementDto.user = user
+  async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto, courseId: string) {
+    // user from the courseManagmentDto
+    const { userId } = courseMnagementDto
+    // get the user Object from the user service
+    const user = await this.userService.findOne(userId)
+
     return this.courseEnrollmentRepository.create(courseMnagementDto)
   }
 

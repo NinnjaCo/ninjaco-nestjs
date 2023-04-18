@@ -7,6 +7,7 @@ import { LevelManagement, LevelManagementSchema } from './schemas/LevelManagemen
 import { MissionManagement, MissionManagementSchema } from './schemas/MissionManagement.schema'
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
+import { UsersModule } from 'modules/users/users.module'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { MongooseModule } from '@nestjs/mongoose'
     MongooseModule.forFeature([{ name: MissionManagement.name, schema: MissionManagementSchema }]),
     MongooseModule.forFeature([{ name: LevelManagement.name, schema: LevelManagementSchema }]),
     CoursesModule,
+    UsersModule,
   ],
   controllers: [CourseEnrollmentsController],
   providers: [CourseEnrollmentsService, CourseEnrollmentsRepository],
