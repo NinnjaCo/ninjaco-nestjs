@@ -4,6 +4,7 @@ import { AtGuard } from '../auth/guards/at.guard'
 import { AuthModule } from '../auth/auth.module'
 import { CategoriesModule } from '../categories/categories.module'
 import { ConfigModule } from '@nestjs/config'
+import { CoursesEnrollmentModule } from 'modules/courseEnrollments/courseEnrollments.module'
 import { CoursesModule } from '../courses/courses.module'
 import { DatabaseModule } from '../../database/database.module'
 import { FileUploadModule } from '../files/file-upload.module'
@@ -43,8 +44,8 @@ import { validateConfig } from '../config'
     CoursesModule,
     CategoriesModule,
     GamesModule,
-    CoursesModule,
     UserLevelProgressModule,
+    CoursesEnrollmentModule,
   ],
   controllers: [AppController],
   providers: [
