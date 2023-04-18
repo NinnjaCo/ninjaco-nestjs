@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsBoolean, IsNotEmpty, IsString } from 'class-validator'
+import { Mission } from 'modules/courses/schemas/mission.schema'
 
 export class CreateMissionManagementDto {
   @ApiProperty()
-  @IsString()
   @IsNotEmpty()
-  missionId: string // missionId from the missions table
+  mission: Mission
 
   @ApiProperty()
   @IsBoolean()
