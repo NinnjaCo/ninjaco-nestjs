@@ -6,12 +6,10 @@ import { User } from 'modules/users/schemas/user.schema'
 export class CreateCourseManagementDto {
   @ApiProperty()
   @IsObject()
-  @IsNotEmpty()
   user: User
 
   @ApiProperty()
   @IsObject()
-  @IsNotEmpty()
   course: Course
 
   @ApiProperty()
