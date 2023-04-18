@@ -1,7 +1,7 @@
 import { Course, CourseDocument } from './schemas/course.schema'
 import { CreateLevelDto } from './dto/create-level.dto'
 import { CreateMissionDto } from './dto/create-mission.dto'
-import { EntityRepository } from 'database/entity.repository'
+import { EntityRepository } from '../../database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { UpdateMissionDto } from './dto/update-mission.dto'

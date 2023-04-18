@@ -1,5 +1,5 @@
 import { Category, CategoryDocument } from './schemas/category.schema'
-import { EntityRepository } from 'database/entity.repository'
+import { EntityRepository } from '../../database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { Model } from 'mongoose'

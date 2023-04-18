@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 describe('AppController', () => {
   let app: INestApplication
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile()
@@ -16,10 +16,11 @@ describe('AppController', () => {
   })
 
   afterAll(async () => {
-    await app.close()
+    await Promise.all([app.close()])
   })
 
-  it('/health (GET)', () => {
-    return request(app.getHttpServer()).get('/health').expect(200)
+  it('/health (GET)', async () => {
+    const response = await request(app.getHttpServer()).get('/health')
+    expect(response.status).toBe(200)
   })
 })
