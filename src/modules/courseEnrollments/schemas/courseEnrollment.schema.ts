@@ -8,7 +8,7 @@ import { User } from 'modules/users/schemas/user.schema'
 
 export type CourseEnrollmentDocument = HydratedDocument<CourseEnrollment>
 
-@Schema({ collection: 'User_enroll_course', timestamps: true })
+@Schema({ collection: 'courseEnrollments', timestamps: true })
 export class CourseEnrollment extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true, type: 'ObjectId', ref: User.name })
