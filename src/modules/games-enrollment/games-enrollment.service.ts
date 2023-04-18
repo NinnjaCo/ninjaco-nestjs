@@ -1,9 +1,9 @@
+import { CreateGameProgressDto } from './dto/create-game-progress.dto'
 import { GameProgress } from './schemas/game-progress.schema'
 import { GamesProgessRepository } from './games-progress.repository'
 import { GamesRepository } from 'modules/games/games.repository'
 import { Injectable } from '@nestjs/common'
-import { PlayGameDto } from './dto/play-game.dto'
-import { UpdatePlayGameDto } from './dto/update-play-game.dto'
+import { UpdateGameProgressDto } from './dto/update-game-progress.dto'
 import { UserPlayGame } from './schemas/user-play-game.schema'
 import { UsersPlayGamesRepository } from './users-play-games.repository'
 
@@ -15,7 +15,7 @@ export class GamesEnrollmentService {
     private readonly gamesRepository: GamesRepository
   ) {}
 
-  async userStartGame(playDto: PlayGameDto): Promise<GameProgress> {
+  async userStartGame(playDto: CreateGameProgressDto): Promise<GameProgress> {
     const gameProgress = new GameProgress()
     gameProgress.gameId = playDto.gameId
     gameProgress.userId = playDto.userId
@@ -47,7 +47,7 @@ export class GamesEnrollmentService {
     return newGames
   }
 
-  async updateGameProgress(updateDto: UpdatePlayGameDto): Promise<GameProgress> {
+  async updateGameProgress(updateDto: UpdateGameProgressDto): Promise<GameProgress> {
     await this.gameProgressRepository.findOneAndUpdate({ _id: updateDto.gameId }, updateDto)
     return this.gameProgressRepository.findOne({ _id: updateDto.gameId })
   }

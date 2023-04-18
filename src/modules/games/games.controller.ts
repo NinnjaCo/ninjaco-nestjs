@@ -3,14 +3,10 @@ import { ApiTags } from '@nestjs/swagger'
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CreateGameDto } from './dto/create-game.dto'
 import { Game } from './schemas/game.schema'
-import { GameProgress } from '../games-enrollment/schemas/game-progress.schema'
 import { GamesService } from './games.service'
-import { PlayGameDto } from '../games-enrollment/dto/play-game.dto'
-import { Public } from 'common/decorators/public.decorator'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateGameDto } from './dto/update-game.dto'
-import { UpdatePlayGameDto } from '../games-enrollment/dto/update-play-game.dto'
 
 @ApiTags('Games')
 @Controller('games')
