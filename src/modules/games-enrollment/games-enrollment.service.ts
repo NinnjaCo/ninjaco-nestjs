@@ -15,11 +15,13 @@ export class GamesEnrollmentService {
     private readonly gamesRepository: GamesRepository
   ) {}
 
-  async userStartGame(playDto: CreateGameProgressDto): Promise<GameProgress> {
-    const gameProgress = new GameProgress()
-    gameProgress.gameId = playDto.gameId
-    gameProgress.userId = playDto.userId
-    gameProgress.progress = playDto.progress
+  async createGameProgress(playDto: CreateGameProgressDto): Promise<GameProgress> {
+    const gameProgress = this.gameProgressRepository.create(playDto)
+    // const gameProgress = new GameProgress()
+    // gameProgress.gameId = playDto.gameId
+    // gameProgress.userId = playDto.userId
+    // gameProgress.progress = playDto.progress
+    // const userPlayGame = this.usersPlayGamesRepository.create({playDto.gameId, playDto.userId, gameProgress._id.toString()})
     const userPlayGame = new UserPlayGame()
     userPlayGame.gameId = playDto.gameId
     userPlayGame.userId = playDto.userId
@@ -30,12 +32,9 @@ export class GamesEnrollmentService {
   }
 
   async getCompletedGames() {
-    console.log('getCompletedGames')
     const games = await this.gamesRepository.find({})
-    console.log('games', games)
     const newGames = []
     games.forEach(async (game) => {
-      console.log('game', game)
       const userPlayGame = await this.usersPlayGamesRepository.findOne({ gameId: game._id })
       console.log(userPlayGame)
       if (userPlayGame && userPlayGame.completed) {

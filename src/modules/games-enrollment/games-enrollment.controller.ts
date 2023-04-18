@@ -15,8 +15,8 @@ export class GamesEnrollmentController {
     description: 'Get game progress by user ID',
   })
   @Post()
-  async userStartGame(@Body() playDto: CreateGameProgressDto): Promise<GameProgress> {
-    return await this.gamesEnrollmentService.userStartGame(playDto)
+  async createGameProgress(@Body() playDto: CreateGameProgressDto): Promise<GameProgress> {
+    return await this.gamesEnrollmentService.createGameProgress(playDto)
   }
 
   @ApiGlobalResponse(GameProgress, {
