@@ -1,10 +1,10 @@
+import { CreateLevelProgressDto } from './dto/create-levelProgress.dto'
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { LevelProgress } from './schemas/LevelProgress.schema'
 import { LevelProgressRepository } from './levelProgress.repository'
 import { MongoServerError } from 'mongodb'
 import { UpdateLevelProgressDto } from './dto/update-levelProgress.dto'
 import { handleMongoDuplicateKeyError } from 'common/shared'
-import { CreateLevelProgressDto } from './dto/create-levelProgress.dto'
 
 @Injectable()
 export class LevelProgressService {
