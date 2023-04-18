@@ -13,17 +13,17 @@ export class UserPlayGame extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
   gameId: string
-
+  //how to put two fields as primary key in mongoose
   @ApiProperty()
   @Prop({ required: true })
-  startedAt: Date
+  startedAt: string
 
   @ApiProperty()
   @Prop({ required: true, type: 'ObjectId' })
   gameProgressId: string
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   completed: boolean
 }
 

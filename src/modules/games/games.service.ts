@@ -1,18 +1,20 @@
 import { CreateGameDto } from './dto/create-game.dto'
 import { Game } from './schemas/game.schema'
-import { GameProgress } from './schemas/game-progress.schema'
+import { GameProgress } from '../games-enrollment/schemas/game-progress.schema'
+import { GamesProgessRepository } from '../games-enrollment/games-progress.repository'
 import { GamesRepository } from './games.repository'
 import { Injectable } from '@nestjs/common'
-import { PlayGameDto } from './dto/play-game.dto'
+import { PlayGameDto } from '../games-enrollment/dto/play-game.dto'
 import { UpdateGameDto } from './dto/update-game.dto'
-import { UserPlayGame } from './schemas/user-play-game.schema'
-import { UsersPlayGamesRepository } from './user-play-game.repository'
-
+import { UpdatePlayGameDto } from '../games-enrollment/dto/update-play-game.dto'
+import { UserPlayGame } from '../games-enrollment/schemas/user-play-game.schema'
+import { UsersPlayGamesRepository } from '../games-enrollment/users-play-games.repository'
 @Injectable()
 export class GamesService {
   constructor(
     private readonly gamesRepository: GamesRepository,
-    private readonly usersPlayGamesRepository: UsersPlayGamesRepository
+    private readonly usersPlayGamesRepository: UsersPlayGamesRepository,
+    private readonly gameProgressRepository: GamesProgessRepository
   ) {}
 
   async create(createDto: CreateGameDto): Promise<Game> {
@@ -34,30 +36,5 @@ export class GamesService {
 
   async update(id: string, updateDto: UpdateGameDto): Promise<Game> {
     return await this.gamesRepository.findOneAndUpdate({ _id: id }, updateDto)
-  }
-  async play(playDto: PlayGameDto): Promise<GameProgress> {
-    const gameProgress = new GameProgress()
-    gameProgress.gameId = playDto.gameId
-    gameProgress.userId = playDto.userId
-    gameProgress.progress = playDto.progress
-    const userPlayGame = new UserPlayGame()
-    userPlayGame.gameId = playDto.gameId
-    userPlayGame.userId = playDto.userId
-    userPlayGame.gameProgressId = gameProgress._id.toString()
-    return gameProgress
-  }
-
-  async getCompletedGames(): Promise<Game[]> {
-    const games = await this.gamesRepository.find({})
-    const newGames = []
-    games.forEach(async (game) => {
-      const userPlayGame = await this.usersPlayGamesRepository.findOne({ gameId: game._id })
-      if (userPlayGame && userPlayGame.completed) {
-        newGames.push({ ...game.toObject(), completed: true })
-      } else {
-        newGames.push({ ...game.toObject(), completed: false })
-      }
-    })
-    return newGames
   }
 }

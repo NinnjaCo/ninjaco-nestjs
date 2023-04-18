@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config'
 import { CoursesModule } from '../courses/courses.module'
 import { DatabaseModule } from '../../database/database.module'
 import { FileUploadModule } from '../files/file-upload.module'
+import { GamesEnrollmentModule } from 'modules/games-enrollment/games-enrollment.module'
 import { GamesModule } from '../games/games.module'
 import { LoggerMiddleware } from '../../common/middleware/logger.middleware'
 import { MailModule } from '../mail/mail.module'
@@ -42,6 +43,7 @@ import { validateConfig } from '../config'
     CoursesModule,
     CategoriesModule,
     GamesModule,
+    GamesEnrollmentModule,
   ],
   controllers: [AppController],
   providers: [
