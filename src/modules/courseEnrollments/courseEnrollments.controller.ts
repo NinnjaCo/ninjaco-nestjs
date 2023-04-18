@@ -34,14 +34,14 @@ export class CourseEnrollmentsController {
   //     return this.courseManagementService.findCourseById(id)
   //   }
 
-  //   @ApiGlobalResponse(CourseEnrollment, {
-  //     description: 'Delete course by id | ADMIN and creator only',
-  //   })
-  //   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
-  //   @Delete(':id')
-  //   remove(@Param('id') id: string): Promise<CourseEnrollment> {
-  //     return this.courseManagementService.deleteCourse(id)
-  //   }
+  @ApiGlobalResponse(CourseEnrollment, {
+    description: 'Delete course by id | ADMIN and creator only',
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<CourseEnrollment> {
+    return this.courseManagementService.deleteCourse(id)
+  }
 
   // @ApiGlobalResponse(CourseEnrollment, {
   //   description: 'Update course information | ADMIN and creator only',
