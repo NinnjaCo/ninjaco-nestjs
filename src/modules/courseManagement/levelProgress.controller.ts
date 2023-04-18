@@ -1,8 +1,9 @@
 import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { ArraySchema } from 'swagger/swagger-primitive-type'
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { Course } from 'modules/courses/schemas/course.schema'
+import { CreateLevelProgressDto } from './dto/create-levelProgress.dto'
 import { LevelProgress } from './schemas/LevelProgress.schema'
 import { LevelProgressService } from './levelProgress.service'
 import { RoleEnum } from 'modules/roles/roles.enum'
@@ -50,6 +51,15 @@ export class LevelProgressController {
     @Param('id') id: string,
     @Body() progressDto: UpdateLevelProgressDto
   ): Promise<LevelProgress> {
-    return this.levelProgressService.updateCourse(id, progressDto)
+    return this.levelProgressService.updateLevelProgress(id, progressDto)
+  }
+
+  @ApiGlobalResponse(LevelProgress, {
+    description: 'Create newLevelProgress | ADMIN and creator only',
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Post()
+  create(@Body() levelDto: CreateLevelProgressDto): Promise<LevelProgress> {
+    return this.levelProgressService.createLevelProgress(levelDto)
   }
 }

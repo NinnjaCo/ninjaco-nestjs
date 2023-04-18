@@ -4,6 +4,7 @@ import { LevelProgressRepository } from './levelProgress.repository'
 import { MongoServerError } from 'mongodb'
 import { UpdateLevelProgressDto } from './dto/update-levelProgress.dto'
 import { handleMongoDuplicateKeyError } from 'common/shared'
+import { CreateLevelProgressDto } from './dto/create-levelProgress.dto'
 
 @Injectable()
 export class LevelProgressService {
@@ -20,9 +21,27 @@ export class LevelProgressService {
     return await this.levelProgressRepository.findOneAndDelete({ _id: id })
   }
 
-  async updateCourse(id: string, progressDto: UpdateLevelProgressDto): Promise<LevelProgress> {
+  async updateLevelProgress(
+    id: string,
+    progressDto: UpdateLevelProgressDto
+  ): Promise<LevelProgress> {
     try {
       return await this.levelProgressRepository.findOneAndUpdate({ _id: id }, progressDto)
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
+  }
+
+  async createLevelProgress(progressDto: CreateLevelProgressDto): Promise<LevelProgress> {
+    try {
+      const progress = await this.levelProgressRepository.create(progressDto)
+      return progress
     } catch (error) {
       // if error type is from mongodb
       if (error instanceof MongoServerError) {
