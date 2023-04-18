@@ -4,12 +4,14 @@ import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { Injectable } from '@nestjs/common'
+import { UsersService } from 'modules/users/users.service'
 
 @Injectable()
 export class CourseEnrollmentsService {
   constructor(
     private readonly courseEnrollmentRepository: CourseEnrollmentsRepository,
-    private readonly coursesService: CoursesService
+    private readonly coursesService: CoursesService,
+    private readonly usersService: UsersService
   ) {}
 
   async findAllCourses(userId: string): Promise<Course[] | CourseEnrollment[]> {
@@ -28,7 +30,17 @@ export class CourseEnrollmentsService {
     }) as unknown as Course[] | CourseEnrollment[]
     return result
   }
-  async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
+  async createCourseEnrollement(
+    courseMnagementDto: CreateCourseManagementDto,
+    userId: string,
+    courseId: string
+  ) {
+    // find the user and course
+    const course = await this.coursesService.findCourseById(courseId)
+    // find user
+    const user = await this.usersService.findOne(userId)
+    courseMnagementDto.course = course
+    courseMnagementDto.user = user
     return this.courseEnrollmentRepository.create(courseMnagementDto)
   }
 
