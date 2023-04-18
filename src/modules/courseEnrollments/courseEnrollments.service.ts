@@ -2,6 +2,7 @@ import { Course } from 'modules/courses/schemas/course.schema'
 import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
+import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
@@ -25,5 +26,8 @@ export class CourseEnrollmentsService {
       return course
     }) as unknown as Course[]
     return result
+  }
+  async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
+    return this.courseEnrollmentRepository.create(courseMnagementDto)
   }
 }

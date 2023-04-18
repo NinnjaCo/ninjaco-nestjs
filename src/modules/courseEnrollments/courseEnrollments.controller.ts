@@ -43,26 +43,29 @@ export class CourseEnrollmentsController {
   //     return this.courseManagementService.deleteCourse(id)
   //   }
 
+  // @ApiGlobalResponse(CourseEnrollment, {
+  //   description: 'Update course information | ADMIN and creator only',
+  // })
+  // @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  // @Put(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() courseMnagementDto: UpdateCourseMangementDto
+  // ): Promise<Course> {
+  //   return this.CourseEnrollmentService.updateCourse(id, courseMnagementDto)
+  // }
+
   @ApiGlobalResponse(CourseEnrollment, {
-    description: 'Update course information | ADMIN and creator only',
+    description: 'Create new course enrollment | ADMIN and creator only',
   })
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
-  @Put(':id')
-  update(
-    @Param('id') id: string,
-    @Body() courseMnagementDto: UpdateCourseMangementDto
-  ): Promise<Course> {
-    return this.CourseEnrollmentService.updateCourse(id, courseMnagementDto)
+  @Post(':courseId')
+  create(
+    @Param('courseId') courseId: string,
+    @Body() courseMnagementDto: CreateCourseManagementDto
+  ): Promise<CourseEnrollment> {
+    return this.CourseEnrollmentService.createCourseEnrollement(courseMnagementDto)
   }
-
-  //   @ApiGlobalResponse(CourseEnrollment, {
-  //     description: 'Create new course | ADMIN and creator only',
-  //   })
-  //   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
-  //   @Post()
-  //   create(@Body() courseMnagementDto: CreateCourseManagementDto): Promise<CourseEnrollment> {
-  //     return this.courseManagementService.createCourse(courseMnagementDto)
-  //   }
 
   //   // mission management crud
   //   @ApiGlobalResponse(ArraySchema, {
@@ -78,18 +81,18 @@ export class CourseEnrollmentsController {
   //     return this.courseManagementService.updateMissionProgress(id, missionId, missionMnagementDto)
   //   }
 
-  //   @ApiGlobalResponse(MissionManagement, {
-  //     description: 'Create mission progress | ADMIN and creator only',
-  //   })
-  //   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
-  //   @Post(':id/mission')
-  //   createMissionProgress(
-  //     @Param('id') id: string,
-  //     @Param('missionId') missionId: string,
-  //     @Body() missionManagementDto: CreateMissionManagementDto
-  //   ): Promise<MissionManagement> {
-  //     return this.courseManagementService.createMissionProgress(id, missionId, missionManagementDto)
-  //   }
+  // @ApiGlobalResponse(MissionManagement, {
+  //   description: 'Create mission progress | ADMIN and creator only',
+  // })
+  // @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  // @Post(':id/mission')
+  // createMissionProgress(
+  //   @Param('id') id: string,
+  //   @Param('missionId') missionId: string,
+  //   @Body() missionManagementDto: CreateMissionManagementDto
+  // ): Promise<MissionManagement> {
+  //   return this.courseManagementService.createMissionProgress(id, missionId, missionManagementDto)
+  // }
 
   //   @ApiGlobalResponse(MissionManagement, {
   //     description: 'Delete mission progress | ADMIN and creator only',
