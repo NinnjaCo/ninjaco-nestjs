@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config'
 import { CoursesModule } from '../courses/courses.module'
 import { DatabaseModule } from '../../database/database.module'
 import { FileUploadModule } from '../files/file-upload.module'
-import { GamesEnrollmentModule } from 'modules/games-enrollment/games-enrollment.module'
+import { GameProgressModule } from 'modules/usersGameProgress/game-progress.module'
 import { GamesModule } from '../games/games.module'
 import { LoggerMiddleware } from '../../common/middleware/logger.middleware'
 import { MailModule } from '../mail/mail.module'
@@ -17,6 +17,7 @@ import { RolesGuard } from '../roles/roles.guard'
 import { RolesModule } from '../roles/roles.module'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { UsersModule } from '../users/users.module'
+import { UsersPlayGamesModule } from 'modules/usersPlayGames/usersPlayGames.module'
 import { validateConfig } from '../config'
 
 @Module({
@@ -43,7 +44,8 @@ import { validateConfig } from '../config'
     CoursesModule,
     CategoriesModule,
     GamesModule,
-    GamesEnrollmentModule,
+    GameProgressModule,
+    UsersPlayGamesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { BaseEntity } from 'database/base.entity'
 import { Game } from 'modules/games/schemas/game.schema'
-import { GameProgress } from 'modules/userGameProgress/schema/game-progress.schema'
+import { GameProgress } from 'modules/usersGameProgress/schema/game-progress.schema'
 import { HydratedDocument } from 'mongoose'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { User } from 'modules/users/schemas/user.schema'
