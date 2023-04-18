@@ -12,4 +12,8 @@ export class LevelProgressService {
   async findLevelProgressById(id: string): Promise<LevelProgress> {
     return await this.levelProgressRepository.findOne({ _id: id })
   }
+
+  async deleteCourse(id: string): Promise<LevelProgress> {
+    return await this.levelProgressRepository.findOneAndDelete({ _id: id })
+  }
 }
