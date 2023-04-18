@@ -5,6 +5,8 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CourseManagementService } from './courseManagement.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
+import { LevelManagement } from './schemas/LevelManagement.schema'
+import { MissionManagement } from './schemas/MissionManagement.schema'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateCourseMangementDto } from './dto/update-courseManagement'
@@ -62,8 +64,8 @@ export class CourseManagementController {
     return this.courseManagementService.createCourse(courseMnagementDto)
   }
 
-  // for the mission progress
-  @ApiGlobalResponse(User_enroll_course, {
+  // mission management crud
+  @ApiGlobalResponse(ArraySchema, {
     description: 'Update mission progress | ADMIN and creator only',
   })
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
@@ -72,24 +74,24 @@ export class CourseManagementController {
     @Param('id') id: string,
     @Param('missionId') missionId: string,
     @Body() missionMnagementDto: UpdateMissionManagementDto
-  ): Promise<User_enroll_course> {
+  ): Promise<MissionManagement> {
     return this.courseManagementService.updateMissionProgress(id, missionId, missionMnagementDto)
   }
 
-  @ApiGlobalResponse(User_enroll_course, {
+  @ApiGlobalResponse(MissionManagement, {
     description: 'Create mission progress | ADMIN and creator only',
   })
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
-  @Post(':id/mission/:missionId')
+  @Post(':id/mission')
   createMissionProgress(
     @Param('id') id: string,
     @Param('missionId') missionId: string,
     @Body() missionManagementDto: CreateMissionManagementDto
-  ): Promise<User_enroll_course> {
+  ): Promise<MissionManagement> {
     return this.courseManagementService.createMissionProgress(id, missionId, missionManagementDto)
   }
 
-  @ApiGlobalResponse(User_enroll_course, {
+  @ApiGlobalResponse(MissionManagement, {
     description: 'Delete mission progress | ADMIN and creator only',
   })
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
@@ -97,27 +99,27 @@ export class CourseManagementController {
   deleteMissionProgress(
     @Param('id') id: string,
     @Param('missionId') missionId: string
-  ): Promise<User_enroll_course> {
+  ): Promise<MissionManagement> {
     return this.courseManagementService.deleteMissionProgress(id, missionId)
   }
 
-  @ApiGlobalResponse(User_enroll_course, {
+  @ApiGlobalResponse(MissionManagement, {
     description: 'Get all mssions user enrolled in  ',
     isArray: true,
   })
   @Get(':id/mission')
-  findAllByUserId(@Param('userId') userId: string): Promise<User_enroll_course[]> {
-    return this.courseManagementService.findAllByUserId(userId)
+  findAllMissions(@Param('userId') userId: string): Promise<MissionManagement[]> {
+    return this.courseManagementService.findAllMissions(userId)
   }
 
-  @ApiGlobalResponse(User_enroll_course, {
+  @ApiGlobalResponse(MissionManagement, {
     description: 'Get a mssion user enrolled in  ',
   })
   @Get(':id/mission/:missionId')
-  findMissionByUserId(
+  findMission(
     @Param('userId') userId: string,
     @Param('missionId') missionId: string
-  ): Promise<User_enroll_course> {
-    return this.courseManagementService.findMissionByUserId(userId, missionId)
+  ): Promise<MissionManagement> {
+    return this.courseManagementService.findMission(userId, missionId)
   }
 }
