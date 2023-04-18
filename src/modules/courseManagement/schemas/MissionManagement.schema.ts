@@ -18,7 +18,7 @@ export class MissionManagement extends BaseEntity {
 
   @ApiProperty()
   @Prop({ default: [], required: true })
-  levels: LevelManagement[]
+  levels: [LevelManagement]
 
   @ApiProperty()
   @Prop({ required: true })

@@ -25,7 +25,7 @@ export class User_enroll_course extends BaseEntity {
 
   @ApiProperty()
   @Prop({ default: [], required: true })
-  missions: MissionManagement[]
+  missions: [MissionManagement]
 }
 
 export const User_enroll_courseSchema = SchemaFactory.createForClass(User_enroll_course)
