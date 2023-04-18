@@ -31,4 +31,8 @@ export class CourseEnrollmentsService {
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
     return this.courseEnrollmentRepository.create(courseMnagementDto)
   }
+
+  async deleteCourse(id: string): Promise<CourseEnrollment> {
+    return this.courseEnrollmentRepository.findOneAndDelete({ _id: id })
+  }
 }
