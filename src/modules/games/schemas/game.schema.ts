@@ -32,7 +32,7 @@ export class Game extends BaseEntity {
   wallsLocations: Array<Array<number>>
 
   @ApiProperty()
-  @Prop()
+  @Prop({ required: true })
   image: string
 }
 
