@@ -8,4 +8,8 @@ export class LevelProgressService {
   async findAll(): Promise<LevelProgress[]> {
     return await this.levelProgressRepository.find({})
   }
+
+  async findLevelProgressById(id: string): Promise<LevelProgress> {
+    return await this.levelProgressRepository.findOne({ _id: id })
+  }
 }
