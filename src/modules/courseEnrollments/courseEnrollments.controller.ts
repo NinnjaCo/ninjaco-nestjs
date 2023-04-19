@@ -11,6 +11,8 @@ import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
+import { UpdateCourseMangementDto } from './dto/update-courseManagement'
+import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 
 @ApiTags('Course-Enrollements')
 @Controller('course-enrollements')
@@ -34,18 +36,16 @@ export class CourseEnrollmentsController {
   }
 
   @ApiGlobalResponse(CourseEnrollment, {
-    description: 'Delete course by id | ADMIN and creator only',
+    description: 'Delete course by id ',
   })
-  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<CourseEnrollment> {
     return this.CourseEnrollmentService.deleteCourse(id)
   }
 
   // @ApiGlobalResponse(CourseEnrollment, {
-  //   description: 'Update course information | ADMIN and creator only',
+  //   description: 'Update course information',
   // })
-  // @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   // @Put(':id')
   // update(
   //   @Param('id') id: string,
@@ -55,9 +55,8 @@ export class CourseEnrollmentsController {
   // }
 
   @ApiGlobalResponse(CourseEnrollment, {
-    description: 'Create new course enrollment | ADMIN and creator only',
+    description: 'Create new course enrollment ',
   })
-  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Post(':courseId')
   create(
     @Param('courseId') courseId: string,
@@ -68,9 +67,8 @@ export class CourseEnrollmentsController {
 
   //   // mission management crud
   //   @ApiGlobalResponse(ArraySchema, {
-  //     description: 'Update mission progress | ADMIN and creator only',
+  //     description: 'Update mission progress ',
   //   })
-  //   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   //   @Put(':id/mission/:missionId')
   //   updateMissionProgress(
   //     @Param('id') id: string,
@@ -96,18 +94,21 @@ export class CourseEnrollmentsController {
       missionManagementDto
     )
   }
-
-  //   @ApiGlobalResponse(MissionManagement, {
-  //     description: 'Delete mission progress | ADMIN and creator only',
-  //   })
-  //   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
-  //   @Delete(':id/mission/:missionId')
-  //   deleteMissionProgress(
-  //     @Param('id') id: string,
-  //     @Param('missionId') missionId: string
-  //   ): Promise<MissionManagement> {
-  //     return this.courseManagementService.deleteMissionProgress(id, missionId)
-  //   }
+  // @ApiGlobalResponse(MissionManagement, {
+  //   description: 'Create mission progress ',
+  // })
+  // @Post(':id/mission')
+  // createMissionProgress(
+  //   @Param('id') courseId: string,
+  //   @Param('missionId') missionId: string,
+  //   @Body() missionManagementDto: CreateMissionManagementDto
+  // ): Promise<MissionManagement> {
+  //   return this.CourseEnrollmentService.createMissionProgress(
+  //     courseId,
+  //     missionId,
+  //     missionManagementDto
+  //   )
+  // }
 
   @ApiGlobalResponse(MissionManagement, {
     description: 'Get all mssions user enrolled in   ',
@@ -121,14 +122,15 @@ export class CourseEnrollmentsController {
     return this.CourseEnrollmentService.findAllMissions(userId, courseId)
   }
 
-  //   @ApiGlobalResponse(MissionManagement, {
-  //     description: 'Get a mssion user enrolled in  ',
-  //   })
-  //   @Get(':id/mission/:missionId')
-  //   findMission(
-  //     @Param('userId') userId: string,
-  //     @Param('missionId') missionId: string
-  //   ): Promise<MissionManagement> {
-  //     return this.courseManagementService.findMission(userId, missionId)
-  //   }
+  @ApiGlobalResponse(MissionManagement, {
+    description: 'Get a mssion user enrolled in  ',
+  })
+  @Get(':id/:missionId')
+  findMissionById(
+    @Param('userId') userId: string,
+    @Param('missionId') missionId: string,
+    courseId: string
+  ): Promise<MissionManagement> {
+    return this.CourseEnrollmentService.findMissionById(userId, missionId, courseId)
+  }
 }
