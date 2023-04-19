@@ -35,18 +35,16 @@ export class CourseEnrollmentsController {
   }
 
   @ApiGlobalResponse(CourseEnrollment, {
-    description: 'Delete course by id | ADMIN and creator only',
+    description: 'Delete course by id ',
   })
-  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<CourseEnrollment> {
     return this.CourseEnrollmentService.deleteCourse(id)
   }
 
   // @ApiGlobalResponse(CourseEnrollment, {
-  //   description: 'Update course information | ADMIN and creator only',
+  //   description: 'Update course information',
   // })
-  // @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   // @Put(':id')
   // update(
   //   @Param('id') id: string,
@@ -56,9 +54,8 @@ export class CourseEnrollmentsController {
   // }
 
   @ApiGlobalResponse(CourseEnrollment, {
-    description: 'Create new course enrollment | ADMIN and creator only',
+    description: 'Create new course enrollment ',
   })
-  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Post(':courseId')
   create(
     @Param('courseId') courseId: string,
@@ -69,9 +66,8 @@ export class CourseEnrollmentsController {
 
   //   // mission management crud
   //   @ApiGlobalResponse(ArraySchema, {
-  //     description: 'Update mission progress | ADMIN and creator only',
+  //     description: 'Update mission progress ',
   //   })
-  //   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   //   @Put(':id/mission/:missionId')
   //   updateMissionProgress(
   //     @Param('id') id: string,
@@ -82,9 +78,8 @@ export class CourseEnrollmentsController {
   //   }
 
   // @ApiGlobalResponse(MissionManagement, {
-  //   description: 'Create mission progress | ADMIN and creator only',
+  //   description: 'Create mission progress ',
   // })
-  // @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   // @Post(':id/mission')
   // createMissionProgress(
   //   @Param('id') courseId: string,
@@ -98,17 +93,16 @@ export class CourseEnrollmentsController {
   //   )
   // }
 
-  //   @ApiGlobalResponse(MissionManagement, {
-  //     description: 'Delete mission progress | ADMIN and creator only',
-  //   })
-  //   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
-  //   @Delete(':id/mission/:missionId')
-  //   deleteMissionProgress(
-  //     @Param('id') id: string,
-  //     @Param('missionId') missionId: string
-  //   ): Promise<MissionManagement> {
-  //     return this.courseManagementService.deleteMissionProgress(id, missionId)
-  //   }
+  @ApiGlobalResponse(MissionManagement, {
+    description: 'Delete mission progress ',
+  })
+  @Delete(':id/mission/:missionId')
+  deleteMissionProgress(
+    @Param('id') id: string,
+    @Param('missionId') missionId: string
+  ): Promise<MissionManagement> {
+    return this.courseManagementService.deleteMissionProgress(id, missionId)
+  }
 
   @ApiGlobalResponse(MissionManagement, {
     description: 'Get all mssions user enrolled in   ',
