@@ -7,6 +7,8 @@ import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsService } from './courseEnrollments.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
+import { Level } from 'modules/courses/schemas/level.schema'
+import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { RoleEnum } from 'modules/roles/roles.enum'
@@ -79,9 +81,8 @@ export class CourseEnrollmentsController {
   //   }
 
   @ApiGlobalResponse(MissionManagement, {
-    description: 'Create mission progress | ADMIN and creator only',
+    description: 'Create mission progress ',
   })
-  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Post(':id/mission')
   createMissionProgress(
     @Param('id') courseId: string,
@@ -94,23 +95,8 @@ export class CourseEnrollmentsController {
       missionManagementDto
     )
   }
-  // @ApiGlobalResponse(MissionManagement, {
-  //   description: 'Create mission progress ',
-  // })
-  // @Post(':id/mission')
-  // createMissionProgress(
-  //   @Param('id') courseId: string,
-  //   @Param('missionId') missionId: string,
-  //   @Body() missionManagementDto: CreateMissionManagementDto
-  // ): Promise<MissionManagement> {
-  //   return this.CourseEnrollmentService.createMissionProgress(
-  //     courseId,
-  //     missionId,
-  //     missionManagementDto
-  //   )
-  // }
 
-  @ApiGlobalResponse(MissionManagement, {
+  @ApiGlobalResponse(ArraySchema, {
     description: 'Get all mssions user enrolled in   ',
     isArray: true,
   })
@@ -132,5 +118,19 @@ export class CourseEnrollmentsController {
     courseId: string
   ): Promise<MissionManagement> {
     return this.CourseEnrollmentService.findMissionById(userId, missionId, courseId)
+  }
+
+  //level crud
+  @ApiGlobalResponse(ArraySchema, {
+    description: 'Get all levels user enrolled in   ',
+    isArray: true,
+  })
+  @Get(':id/:missionId')
+  findAllLevels(
+    @Param('id') courseId: string,
+    userId: string,
+    @Param('missionId') missionId: string
+  ): Promise<Level[] | LevelManagement[]> {
+    return this.CourseEnrollmentService.findAllLevels(userId, courseId, missionId)
   }
 }
