@@ -21,9 +21,7 @@ export class UsersPlayGamesService {
   ) {}
 
   async createUserPlayGameEntry(createGameDto: CreateGameProgressDto): Promise<GameProgress> {
-    console.log('createGameDto in service', createGameDto)
     const gameProgress = await this.gameProgressRepository.createGameProgressEntry(createGameDto)
-    console.log('gameProgress ', gameProgress)
     const game = await this.gamesService.findOne(createGameDto.gameId)
     const user = await this.usersService.findOne(createGameDto.userId)
     const userPlayGame = await this.usersPlayGamesRepository.create({
@@ -33,7 +31,6 @@ export class UsersPlayGamesService {
       completed: false,
       startedAt: new Date().toISOString(),
     })
-    console.log('userPlayGame', userPlayGame)
     return gameProgress
   }
 
