@@ -13,7 +13,7 @@ export class UpdateGameProgressDto {
   gameId: string
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   progress: string
 

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
-export class CreateUserPlayGameDto {
+export class UpdateUserPlayGameDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -14,7 +14,11 @@ export class CreateUserPlayGameDto {
 
   @ApiProperty()
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
   progress: string
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  completed: boolean
 }

@@ -18,7 +18,7 @@ export class GameProgress extends BaseEntity {
   gameId: string
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: true, default: '' })
   progress: string
 }
 

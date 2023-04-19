@@ -24,10 +24,10 @@ export class UserPlayGame extends BaseEntity {
 
   @ApiProperty()
   @Prop({ required: true, type: 'ObjectId', ref: GameProgress.name })
-  gameProgressId: string
+  gameProgress: GameProgress
 
   @ApiProperty()
-  @Prop({ required: false })
+  @Prop({ default: false, required: true })
   completed: boolean
 }
 
