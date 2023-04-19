@@ -3,6 +3,7 @@ import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
+import { CreateLevelManagementDto } from './dto/create-levelManagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Injectable } from '@nestjs/common'
 import { Level } from 'modules/courses/schemas/level.schema'
@@ -147,5 +148,20 @@ export class CourseEnrollmentsService {
     const levels = mission.levels
     // return the level object by levelId
     return levels.find((level) => level._id.toString() === levelId)
+  }
+
+  async createLevelProgress(
+    courseId: string,
+    missionId: string,
+    levelId: string,
+    createLevelManagementDto: CreateLevelManagementDto
+  ): Promise<LevelManagement> {
+    const level = await this.courseEnrollmentRepository.createLevelProgress(
+      courseId,
+      missionId,
+      levelId,
+      createLevelManagementDto
+    )
+    return level
   }
 }

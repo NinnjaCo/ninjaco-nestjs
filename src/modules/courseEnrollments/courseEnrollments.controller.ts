@@ -6,6 +6,7 @@ import { Course } from 'modules/courses/schemas/course.schema'
 import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsService } from './courseEnrollments.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
+import { CreateLevelManagementDto } from './dto/create-levelManagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
@@ -81,7 +82,7 @@ export class CourseEnrollmentsController {
   @ApiGlobalResponse(MissionManagement, {
     description: 'Create mission progress ',
   })
-  @Post(':id/mission')
+  @Post(':id/:missionId')
   createMissionProgress(
     @Param('id') courseId: string,
     @Param('missionId') missionId: string,
@@ -131,18 +132,36 @@ export class CourseEnrollmentsController {
   ): Promise<(Level | LevelManagement)[]> {
     return this.CourseEnrollmentService.findAllLevels(userId, courseId, missionId)
   }
-  // level management crud
+
   @ApiGlobalResponse(LevelManagement, {
     description: 'Create level progress | ADMIN and creator only',
   })
   // get a level by id
-  @Get(':courseid/missoinid/levelid')
+  @Get(':id/missoinId/levelId')
   findLevelById(
-    @Param('courseid') courseId: string,
-    @Param('missionid') missionId: string,
-    @Param('levelid') levelId: string,
+    @Param('id') courseId: string,
+    @Param('missionId') missionId: string,
+    @Param('levelId') levelId: string,
     userId: string
   ): Promise<LevelManagement> {
     return this.CourseEnrollmentService.findLevelById(userId, courseId, missionId, levelId)
+  }
+
+  @ApiGlobalResponse(LevelManagement, {
+    description: 'Create level progress ',
+  })
+  @Post(':id/missoinId/levelId')
+  createLevelProgress(
+    @Param('id') courseId: string,
+    @Param('missionId') missionId: string,
+    @Param('levelId') levelId: string,
+    @Body() createLevelManagementDto: CreateLevelManagementDto
+  ): Promise<LevelManagement> {
+    return this.CourseEnrollmentService.createLevelProgress(
+      courseId,
+      missionId,
+      levelId,
+      createLevelManagementDto
+    )
   }
 }
