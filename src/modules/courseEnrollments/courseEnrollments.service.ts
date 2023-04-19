@@ -5,6 +5,7 @@ import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Injectable } from '@nestjs/common'
+import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { UsersService } from 'modules/users/users.service'
@@ -106,5 +107,28 @@ export class CourseEnrollmentsService {
     const missions = courseEnrollment.missions
     // return the missions array
     return missions.find((mission) => mission._id.toString() === missionId)
+  }
+
+  //level service
+  // find level by id
+  async findLevelById(
+    userId: string,
+    courseId: string,
+    missionId: string,
+    levelId: string
+  ): Promise<LevelManagement> {
+    // get the courseEnrollment object by courseId
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      courseId,
+      userId,
+    })
+    // get the missions array from the courseEnrollment object
+    const missions = courseEnrollment.missions
+    // get the mission object by missionId
+    const mission = missions.find((mission) => mission._id.toString() === missionId)
+    // get the levels array from the mission object
+    const levels = mission.levels
+    // return the level object by levelId
+    return levels.find((level) => level._id.toString() === levelId)
   }
 }

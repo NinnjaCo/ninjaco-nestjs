@@ -136,9 +136,8 @@ export class CourseEnrollmentsController {
   }
 
   // level management crud
-   @ApiGlobalResponse(LevelManagement, {
-
-    description: 'Create level progress | ADMIN and creator only',  
+  @ApiGlobalResponse(LevelManagement, {
+    description: 'Create level progress | ADMIN and creator only',
   })
   // get a level by id
   @Get(':courseid/missoinid/levelid')
@@ -149,5 +148,5 @@ export class CourseEnrollmentsController {
     userId: string
   ): Promise<LevelManagement> {
     return this.CourseEnrollmentService.findLevelById(userId, courseId, missionId, levelId)
-
+  }
 }
