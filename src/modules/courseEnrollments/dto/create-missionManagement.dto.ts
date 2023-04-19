@@ -4,8 +4,9 @@ import { Mission } from 'modules/courses/schemas/mission.schema'
 
 export class CreateMissionManagementDto {
   @ApiProperty()
+  @IsString()
   @IsNotEmpty()
-  mission: Mission
+  userId: string
 
   @ApiProperty()
   @IsBoolean()
