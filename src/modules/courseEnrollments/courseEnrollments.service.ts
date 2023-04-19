@@ -64,7 +64,7 @@ export class CourseEnrollmentsService {
   async findAllMissions(
     userId: string,
     courseId: string
-  ): Promise<MissionManagement[] | Mission[]> {
+  ): Promise<(MissionManagement | Mission)[]> {
     // do the same concept as the findAllCourses function
     const missions = await this.coursesService.findAllMissions(courseId)
     const result = missions.map((mission) => {
@@ -77,7 +77,7 @@ export class CourseEnrollmentsService {
         return MissionManagement
       }
       return mission
-    }) as unknown as MissionManagement[] | Mission[]
+    }) as unknown as (MissionManagement | Mission)[]
     return result
   }
 
@@ -126,5 +126,26 @@ export class CourseEnrollmentsService {
       return level
     }) as unknown as (LevelManagement | Level)[]
     return result
+  }
+
+  async findLevelById(
+    userId: string,
+    courseId: string,
+    missionId: string,
+    levelId: string
+  ): Promise<LevelManagement> {
+    // get the courseEnrollment object by courseId
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      courseId,
+      userId,
+    })
+    // get the missions array from the courseEnrollment object
+    const missions = courseEnrollment.missions
+    // get the mission object by missionId
+    const mission = missions.find((mission) => mission._id.toString() === missionId)
+    // get the levels array from the mission object
+    const levels = mission.levels
+    // return the level object by levelId
+    return levels.find((level) => level._id.toString() === levelId)
   }
 }

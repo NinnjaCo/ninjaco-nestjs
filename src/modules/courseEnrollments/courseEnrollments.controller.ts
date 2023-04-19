@@ -104,7 +104,7 @@ export class CourseEnrollmentsController {
   findAllMissions(
     @Param('id') courseId: string,
     userId: string
-  ): Promise<MissionManagement[] | Mission[]> {
+  ): Promise<(MissionManagement | Mission)[]> {
     return this.CourseEnrollmentService.findAllMissions(userId, courseId)
   }
 
@@ -132,5 +132,19 @@ export class CourseEnrollmentsController {
     @Param('missionId') missionId: string
   ): Promise<(Level | LevelManagement)[]> {
     return this.CourseEnrollmentService.findAllLevels(userId, courseId, missionId)
+  }
+  // level management crud
+  @ApiGlobalResponse(LevelManagement, {
+    description: 'Create level progress | ADMIN and creator only',
+  })
+  // get a level by id
+  @Get(':courseid/missoinid/levelid')
+  findLevelById(
+    @Param('courseid') courseId: string,
+    @Param('missionid') missionId: string,
+    @Param('levelid') levelId: string,
+    userId: string
+  ): Promise<LevelManagement> {
+    return this.CourseEnrollmentService.findLevelById(userId, courseId, missionId, levelId)
   }
 }
