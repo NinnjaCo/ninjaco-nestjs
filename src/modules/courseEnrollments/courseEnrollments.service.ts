@@ -4,6 +4,7 @@ import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { Injectable } from '@nestjs/common'
+import { MissionManagement } from './schemas/MissionManagement.schema'
 import { UsersService } from 'modules/users/users.service'
 
 @Injectable()
@@ -31,8 +32,8 @@ export class CourseEnrollmentsService {
     return result
   }
 
-  async findCourseById(id: string): Promise<CourseEnrollment> {
-    return this.courseEnrollmentRepository.findOne({ _id: id })
+  async findCourseById(id: string, userId: string): Promise<CourseEnrollment> {
+    return this.courseEnrollmentRepository.findOne({ _id: id, userId })
   }
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto, courseId: string) {
     // user from the courseManagmentDto
@@ -52,5 +53,19 @@ export class CourseEnrollmentsService {
 
   async deleteCourse(id: string): Promise<CourseEnrollment> {
     return this.courseEnrollmentRepository.findOneAndDelete({ _id: id })
+  }
+
+  // mission service
+  // find all missions
+  async findAllMissions(userId: string, courseId: string): Promise<MissionManagement[]> {
+    // get the courseEnrollment object by xourseId
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      courseId,
+      userId,
+    })
+    // get the missions array from the courseEnrollment object
+    const missions = courseEnrollment.missions
+    // return the missions array
+    return missions
   }
 }

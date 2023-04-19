@@ -30,8 +30,8 @@ export class CourseEnrollmentsController {
     description: 'Get course by id ',
   })
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<CourseEnrollment> {
-    return this.CourseEnrollmentService.findCourseById(id)
+  findOne(@Param('id') id: string, userId: string): Promise<CourseEnrollment> {
+    return this.CourseEnrollmentService.findCourseById(id, userId)
   }
 
   @ApiGlobalResponse(CourseEnrollment, {
@@ -87,11 +87,15 @@ export class CourseEnrollmentsController {
   // @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   // @Post(':id/mission')
   // createMissionProgress(
-  //   @Param('id') id: string,
+  //   @Param('id') courseId: string,
   //   @Param('missionId') missionId: string,
   //   @Body() missionManagementDto: CreateMissionManagementDto
   // ): Promise<MissionManagement> {
-  //   return this.courseManagementService.createMissionProgress(id, missionId, missionManagementDto)
+  //   return this.CourseEnrollmentService.createMissionProgress(
+  //     courseId,
+  //     missionId,
+  //     missionManagementDto
+  //   )
   // }
 
   //   @ApiGlobalResponse(MissionManagement, {
@@ -106,14 +110,14 @@ export class CourseEnrollmentsController {
   //     return this.courseManagementService.deleteMissionProgress(id, missionId)
   //   }
 
-  //   @ApiGlobalResponse(MissionManagement, {
-  //     description: 'Get all mssions user enrolled in  ',
-  //     isArray: true,
-  //   })
-  //   @Get(':id/mission')
-  //   findAllMissions(@Param('userId') userId: string): Promise<MissionManagement[]> {
-  //     return this.courseManagementService.findAllMissions(userId)
-  //   }
+  @ApiGlobalResponse(MissionManagement, {
+    description: 'Get all mssions user enrolled in   ',
+    isArray: true,
+  })
+  @Get(':id')
+  findAllMissions(@Param('id') courseId: string, userId: string): Promise<MissionManagement[]> {
+    return this.CourseEnrollmentService.findAllMissions(userId, courseId)
+  }
 
   //   @ApiGlobalResponse(MissionManagement, {
   //     description: 'Get a mssion user enrolled in  ',
