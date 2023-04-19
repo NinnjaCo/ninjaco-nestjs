@@ -32,11 +32,18 @@ export class CourseEnrollmentsService {
   }
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
     // user from the courseManagmentDto
-    const { userId } = courseMnagementDto
-    // get the user Object from the user service
+    const { userId, ...newDto } = courseMnagementDto
+    // get the user Object and the course
     const user = await this.userService.findOne(userId)
+    const course = await this.coursesService.findCourseById(courseId)
 
-    return this.courseEnrollmentRepository.create(courseMnagementDto)
+    const courseEnrollment = {
+      newDto,
+      user,
+      course,
+    }
+
+    return this.courseEnrollmentRepository.create(courseEnrollment)
   }
 
   async deleteCourse(id: string): Promise<CourseEnrollment> {
