@@ -26,13 +26,13 @@ export class CourseEnrollmentsController {
     return this.CourseEnrollmentService.findAllCourses(userId)
   }
 
-  //   @ApiGlobalResponse(CourseEnrollment, {
-  //     description: 'Get course by id ',
-  //   })
-  //   @Get(':id')
-  //   findOne(@Param('id') id: string): Promise<CourseEnrollment> {
-  //     return this.courseManagementService.findCourseById(id)
-  //   }
+  @ApiGlobalResponse(CourseEnrollment, {
+    description: 'Get course by id ',
+  })
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<CourseEnrollment> {
+    return this.CourseEnrollmentService.findCourseById(id)
+  }
 
   @ApiGlobalResponse(CourseEnrollment, {
     description: 'Delete course by id | ADMIN and creator only',

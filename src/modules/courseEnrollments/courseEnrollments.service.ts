@@ -30,6 +30,10 @@ export class CourseEnrollmentsService {
     }) as unknown as Course[] | CourseEnrollment[]
     return result
   }
+
+  async findCourseById(id: string): Promise<CourseEnrollment> {
+    return this.courseEnrollmentRepository.findOne({ _id: id })
+  }
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto, courseId: string) {
     // user from the courseManagmentDto
     const { userId, ...newDto } = courseMnagementDto
