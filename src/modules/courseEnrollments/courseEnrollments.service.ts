@@ -19,7 +19,7 @@ export class CourseEnrollmentsService {
     private readonly userService: UsersService
   ) {}
 
-  async findAllCourses(userId: string): Promise<Course[] | CourseEnrollment[]> {
+  async findAllCourses(userId: string): Promise<(Course | CourseEnrollment)[]> {
     //return the all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
     console.log(courses)
@@ -32,7 +32,7 @@ export class CourseEnrollmentsService {
         return CourseEnrollment
       }
       return course
-    }) as unknown as Course[] | CourseEnrollment[]
+    }) as unknown as (Course | CourseEnrollment)[]
     return result
   }
 
@@ -110,7 +110,7 @@ export class CourseEnrollmentsService {
     return missions.find((mission) => mission._id.toString() === missionId)
   }
 
-  async findAllLevels(courseId, userId, missionId): Promise<Level[] | LevelManagement[]> {
+  async findAllLevels(courseId, userId, missionId): Promise<(Level | LevelManagement)[]> {
     // do the same concept as the findAllCourses function
     const levels = await this.coursesService.findAllLevels(courseId, missionId)
     const result = levels.map((level) => {
@@ -124,7 +124,7 @@ export class CourseEnrollmentsService {
         return LevelManagement
       }
       return level
-    }) as unknown as LevelManagement[] | Level[]
+    }) as unknown as (LevelManagement | Level)[]
     return result
   }
 }

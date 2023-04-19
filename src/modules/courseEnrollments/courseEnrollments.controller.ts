@@ -25,7 +25,7 @@ export class CourseEnrollmentsController {
     isArray: true,
   })
   @Get()
-  findAllCourses(userId: string): Promise<Course[] | CourseEnrollment[]> {
+  findAllCourses(userId: string): Promise<(Course | CourseEnrollment)[]> {
     return this.CourseEnrollmentService.findAllCourses(userId)
   }
 
@@ -130,7 +130,7 @@ export class CourseEnrollmentsController {
     @Param('id') courseId: string,
     userId: string,
     @Param('missionId') missionId: string
-  ): Promise<Level[] | LevelManagement[]> {
+  ): Promise<(Level | LevelManagement)[]> {
     return this.CourseEnrollmentService.findAllLevels(userId, courseId, missionId)
   }
 }
