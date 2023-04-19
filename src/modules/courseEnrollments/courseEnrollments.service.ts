@@ -76,7 +76,7 @@ export class CourseEnrollmentsService {
         return MissionManagement
       }
       return mission
-    }) as unknown as MissionManagement[] | Mission[]
+    }) as unknown as (MissionManagement | Mission)[]
     return result
   }
 
