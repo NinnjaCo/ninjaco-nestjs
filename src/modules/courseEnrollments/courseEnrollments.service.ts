@@ -63,7 +63,7 @@ export class CourseEnrollmentsService {
   async findAllMissions(
     userId: string,
     courseId: string
-  ): Promise<MissionManagement[] | Mission[]> {
+  ): Promise<(MissionManagement | Mission)[]> {
     // do the same concept as the findAllCourses function
     const missions = await this.coursesService.findAllMissions(courseId)
     const result = missions.map((mission) => {

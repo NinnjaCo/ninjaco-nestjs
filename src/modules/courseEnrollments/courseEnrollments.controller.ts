@@ -119,7 +119,7 @@ export class CourseEnrollmentsController {
   findAllMissions(
     @Param('id') courseId: string,
     userId: string
-  ): Promise<MissionManagement[] | Mission[]> {
+  ): Promise<(MissionManagement | Mission)[]> {
     return this.CourseEnrollmentService.findAllMissions(userId, courseId)
   }
 
