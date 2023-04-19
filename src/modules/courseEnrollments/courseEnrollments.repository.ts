@@ -1,6 +1,4 @@
 import { CourseEnrollment, CourseEnrollmentDocument } from './schemas/courseEnrollment.schema'
-import { CreateLevelManagementDto } from './dto/create-levelManagement.dto'
-import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { EntityRepository } from 'database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
@@ -24,21 +22,24 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
 
   async createMissionProgress(
     courseEnrollmentId: string,
-    missionId: string,
-    createMissionManagementDto: CreateMissionManagementDto
+    missionId: string
   ): Promise<MissionManagement> {
     // create a new mission management
     const missionObjct = {
-      createMissionManagementDto,
       missionId,
+      startedAt: new Date().toISOString(),
     }
     const missionManagement = new this.missionManagementModel({
       ...missionObjct,
     })
+
     // find the course enrollment
     const courseEnrollment = await this.courseEnrollmentModel.findOne({
       _id: courseEnrollmentId,
     })
+    console.log(courseEnrollmentId)
+    console.log(courseEnrollment)
+    console.log(missionManagement)
     // push the mission management to the missions array of the course enrollment
     courseEnrollment.missions.push(missionManagement)
     // save the course enrollment
@@ -49,14 +50,13 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
 
   async createLevelProgress(
     courseEnrollmentId: string,
-    missionId: string,
-    levelId: string,
-    createLevelManagementDto: CreateLevelManagementDto
+    missionEnrollmentId: string,
+    levelEnrollmentId: string
   ): Promise<LevelManagement> {
     // create a new level management
     const levelObjct = {
-      createLevelManagementDto,
-      levelId,
+      levelEnrollmentId,
+      startedAt: new Date().toISOString(),
     }
     const levelManagement = new this.levelManagementModel({
       ...levelObjct,
@@ -65,13 +65,19 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     const courseEnrollment = await this.courseEnrollmentModel.findOne({
       _id: courseEnrollmentId,
     })
-    // find the mission management
-    const missionManagement = await this.missionManagementModel.findOne({
-      _id: missionId,
-    })
-
-    // push the level management to the levels array of the course enrollmen
+    // find the mission management inside the course enrollment
+    const missionManagement = courseEnrollment.missions.find(
+      (mission) => mission._id.toString() === missionEnrollmentId
+    )
     missionManagement.levels.push(levelManagement)
+
+    courseEnrollment.missions = courseEnrollment.missions.map((mission) => {
+      if (mission._id.toString() === missionEnrollmentId) {
+        console.log('hello', missionManagement)
+        return missionManagement
+      }
+      return mission
+    }) as unknown as [MissionManagement]
 
     await courseEnrollment.save()
     // return the level management
