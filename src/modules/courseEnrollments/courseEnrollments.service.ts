@@ -5,6 +5,7 @@ import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Injectable } from '@nestjs/common'
+import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
@@ -18,7 +19,7 @@ export class CourseEnrollmentsService {
     private readonly userService: UsersService
   ) {}
 
-  async findAllCourses(userId: string): Promise<Course[] | CourseEnrollment[]> {
+  async findAllCourses(userId: string): Promise<(Course | CourseEnrollment)[]> {
     //return the all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
     console.log(courses)
@@ -31,7 +32,7 @@ export class CourseEnrollmentsService {
         return CourseEnrollment
       }
       return course
-    }) as unknown as Course[] | CourseEnrollment[]
+    }) as unknown as (Course | CourseEnrollment)[]
     return result
   }
 
@@ -109,8 +110,24 @@ export class CourseEnrollmentsService {
     return missions.find((mission) => mission._id.toString() === missionId)
   }
 
-  //level service
-  // find level by id
+  async findAllLevels(courseId, userId, missionId): Promise<(Level | LevelManagement)[]> {
+    // do the same concept as the findAllCourses function
+    const levels = await this.coursesService.findAllLevels(courseId, missionId)
+    const result = levels.map((level) => {
+      const LevelManagement = this.courseEnrollmentRepository.findOne({
+        courseId,
+        userId,
+        'missions.missionId': missionId,
+        'missions.levels.levelId': level._id,
+      })
+      if (LevelManagement) {
+        return LevelManagement
+      }
+      return level
+    }) as unknown as (LevelManagement | Level)[]
+    return result
+  }
+
   async findLevelById(
     userId: string,
     courseId: string,
