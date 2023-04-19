@@ -3,6 +3,7 @@ import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
+import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Injectable } from '@nestjs/common'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { UsersService } from 'modules/users/users.service'
@@ -67,5 +68,18 @@ export class CourseEnrollmentsService {
     const missions = courseEnrollment.missions
     // return the missions array
     return missions
+  }
+
+  async createMissionProgress(
+    courseId: string,
+    misssionId: string,
+    createMissionManagementDto: CreateMissionManagementDto
+  ): Promise<MissionManagement> {
+    const mission = await this.courseEnrollmentRepository.createMissionProgress(
+      courseId,
+      misssionId,
+      createMissionManagementDto
+    )
+    return mission
   }
 }

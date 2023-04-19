@@ -81,22 +81,22 @@ export class CourseEnrollmentsController {
   //     return this.courseManagementService.updateMissionProgress(id, missionId, missionMnagementDto)
   //   }
 
-  // @ApiGlobalResponse(MissionManagement, {
-  //   description: 'Create mission progress | ADMIN and creator only',
-  // })
-  // @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
-  // @Post(':id/mission')
-  // createMissionProgress(
-  //   @Param('id') courseId: string,
-  //   @Param('missionId') missionId: string,
-  //   @Body() missionManagementDto: CreateMissionManagementDto
-  // ): Promise<MissionManagement> {
-  //   return this.CourseEnrollmentService.createMissionProgress(
-  //     courseId,
-  //     missionId,
-  //     missionManagementDto
-  //   )
-  // }
+  @ApiGlobalResponse(MissionManagement, {
+    description: 'Create mission progress | ADMIN and creator only',
+  })
+  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
+  @Post(':id/mission')
+  createMissionProgress(
+    @Param('id') courseId: string,
+    @Param('missionId') missionId: string,
+    @Body() missionManagementDto: CreateMissionManagementDto
+  ): Promise<MissionManagement> {
+    return this.CourseEnrollmentService.createMissionProgress(
+      courseId,
+      missionId,
+      missionManagementDto
+    )
+  }
 
   //   @ApiGlobalResponse(MissionManagement, {
   //     description: 'Delete mission progress | ADMIN and creator only',
