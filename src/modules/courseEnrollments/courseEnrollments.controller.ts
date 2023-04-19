@@ -12,6 +12,7 @@ import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateCourseMangementDto } from './dto/update-courseManagement'
 import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
+import { Mission } from 'modules/courses/schemas/mission.schema'
 
 @ApiTags('Course-Enrollements')
 @Controller('course-enrollements')
@@ -115,7 +116,10 @@ export class CourseEnrollmentsController {
     isArray: true,
   })
   @Get(':id')
-  findAllMissions(@Param('id') courseId: string, userId: string): Promise<MissionManagement[]> {
+  findAllMissions(
+    @Param('id') courseId: string,
+    userId: string
+  ): Promise<MissionManagement[] | Mission[]> {
     return this.CourseEnrollmentService.findAllMissions(userId, courseId)
   }
 

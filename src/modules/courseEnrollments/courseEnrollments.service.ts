@@ -5,6 +5,7 @@ import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Injectable } from '@nestjs/common'
+import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { UsersService } from 'modules/users/users.service'
 
@@ -58,16 +59,24 @@ export class CourseEnrollmentsService {
 
   // mission service
   // find all missions
-  async findAllMissions(userId: string, courseId: string): Promise<MissionManagement[]> {
-    // get the courseEnrollment object by xourseId
-    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
-      courseId,
-      userId,
-    })
-    // get the missions array from the courseEnrollment object
-    const missions = courseEnrollment.missions
-    // return the missions array
-    return missions
+  async findAllMissions(
+    userId: string,
+    courseId: string
+  ): Promise<MissionManagement[] | Mission[]> {
+    // do the same concept as the findAllCourses function
+    const missions = await this.coursesService.findAllMissions(courseId)
+    const result = missions.map((mission) => {
+      const MissionManagement = this.courseEnrollmentRepository.findOne({
+        courseId,
+        userId,
+        'missions.missionId': mission._id,
+      })
+      if (MissionManagement) {
+        return MissionManagement
+      }
+      return mission
+    }) as unknown as MissionManagement[] | Mission[]
+    return result
   }
 
   async createMissionProgress(
