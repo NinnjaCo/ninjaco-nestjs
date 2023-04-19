@@ -68,4 +68,20 @@ export class CourseEnrollmentsService {
     // return the missions array
     return missions
   }
+
+  async findMissionById(
+    missionId: string,
+    userId: string,
+    courseId: string
+  ): Promise<MissionManagement> {
+    // get the courseEnrollment object by courseId
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      courseId,
+      userId,
+    })
+    // get the missions array from the courseEnrollment object
+    const missions = courseEnrollment.missions
+    // return the missions array
+    return missions.find((mission) => mission._id.toString() === missionId)
+  }
 }

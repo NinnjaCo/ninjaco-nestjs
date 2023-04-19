@@ -119,14 +119,15 @@ export class CourseEnrollmentsController {
     return this.CourseEnrollmentService.findAllMissions(userId, courseId)
   }
 
-  //   @ApiGlobalResponse(MissionManagement, {
-  //     description: 'Get a mssion user enrolled in  ',
-  //   })
-  //   @Get(':id/mission/:missionId')
-  //   findMission(
-  //     @Param('userId') userId: string,
-  //     @Param('missionId') missionId: string
-  //   ): Promise<MissionManagement> {
-  //     return this.courseManagementService.findMission(userId, missionId)
-  //   }
+  @ApiGlobalResponse(MissionManagement, {
+    description: 'Get a mssion user enrolled in  ',
+  })
+  @Get(':id/:missionId')
+  findMissionById(
+    @Param('userId') userId: string,
+    @Param('missionId') missionId: string,
+    courseId: string
+  ): Promise<MissionManagement> {
+    return this.CourseEnrollmentService.findMissionById(userId, missionId, courseId)
+  }
 }
