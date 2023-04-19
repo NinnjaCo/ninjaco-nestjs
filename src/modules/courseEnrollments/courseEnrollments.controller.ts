@@ -94,17 +94,6 @@ export class CourseEnrollmentsController {
   // }
 
   @ApiGlobalResponse(MissionManagement, {
-    description: 'Delete mission progress ',
-  })
-  @Delete(':id/mission/:missionId')
-  deleteMissionProgress(
-    @Param('id') id: string,
-    @Param('missionId') missionId: string
-  ): Promise<MissionManagement> {
-    return this.courseManagementService.deleteMissionProgress(id, missionId)
-  }
-
-  @ApiGlobalResponse(MissionManagement, {
     description: 'Get all mssions user enrolled in   ',
     isArray: true,
   })
