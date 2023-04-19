@@ -13,6 +13,7 @@ import { RoleEnum } from 'modules/roles/roles.enum'
 import { Roles } from 'modules/roles/roles.decorator'
 import { UpdateCourseMangementDto } from './dto/update-courseManagement'
 import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
+import { LevelManagement } from './schemas/LevelManagement.schema'
 
 @ApiTags('Course-Enrollements')
 @Controller('course-enrollements')
@@ -133,4 +134,20 @@ export class CourseEnrollmentsController {
   ): Promise<MissionManagement> {
     return this.CourseEnrollmentService.findMissionById(userId, missionId, courseId)
   }
+
+  // level management crud
+   @ApiGlobalResponse(LevelManagement, {
+
+    description: 'Create level progress | ADMIN and creator only',  
+  })
+  // get a level by id
+  @Get(':courseid/missoinid/levelid')
+  findLevelById(
+    @Param('courseid') courseId: string,
+    @Param('missionid') missionId: string,
+    @Param('levelid') levelId: string,
+    userId: string
+  ): Promise<LevelManagement> {
+    return this.CourseEnrollmentService.findLevelById(userId, courseId, missionId, levelId)
+
 }
