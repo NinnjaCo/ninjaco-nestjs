@@ -8,6 +8,9 @@ import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
+import { UpdateCourseMangementDto } from './dto/update-courseManagement'
+import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
+import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 import { UsersService } from 'modules/users/users.service'
 
 @Injectable()
@@ -21,23 +24,24 @@ export class CourseEnrollmentsService {
   async findAllCourses(userId: string): Promise<(Course | CourseEnrollment)[]> {
     //return the all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
-    console.log(courses)
     const result = courses.map((course) => {
       const courseEnrollment = this.courseEnrollmentRepository.findOne({
-        courseId: course._id,
+        course: course._id,
         userId,
       })
+      console.log(userId)
+      console.log(course._id)
       if (courseEnrollment) {
+        console.log(courseEnrollment)
         return courseEnrollment
-      } else {
-        return course
       }
-    }) as (Course | CourseEnrollment)[]
+      return course
+    }) as any
     return result
   }
 
   async findCourseById(id: string, userId: string): Promise<CourseEnrollment> {
-    return this.courseEnrollmentRepository.findOne({ _id: id, userId })
+    return this.courseEnrollmentRepository.findOne({ _id: id })
   }
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto, courseId: string) {
     // user from the courseManagmentDto
@@ -158,5 +162,28 @@ export class CourseEnrollmentsService {
       levelEnrollementId
     )
     return level
+  }
+
+  // the update function change the state comleted of a level to true, then checks all the levels
+  // if all completed, it set the completed state of missions to true, and checks for all the missions
+  // if all completed, then it marks the course as completed
+  async updateProgress(
+    courseEnrolementId: string,
+    missionEnrollementId: string,
+    levelEnrollementId: string,
+    levelManagmentDto: UpdateMissionManagementDto,
+    _MissionManagmentDto: UpdateLevelManagementDto,
+    CourseManagmntDto: UpdateCourseMangementDto
+  ): Promise<LevelManagement | MissionManagement | CourseEnrollment> {
+    //update the level and checks if all other levels are completed
+    const progress = await this.courseEnrollmentRepository.updateProgress(
+      courseEnrolementId,
+      missionEnrollementId,
+      levelEnrollementId,
+      levelManagmentDto,
+      _MissionManagmentDto,
+      CourseManagmntDto
+    )
+    return progress
   }
 }

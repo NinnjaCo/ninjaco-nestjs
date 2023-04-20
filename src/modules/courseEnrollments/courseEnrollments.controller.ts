@@ -11,6 +11,7 @@ import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { UpdateCourseMangementDto } from './dto/update-courseManagement'
+import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
 import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 
 @ApiTags('Course-Enrollements')
@@ -22,7 +23,7 @@ export class CourseEnrollmentsController {
     isArray: true,
   })
   @Get()
-  findAllCourses(userId: string): Promise<(Course | CourseEnrollment)[]> {
+  findAllCourses(@Body() userId: string): Promise<(Course | CourseEnrollment)[]> {
     return this.CourseEnrollmentService.findAllCourses(userId)
   }
 
@@ -30,7 +31,7 @@ export class CourseEnrollmentsController {
     description: 'Get course by id ',
   })
   @Get(':id')
-  findOne(@Param('id') id: string, userId: string): Promise<CourseEnrollment> {
+  findOne(@Param('id') id: string, @Body() userId: string): Promise<CourseEnrollment> {
     return this.CourseEnrollmentService.findCourseById(id, userId)
   }
 
@@ -152,6 +153,28 @@ export class CourseEnrollmentsController {
       courseEnrolementId,
       missionEnrollementId,
       levelEnrollementId
+    )
+  }
+
+  @ApiGlobalResponse(LevelManagement, {
+    description: 'Update level progress ',
+  })
+  @Put(':id/:missionId/:levelId')
+  updateProgress(
+    @Param('id') courseEnrolementId: string,
+    @Param('missionId') missionEnrollementId: string,
+    @Param('levelId') levelEnrollementId: string,
+    levelManagmentDto: UpdateMissionManagementDto,
+    MissionManagmentDto: UpdateLevelManagementDto,
+    CourseManagmntDto: UpdateCourseMangementDto
+  ): Promise<LevelManagement | MissionManagement | CourseEnrollment> {
+    return this.CourseEnrollmentService.updateProgress(
+      courseEnrolementId,
+      missionEnrollementId,
+      levelEnrollementId,
+      levelManagmentDto,
+      MissionManagmentDto,
+      CourseManagmntDto
     )
   }
 }
