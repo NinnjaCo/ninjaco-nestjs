@@ -33,7 +33,7 @@ export class CourseEnrollmentsService {
       const courseId = course._id.toString()
       const courseEnrollment = await this.findCourseById(courseId, userId)
       // wait for the course to be fetched from the database
-      waitForDebugger
+
       if (courseEnrollment) {
         console.log(courseEnrollment)
         return courseEnrollment
