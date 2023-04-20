@@ -34,7 +34,7 @@ export class CourseEnrollmentsService {
     //return the all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
     //create an empty array to store the result
-    const result = []
+    let result = []
     courses.map(async (course) => {
       //get the course id as a string
       const courseId = course._id.toString()
@@ -50,6 +50,7 @@ export class CourseEnrollmentsService {
     }) as unknown as (Course | CourseEnrollment)[]
     return result
   }
+
   /**
    *
    * @param courseId
@@ -67,6 +68,12 @@ export class CourseEnrollmentsService {
 
     return this.courseEnrollmentRepository.findOne({ course: courseObjectId, user: userObjectId })
   }
+
+  /**
+   *
+   * @param courseMnagementDto
+   * @returns the course enrollement object when a user enrol in a course
+   */
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
     // user from the courseManagmentDto
     const { userId, ...newDto } = courseMnagementDto
