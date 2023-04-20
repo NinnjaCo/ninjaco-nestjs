@@ -156,7 +156,7 @@ export class CourseEnrollmentsController {
   @ApiGlobalResponse(LevelManagement, {
     description: 'Update level progress ',
   })
-  @Put('/missions/levels/')
+  @Put('/missions/levels')
   updateProgress(
     @Body() levelManagmentDto: UpdateLevelManagementDto,
     missionManagementDto: UpdateMissionManagementDto,
