@@ -10,10 +10,12 @@ import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
+import { ObjectId } from 'mongoose'
 import { UpdateCourseMangementDto } from './dto/update-courseManagement'
 import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
 import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 import { UsersService } from 'modules/users/users.service'
+import { waitForDebugger } from 'inspector'
 
 @Injectable()
 export class CourseEnrollmentsService {
@@ -26,24 +28,30 @@ export class CourseEnrollmentsService {
   async findAllCourses(userId: string): Promise<(Course | CourseEnrollment)[]> {
     //return the all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
-    const result = courses.map((course) => {
-      const courseEnrollment = this.courseEnrollmentRepository.findOne({
-        course: course._id,
-        userId,
-      })
-      console.log(userId)
-      console.log(course._id)
+    const result = courses.map(async (course) => {
+      //get the course id as a string
+      const courseId = course._id.toString()
+      const courseEnrollment = await this.findCourseById(courseId, userId)
+      // wait for the course to be fetched from the database
+      waitForDebugger
       if (courseEnrollment) {
         console.log(courseEnrollment)
         return courseEnrollment
-      }
-      return course
-    }) as any
+      } else return course
+    }) as unknown as (Course | CourseEnrollment)[]
     return result
   }
 
-  async findCourseById(id: string, userId: string): Promise<CourseEnrollment | Course> {
-    return this.courseEnrollmentRepository.findOne({ _id: id, userId })
+  async findCourseById(courseId: string, userId: string): Promise<CourseEnrollment | Course> {
+    // get the course with courseId from the course service
+    const course = await this.coursesService.findCourseById(courseId)
+    // get the user with userId from the user service
+
+    const user = await this.userService.findOne(userId)
+    const courseObjectId = course._id
+    const userObjectId = user._id
+
+    return this.courseEnrollmentRepository.findOne({ course: courseObjectId, user: userObjectId })
   }
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
     // user from the courseManagmentDto
@@ -72,25 +80,25 @@ export class CourseEnrollmentsService {
 
   // mission service
   // find all missions
-  async findAllMissions(
-    userId: string,
-    courseId: string
-  ): Promise<(MissionManagement | Mission)[]> {
-    // do the same concept as the findAllCourses function
-    const missions = await this.coursesService.findAllMissions(courseId)
-    const result = missions.map((mission) => {
-      const MissionManagement = this.courseEnrollmentRepository.findOne({
-        courseId,
-        userId,
-        'missions.missionId': mission._id,
-      })
-      if (MissionManagement) {
-        return MissionManagement
-      }
-      return mission
-    }) as unknown as (MissionManagement | Mission)[]
-    return result
-  }
+  // async findAllMissions(
+  //   userId: string,
+  //   courseId: string
+  // ): Promise<(MissionManagement | Mission)[]> {
+  //   // do the same concept as the findAllCourses function
+  //   const missions = await this.coursesService.findAllMissions(courseId)
+  //   const result = missions.map((mission) => {
+  //     const MissionManagement = this.courseEnrollmentRepository.findOne({
+  //       courseId,
+  //       userId,
+  //       'missions.missionId': mission._id,
+  //     })
+  //     if (MissionManagement) {
+  //       return MissionManagement
+  //     }
+  //     return mission
+  //   }) as unknown as (MissionManagement | Mission)[]
+  //   return result
+  // }
 
   async createMissionProgress(
     createMissionProgress: CreateMissionManagementDto
@@ -105,15 +113,23 @@ export class CourseEnrollmentsService {
     )
   }
 
-  async findMissionById(missionId: string, courseId: string): Promise<MissionManagement> {
+  async findMissionById(
+    missionId: string,
+    courseId: string,
+    userId: string
+  ): Promise<MissionManagement> {
     // get the courseEnrollment object by courseId
-    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
-      courseId,
-    })
+    const courseEnrollment = await this.findCourseById(courseId, userId)
     // get the missions array from the courseEnrollment object
     const missions = courseEnrollment.missions
-    // return the missions array
-    return missions.find((mission) => mission._id.toString() === missionId)
+
+    //loop over the missions array and get the mission object by missionId
+    const mission = missions.map((mission) => {
+      if (mission.mission.toString() === missionId) {
+        return mission
+      }
+    })
+    return mission[0]
   }
 
   async findAllLevels(courseId, userId, missionId): Promise<(Level | LevelManagement)[]> {
@@ -140,19 +156,23 @@ export class CourseEnrollmentsService {
     missionId: string,
     levelId: string
   ): Promise<LevelManagement> {
-    // get the courseEnrollment object by courseId
-    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
-      courseId,
-      userId,
-    })
+    // find one courseEnrollment object by courseId
+    const courseEnrollment = await this.findCourseById(courseId, userId)
     // get the missions array from the courseEnrollment object
     const missions = courseEnrollment.missions
-    // get the mission object by missionId
-    const mission = missions.find((mission) => mission._id.toString() === missionId)
+
     // get the levels array from the mission object
-    const levels = mission.levels
+
+    const mission = missions.map((mission) => {
+      if (mission.mission.toString() === missionId) {
+        return mission
+      }
+    })
+
+    const levels = mission[0].levels
+
     // return the level object by levelId
-    return levels.find((level) => level._id.toString() === levelId)
+    return levels.find((level) => level.level.toString() === levelId)
   }
 
   async createLevelProgress(
