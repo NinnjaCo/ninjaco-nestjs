@@ -115,29 +115,26 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     const levelManagement = missionManagement.levels.find(
       (level) => level.level.toString() === levelManagmentDto.levelId
     )
-
-    console.log(missionManagement)
-    console.log(levelManagement)
     // update the level management
     levelManagement.completed = levelManagmentDto.completed
 
-    //   //********** */
-    //  delete the old mission and add the updated one
+    //********** */
+    //delete the old mission and add the updated one
 
-    //   courseEnrollment.missions = courseEnrollment.missions.map(async (mission) => {
-    //     if (mission.mission.toString() === levelManagmentDto.missionId) {
-    //       // delete the old mission management, and save the new one that contains the new level
-    //       courseEnrollment.missions = (await courseEnrollment.missions.filter(
-    //         (mission) => mission.mission.toString() !== levelManagmentDto.missionId
-    //       )) as unknown as [MissionManagement]
+    courseEnrollment.missions = courseEnrollment.missions.map(async (mission) => {
+      if (mission.mission.toString() === levelManagmentDto.missionId) {
+        // delete the old mission management, and save the new one that contains the new level
+        courseEnrollment.missions = (await courseEnrollment.missions.filter(
+          (mission) => mission.mission.toString() !== levelManagmentDto.missionId
+        )) as unknown as [MissionManagement]
 
-    //       courseEnrollment.missions.push(missionManagement)
-    //       return missionManagement
-    //     }
-    //     return mission
-    //   }) as unknown as [MissionManagement]
+        courseEnrollment.missions.push(missionManagement)
+        return missionManagement
+      }
+      return mission
+    }) as unknown as [MissionManagement]
 
-    //   //************************** */
+    //************************** */
 
     // loop through the levels, if all completed, set the mission as completed, if not return the updated level
     const completedLevels = missionManagement.levels.filter((level) => level.completed === true)
@@ -153,13 +150,13 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
       (mission) => mission.completed === true
     )
     if (completedMissions.length === courseEnrollment.missions.length) {
+      console.log('course completed')
       courseEnrollment.completed = true
     } else {
       await courseEnrollment.save()
       return courseEnrollment
     }
-    console.log(completedMissions.length)
-    console.log(completedLevels.length)
+
     // save the course enrollment
     return await courseEnrollment.save()
   }
