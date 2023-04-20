@@ -178,6 +178,14 @@ export class CourseEnrollmentsService {
     return mission[0]
   }
 
+  /**
+   *
+   * @param courseId
+   * @param userId
+   * @param missionId
+   * @returns all the levels the user is enrolled in and all the levels the user is not enrolled in
+   */
+
   async findAllLevels(courseId, userId, missionId): Promise<(Level | LevelManagement)[]> {
     // do the same concept as the findAllCourses function
     const levels = await this.coursesService.findAllLevels(courseId, missionId)

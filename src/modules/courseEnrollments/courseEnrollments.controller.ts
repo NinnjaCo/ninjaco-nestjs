@@ -90,17 +90,17 @@ export class CourseEnrollmentsController {
     return this.CourseEnrollmentService.createMissionProgress(createMissionProgress)
   }
 
-  // @ApiGlobalResponse(ArraySchema, {
-  //   description: 'Get all mssions user enrolled in   ',
-  //   isArray: true,
-  // })
-  // @Get(':id')
-  // findAllMissions(
-  //   @Param('id') courseId: string,
-  //   userId: string
-  // ): Promise<(MissionManagement | Mission)[]> {
-  //   return this.CourseEnrollmentService.findAllMissions(userId, courseId)
-  // }
+  @ApiGlobalResponse(ArraySchema, {
+    description: 'Get all mssions user enrolled in   ',
+    isArray: true,
+  })
+  @Get(':id')
+  findAllMissions(
+    @Param('id') courseId: string,
+    userId: string
+  ): Promise<(MissionManagement | Mission)[]> {
+    return this.CourseEnrollmentService.findAllMissions(userId, courseId)
+  }
 
   @ApiGlobalResponse(MissionManagement, {
     description: 'Get a mssion user enrolled in  ',
