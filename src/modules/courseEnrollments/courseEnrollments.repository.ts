@@ -73,9 +73,7 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
 
     courseEnrollment.missions = courseEnrollment.missions.map(async (mission) => {
       if (mission._id.toString() === missionEnrollmentId) {
-        console.log(missionManagement)
         // delete the old mission management, and save the new one that contains the new level
-
         courseEnrollment.missions = (await courseEnrollment.missions.filter(
           (mission) => mission._id.toString() !== missionEnrollmentId
         )) as unknown as [MissionManagement]
