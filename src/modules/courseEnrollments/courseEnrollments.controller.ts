@@ -48,17 +48,6 @@ export class CourseEnrollmentsController {
     return this.CourseEnrollmentService.deleteCourse(id)
   }
 
-  // @ApiGlobalResponse(CourseEnrollment, {
-  //   description: 'Update course information',
-  // })
-  // @Put(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() courseMnagementDto: UpdateCourseMangementDto
-  // ): Promise<Course> {
-  //   return this.CourseEnrollmentService.updateCourse(id, courseMnagementDto)
-  // }
-
   @ApiGlobalResponse(CourseEnrollment, {
     description: 'Create new course enrollment ',
   })
@@ -66,19 +55,6 @@ export class CourseEnrollmentsController {
   create(@Body() courseMnagementDto: CreateCourseManagementDto): Promise<CourseEnrollment> {
     return this.CourseEnrollmentService.createCourseEnrollement(courseMnagementDto)
   }
-
-  //   // mission management crud
-  //   @ApiGlobalResponse(ArraySchema, {
-  //     description: 'Update mission progress ',
-  //   })
-  //   @Put(':id/mission/:missionId')
-  //   updateMissionProgress(
-  //     @Param('id') id: string,
-  //     @Param('missionId') missionId: string,
-  //     @Body() missionMnagementDto: UpdateMissionManagementDto
-  //   ): Promise<MissionManagement> {
-  //     return this.courseManagementService.updateMissionProgress(id, missionId, missionMnagementDto)
-  //   }
 
   @ApiGlobalResponse(MissionManagement, {
     description: 'Create mission progress ',
@@ -97,8 +73,9 @@ export class CourseEnrollmentsController {
   @Get(':id')
   findAllMissions(
     @Param('id') courseId: string,
-    userId: string
+    @Body() body
   ): Promise<(MissionManagement | Mission)[]> {
+    const userId = body.userId
     return this.CourseEnrollmentService.findAllMissions(userId, courseId)
   }
 
@@ -123,9 +100,10 @@ export class CourseEnrollmentsController {
   @Get(':id/:missionId')
   findAllLevels(
     @Param('id') courseId: string,
-    userId: string,
+    @Body() body,
     @Param('missionId') missionId: string
   ): Promise<(Level | LevelManagement)[]> {
+    const userId = body.userId
     return this.CourseEnrollmentService.findAllLevels(userId, courseId, missionId)
   }
 
