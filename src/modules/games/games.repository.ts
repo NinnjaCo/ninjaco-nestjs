@@ -1,4 +1,4 @@
-import { EntityRepository } from 'database/entity.repository'
+import { EntityRepository } from '../../database/entity.repository'
 import { Game, GameDocument } from './schemas/game.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'

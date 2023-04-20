@@ -4,7 +4,7 @@ import { Injectable, InternalServerErrorException, UnauthorizedException } from 
 import { JwtService } from '@nestjs/jwt'
 import { MailService } from '../mail/mail.service'
 import { ResetPasswordDto } from './dto/reset-password.dto'
-import { RolesService } from 'modules/roles/roles.service'
+import { RolesService } from '../roles/roles.service'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
 import { UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
@@ -170,11 +170,11 @@ export class AuthService {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: this.JWT_ACCESS_SECRET,
-        expiresIn: '1h',
+        expiresIn: '2d',
       }),
       this.jwtService.signAsync(jwtPayload, {
         secret: this.JWT_REFRESH_SECRET,
-        expiresIn: '7d',
+        expiresIn: '10d',
       }),
     ])
 

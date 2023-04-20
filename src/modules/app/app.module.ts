@@ -16,6 +16,7 @@ import { MinioClientModule } from '../minio/minio-client.module'
 import { RolesGuard } from '../roles/roles.guard'
 import { RolesModule } from '../roles/roles.module'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+import { UserLevelProgressModule } from '../usersLevelsProgress/usersLevelsProgress.module'
 import { UsersModule } from '../users/users.module'
 import { UsersPlayGamesModule } from 'modules/usersPlayGames/usersPlayGames.module'
 import { validateConfig } from '../config'
@@ -46,6 +47,7 @@ import { validateConfig } from '../config'
     GamesModule,
     GameProgressModule,
     UsersPlayGamesModule,
+    UserLevelProgressModule,
   ],
   controllers: [AppController],
   providers: [

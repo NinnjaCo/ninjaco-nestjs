@@ -4,7 +4,7 @@ import { CategoryRepository } from './categories.repository'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { MongoServerError } from 'mongodb'
 import { UpdateCategoryDto } from './dto/update-category.dto'
-import { checkIfValidObjectId, handleMongoDuplicateKeyError } from 'common/shared'
+import { checkIfValidObjectId, handleMongoDuplicateKeyError } from '../../common/shared'
 
 @Injectable()
 export class CategoriesService {
