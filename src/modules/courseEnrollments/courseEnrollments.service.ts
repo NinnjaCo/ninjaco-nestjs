@@ -37,7 +37,15 @@ export class CourseEnrollmentsService {
   }
 
   async findCourseById(id: string, userId: string): Promise<CourseEnrollment> {
-    return this.courseEnrollmentRepository.findOne({ _id: id, userId })
+    // find the course based om the id
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      _id: id,
+    })
+    // if the courseEnrollment is not found throw an error
+    if (!courseEnrollment) {
+      throw new Error('Course not found')
+    }
+    return courseEnrollment
   }
   async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto, courseId: string) {
     // user from the courseManagmentDto
