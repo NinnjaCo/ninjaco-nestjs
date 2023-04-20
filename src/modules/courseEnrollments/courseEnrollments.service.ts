@@ -95,6 +95,12 @@ export class CourseEnrollmentsService {
     return this.courseEnrollmentRepository.create(courseEnrollmentObjct)
   }
 
+  /**
+   *
+   * @param coursid
+   * @returns the deleted courseEnrollment object
+   */
+
   async deleteCourse(id: string): Promise<CourseEnrollment> {
     return this.courseEnrollmentRepository.findOneAndDelete({ _id: id })
   }
