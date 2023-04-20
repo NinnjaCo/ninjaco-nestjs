@@ -203,7 +203,14 @@ export class CourseEnrollmentsService {
     }) as unknown as (LevelManagement | Level)[]
     return result
   }
-
+  /**
+   *
+   * @param userId
+   * @param courseId
+   * @param missionId
+   * @param levelId
+   * @returns the level object according to the levelId
+   */
   async findLevelById(
     userId: string,
     courseId: string,
