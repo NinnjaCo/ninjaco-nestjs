@@ -154,22 +154,16 @@ export class CourseEnrollmentsController {
   @ApiGlobalResponse(LevelManagement, {
     description: 'Update level progress ',
   })
-  @Put(':id/:missionId/:levelId')
+  @Put('/missions/levels/:levelId')
   updateProgress(
-    @Param('id') courseEnrolementId: string,
-    @Param('missionId') missionEnrollementId: string,
-    @Param('levelId') levelEnrollementId: string,
-    levelManagmentDto: UpdateMissionManagementDto,
-    MissionManagmentDto: UpdateLevelManagementDto,
-    CourseManagmntDto: UpdateCourseMangementDto
-  ): Promise<LevelManagement | MissionManagement | CourseEnrollment> {
+    @Body() levelManagmentDto: UpdateLevelManagementDto,
+    missionManagementDto: UpdateMissionManagementDto,
+    courseManagementDto: UpdateCourseMangementDto
+  ): Promise<CourseEnrollment> {
     return this.CourseEnrollmentService.updateProgress(
-      courseEnrolementId,
-      missionEnrollementId,
-      levelEnrollementId,
       levelManagmentDto,
-      MissionManagmentDto,
-      CourseManagmntDto
+      missionManagementDto,
+      courseManagementDto
     )
   }
 }

@@ -170,21 +170,15 @@ export class CourseEnrollmentsService {
   // if all completed, it set the completed state of missions to true, and checks for all the missions
   // if all completed, then it marks the course as completed
   async updateProgress(
-    courseEnrolementId: string,
-    missionEnrollementId: string,
-    levelEnrollementId: string,
-    levelManagmentDto: UpdateMissionManagementDto,
-    _MissionManagmentDto: UpdateLevelManagementDto,
-    CourseManagmntDto: UpdateCourseMangementDto
-  ): Promise<LevelManagement | MissionManagement | CourseEnrollment> {
+    levelManagmentDto: UpdateLevelManagementDto,
+    missionManagementDto: UpdateMissionManagementDto,
+    courseManagementDto: UpdateCourseMangementDto
+  ): Promise<CourseEnrollment> {
     //update the level and checks if all other levels are completed
     const progress = await this.courseEnrollmentRepository.updateProgress(
-      courseEnrolementId,
-      missionEnrollementId,
-      levelEnrollementId,
       levelManagmentDto,
-      _MissionManagmentDto,
-      CourseManagmntDto
+      missionManagementDto,
+      courseManagementDto
     )
     return progress
   }

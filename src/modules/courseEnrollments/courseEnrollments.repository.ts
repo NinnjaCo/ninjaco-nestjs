@@ -98,28 +98,46 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
   }
 
   async updateProgress(
-    courseEnrolementId: string,
-    missionEnrollementId: string,
-    levelEnrollementId: string,
-    levelManagmentDto: UpdateMissionManagementDto,
-    _MissionManagmentDto: UpdateLevelManagementDto,
-    CourseManagmntDto: UpdateCourseMangementDto
+    levelManagmentDto: UpdateLevelManagementDto,
+    missionManagementDto: UpdateMissionManagementDto,
+    courseManagementDto: UpdateCourseMangementDto
   ): Promise<CourseEnrollment> {
     // find the course enrollment
     const courseEnrollment = await this.courseEnrollmentModel.findOne({
-      _id: courseEnrolementId,
+      course: levelManagmentDto.courseId,
+      user: levelManagmentDto.userId,
     })
     // find the mission management inside the course enrollment
     const missionManagement = courseEnrollment.missions.find(
-      (mission) => mission._id.toString() === missionEnrollementId
+      (mission) => mission.mission.toString() === levelManagmentDto.missionId
     )
     // find the level management inside the mission management
     const levelManagement = missionManagement.levels.find(
-      (level) => level._id.toString() === levelEnrollementId
+      (level) => level.level.toString() === levelManagmentDto.levelId
     )
 
+    console.log(missionManagement)
+    console.log(levelManagement)
     // update the level management
     levelManagement.completed = levelManagmentDto.completed
+
+    //   //********** */
+    //  delete the old mission and add the updated one
+
+    //   courseEnrollment.missions = courseEnrollment.missions.map(async (mission) => {
+    //     if (mission.mission.toString() === levelManagmentDto.missionId) {
+    //       // delete the old mission management, and save the new one that contains the new level
+    //       courseEnrollment.missions = (await courseEnrollment.missions.filter(
+    //         (mission) => mission.mission.toString() !== levelManagmentDto.missionId
+    //       )) as unknown as [MissionManagement]
+
+    //       courseEnrollment.missions.push(missionManagement)
+    //       return missionManagement
+    //     }
+    //     return mission
+    //   }) as unknown as [MissionManagement]
+
+    //   //************************** */
 
     // loop through the levels, if all completed, set the mission as completed, if not return the updated level
     const completedLevels = missionManagement.levels.filter((level) => level.completed === true)
