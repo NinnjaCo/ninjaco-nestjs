@@ -152,7 +152,13 @@ export class CourseEnrollmentsService {
       mission
     )
   }
-
+  /**
+   *
+   * @param missionId
+   * @param courseId
+   * @param userId
+   * @returns the mission object according to the missionId
+   */
   async findMissionById(
     missionId: string,
     courseId: string,
