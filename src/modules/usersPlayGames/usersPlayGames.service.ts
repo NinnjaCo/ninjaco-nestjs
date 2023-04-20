@@ -80,7 +80,6 @@ export class UsersPlayGamesService {
         user: userId,
       })
 
-      console.log('userPlayGame', userPlayGame)
       if (userPlayGame) {
         newGames.push(userPlayGame)
       } else {
