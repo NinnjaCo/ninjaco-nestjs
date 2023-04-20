@@ -135,7 +135,11 @@ export class CourseEnrollmentsService {
     }) as unknown as (MissionManagement | Mission)[]
     return result
   }
-
+  /**
+   *
+   * @param createMissionProgress
+   * @returns the missionProgress object
+   */
   async createMissionProgress(
     createMissionProgress: CreateMissionManagementDto
   ): Promise<MissionManagement> {
