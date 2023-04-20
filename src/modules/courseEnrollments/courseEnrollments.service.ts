@@ -251,6 +251,13 @@ export class CourseEnrollmentsService {
     return await this.courseEnrollmentRepository.createLevelProgress(createLevelProgress, level)
   }
 
+  /**
+   *
+   * @param levelManagmentDto
+   * @param missionManagementDto
+   * @param courseManagementDto
+   * @returns the updated courseEnrollment object if the level is completed, the mission is completed, and the course is completed
+   */
   // the update function change the state comleted of a level to true, then checks all the levels
   // if all completed, it set the completed state of missions to true, and checks for all the missions
   // if all completed, then it marks the course as completed
