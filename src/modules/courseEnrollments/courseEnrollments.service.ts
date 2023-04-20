@@ -34,22 +34,27 @@ export class CourseEnrollmentsService {
     //return the all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
     //create an empty array to store the result
-    let result = []
-    result = courses.map(async (course) => {
+
+    const result = courses.map(async (course) => {
       //get the course id as a string
       const courseId = course._id.toString()
-      const courseEnrollment = await this.findCourseById(courseId, userId)
-      // wait for the course to be fetched from the database
+      const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+        course: courseId,
+        user: userId,
+      })
 
+      // wait for the course to be fetched from the database
       if (courseEnrollment) {
+        console.log('ia m here')
         result.push(courseEnrollment)
         console.log(result)
-        return result
       } else {
+        console.log('lalalalal')
         result.push(course)
-        return result
+        console.log(result)
       }
-    }) as unknown as (Course | CourseEnrollment)[]
+    }) as any
+    console.log('outout,', result)
     return result
   }
 
