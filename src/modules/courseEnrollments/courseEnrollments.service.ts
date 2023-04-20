@@ -3,6 +3,8 @@ import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
+import { CreateMissionDto } from 'modules/courses/dto/create-mission.dto'
+import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Injectable } from '@nestjs/common'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
@@ -40,15 +42,15 @@ export class CourseEnrollmentsService {
     return result
   }
 
-  async findCourseById(id: string, userId: string): Promise<CourseEnrollment> {
-    return this.courseEnrollmentRepository.findOne({ _id: id })
+  async findCourseById(id: string, userId: string): Promise<CourseEnrollment | Course> {
+    return this.courseEnrollmentRepository.findOne({ _id: id, userId })
   }
-  async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto, courseId: string) {
+  async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
     // user from the courseManagmentDto
     const { userId, ...newDto } = courseMnagementDto
     // get the user Object and the course
     const user = await this.userService.findOne(userId)
-    const course = await this.coursesService.findCourseById(courseId)
+    const course = await this.coursesService.findCourseById(courseMnagementDto.courseId)
 
     const courseEnrollment = {
       newDto,
@@ -91,14 +93,16 @@ export class CourseEnrollmentsService {
   }
 
   async createMissionProgress(
-    courseEnrollementId: string,
-    misssionId: string
+    createMissionProgress: CreateMissionManagementDto
   ): Promise<MissionManagement> {
-    const mission = await this.courseEnrollmentRepository.createMissionProgress(
-      courseEnrollementId,
-      misssionId
+    const mission = await this.coursesService.findMissionById(
+      createMissionProgress.courseId,
+      createMissionProgress.missionId
     )
-    return mission
+    return await this.courseEnrollmentRepository.createMissionProgress(
+      createMissionProgress,
+      mission
+    )
   }
 
   async findMissionById(missionId: string, courseId: string): Promise<MissionManagement> {
