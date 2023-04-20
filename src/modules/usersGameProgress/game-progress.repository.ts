@@ -1,4 +1,3 @@
-import { CreateGameProgressDto } from 'modules/usersPlayGames/dto/create-game-progress.dto'
 import { EntityRepository } from 'database/entity.repository'
 import { GameProgress, GameProgressDocument } from './schema/game-progress.schema'
 import { InjectModel } from '@nestjs/mongoose'
@@ -11,8 +10,5 @@ export class GameProgressRepository extends EntityRepository<GameProgressDocumen
     @InjectModel(GameProgress.name) private readonly gameProgressModel: Model<GameProgressDocument>
   ) {
     super(gameProgressModel)
-  }
-  createGameProgressEntry(createGameProgressDto: CreateGameProgressDto): Promise<GameProgress> {
-    return this.gameProgressModel.create(createGameProgressDto)
   }
 }
