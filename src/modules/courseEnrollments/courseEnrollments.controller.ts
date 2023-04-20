@@ -6,6 +6,7 @@ import { Course } from 'modules/courses/schemas/course.schema'
 import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsService } from './courseEnrollments.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
+import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
@@ -30,9 +31,12 @@ export class CourseEnrollmentsController {
   @ApiGlobalResponse(CourseEnrollment, {
     description: 'Get course by id ',
   })
-  @Get(':id')
-  findOne(@Param('id') id: string, @Body() userId: string): Promise<CourseEnrollment> {
-    return this.CourseEnrollmentService.findCourseById(id, userId)
+  @Get(':courseId')
+  findOne(
+    @Param('courseId') courseId: string,
+    @Body() userId: string
+  ): Promise<CourseEnrollment | Course> {
+    return this.CourseEnrollmentService.findCourseById(courseId, userId)
   }
 
   @ApiGlobalResponse(CourseEnrollment, {
@@ -57,12 +61,9 @@ export class CourseEnrollmentsController {
   @ApiGlobalResponse(CourseEnrollment, {
     description: 'Create new course enrollment ',
   })
-  @Post(':courseId')
-  create(
-    @Param('courseId') courseId: string,
-    @Body() courseMnagementDto: CreateCourseManagementDto
-  ): Promise<CourseEnrollment> {
-    return this.CourseEnrollmentService.createCourseEnrollement(courseMnagementDto, courseId)
+  @Post()
+  create(@Body() courseMnagementDto: CreateCourseManagementDto): Promise<CourseEnrollment> {
+    return this.CourseEnrollmentService.createCourseEnrollement(courseMnagementDto)
   }
 
   //   // mission management crud
@@ -81,12 +82,11 @@ export class CourseEnrollmentsController {
   @ApiGlobalResponse(MissionManagement, {
     description: 'Create mission progress ',
   })
-  @Post(':id/:missionId')
+  @Post('/missions')
   createMissionProgress(
-    @Param('id') courseEnrollemntId: string,
-    @Param('missionId') missionId: string
+    @Body() createMissionProgress: CreateMissionManagementDto
   ): Promise<MissionManagement> {
-    return this.CourseEnrollmentService.createMissionProgress(courseEnrollemntId, missionId)
+    return this.CourseEnrollmentService.createMissionProgress(createMissionProgress)
   }
 
   @ApiGlobalResponse(ArraySchema, {
