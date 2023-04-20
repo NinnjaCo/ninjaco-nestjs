@@ -9,7 +9,7 @@ import { User } from '../..//users/schemas/user.schema'
 
 export type LevelProgressDocument = HydratedDocument<LevelProgress>
 
-@Schema({ collection: 'LevelProgress', timestamps: true })
+@Schema({ collection: 'levelProgress', timestamps: true })
 export class LevelProgress extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true, type: 'ObjectId', ref: Course.name })
