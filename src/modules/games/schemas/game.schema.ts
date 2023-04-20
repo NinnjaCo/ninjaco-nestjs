@@ -16,6 +16,10 @@ export class Game extends BaseEntity {
   image: string
 
   @ApiProperty()
+  @Prop({ required: true })
+  playerDirection: string
+
+  @ApiProperty()
   @Prop()
   numOfBlocks: number
 

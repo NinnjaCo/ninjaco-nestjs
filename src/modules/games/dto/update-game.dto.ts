@@ -13,6 +13,12 @@ export class UpdateGameDto {
   image: string
 
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  playerDirection: string
+
+  @ApiProperty()
   @IsNumber()
   @IsOptional()
   numOfBlocks?: number
