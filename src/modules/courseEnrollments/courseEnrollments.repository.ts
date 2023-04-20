@@ -1,10 +1,16 @@
 import { CourseEnrollment, CourseEnrollmentDocument } from './schemas/courseEnrollment.schema'
+import { CreateMissionDto } from 'modules/courses/dto/create-mission.dto'
+import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { EntityRepository } from 'database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { LevelManagement } from './schemas/LevelManagement.schema'
+import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { Model } from 'mongoose'
+import { UpdateCourseMangementDto } from './dto/update-courseManagement'
+import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
+import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 
 @Injectable()
 export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollmentDocument> {
@@ -21,12 +27,12 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
   }
 
   async createMissionProgress(
-    courseEnrollmentId: string,
-    missionId: string
+    createMissionProgress: CreateMissionManagementDto,
+    mission: Mission
   ): Promise<MissionManagement> {
     // create a new mission management
     const missionObjct = {
-      missionId,
+      mission: mission,
       startedAt: new Date().toISOString(),
     }
     const missionManagement = new this.missionManagementModel({
@@ -35,9 +41,10 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
 
     // find the course enrollment
     const courseEnrollment = await this.courseEnrollmentModel.findOne({
-      _id: courseEnrollmentId,
+      course: createMissionProgress.courseId,
+      user: createMissionProgress.userId,
     })
-    console.log(courseEnrollmentId)
+
     console.log(courseEnrollment)
     console.log(missionManagement)
     // push the mission management to the missions array of the course enrollment
@@ -87,5 +94,54 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     await courseEnrollment.save()
     // return the level management
     return levelManagement
+  }
+
+  async updateProgress(
+    courseEnrolementId: string,
+    missionEnrollementId: string,
+    levelEnrollementId: string,
+    levelManagmentDto: UpdateMissionManagementDto,
+    _MissionManagmentDto: UpdateLevelManagementDto,
+    CourseManagmntDto: UpdateCourseMangementDto
+  ): Promise<CourseEnrollment> {
+    // find the course enrollment
+    const courseEnrollment = await this.courseEnrollmentModel.findOne({
+      _id: courseEnrolementId,
+    })
+    // find the mission management inside the course enrollment
+    const missionManagement = courseEnrollment.missions.find(
+      (mission) => mission._id.toString() === missionEnrollementId
+    )
+    // find the level management inside the mission management
+    const levelManagement = missionManagement.levels.find(
+      (level) => level._id.toString() === levelEnrollementId
+    )
+
+    // update the level management
+    levelManagement.completed = levelManagmentDto.completed
+
+    // loop through the levels, if all completed, set the mission as completed, if not return the updated level
+    const completedLevels = missionManagement.levels.filter((level) => level.completed === true)
+    if (completedLevels.length === missionManagement.levels.length) {
+      missionManagement.completed = true
+    } else {
+      await courseEnrollment.save()
+      return courseEnrollment
+    }
+
+    //loop through the missions, if all completed, set the course as completed, if not return the updated mission
+    const completedMissions = courseEnrollment.missions.filter(
+      (mission) => mission.completed === true
+    )
+    if (completedMissions.length === courseEnrollment.missions.length) {
+      courseEnrollment.completed = true
+    } else {
+      await courseEnrollment.save()
+      return courseEnrollment
+    }
+    console.log(completedMissions.length)
+    console.log(completedLevels.length)
+    // save the course enrollment
+    return await courseEnrollment.save()
   }
 }
