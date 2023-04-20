@@ -3,7 +3,6 @@ import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
-import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Injectable } from '@nestjs/common'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
@@ -24,15 +23,16 @@ export class CourseEnrollmentsService {
     const courses = await this.coursesService.findAll()
     console.log(courses)
     const result = courses.map((course) => {
-      const CourseEnrollment = this.courseEnrollmentRepository.findOne({
+      const courseEnrollment = this.courseEnrollmentRepository.findOne({
         courseId: course._id,
         userId,
       })
-      if (CourseEnrollment) {
-        return CourseEnrollment
+      if (courseEnrollment) {
+        return courseEnrollment
+      } else {
+        return course
       }
-      return course
-    }) as unknown as (Course | CourseEnrollment)[]
+    }) as (Course | CourseEnrollment)[]
     return result
   }
 
@@ -51,8 +51,13 @@ export class CourseEnrollmentsService {
       user,
       course,
     }
+    // create a new object and add to it the enrolledAt date using the new Date() function
+    const courseEnrollmentObjct = {
+      ...courseEnrollment,
+      enrolledAt: new Date().toISOString(),
+    }
 
-    return this.courseEnrollmentRepository.create(courseEnrollment)
+    return this.courseEnrollmentRepository.create(courseEnrollmentObjct)
   }
 
   async deleteCourse(id: string): Promise<CourseEnrollment> {
@@ -82,27 +87,20 @@ export class CourseEnrollmentsService {
   }
 
   async createMissionProgress(
-    courseId: string,
-    misssionId: string,
-    createMissionManagementDto: CreateMissionManagementDto
+    courseEnrollementId: string,
+    misssionId: string
   ): Promise<MissionManagement> {
     const mission = await this.courseEnrollmentRepository.createMissionProgress(
-      courseId,
-      misssionId,
-      createMissionManagementDto
+      courseEnrollementId,
+      misssionId
     )
     return mission
   }
 
-  async findMissionById(
-    missionId: string,
-    userId: string,
-    courseId: string
-  ): Promise<MissionManagement> {
+  async findMissionById(missionId: string, courseId: string): Promise<MissionManagement> {
     // get the courseEnrollment object by courseId
     const courseEnrollment = await this.courseEnrollmentRepository.findOne({
       courseId,
-      userId,
     })
     // get the missions array from the courseEnrollment object
     const missions = courseEnrollment.missions
@@ -147,5 +145,18 @@ export class CourseEnrollmentsService {
     const levels = mission.levels
     // return the level object by levelId
     return levels.find((level) => level._id.toString() === levelId)
+  }
+
+  async createLevelProgress(
+    courseEnrollementId: string,
+    missionEnrollementId: string,
+    levelEnrollementId: string
+  ): Promise<LevelManagement> {
+    const level = await this.courseEnrollmentRepository.createLevelProgress(
+      courseEnrollementId,
+      missionEnrollementId,
+      levelEnrollementId
+    )
+    return level
   }
 }
