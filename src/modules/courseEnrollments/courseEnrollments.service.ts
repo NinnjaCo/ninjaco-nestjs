@@ -3,7 +3,7 @@ import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
-import { CreateMissionDto } from 'modules/courses/dto/create-mission.dto'
+import { CreateLevelManagementDto } from './dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Injectable } from '@nestjs/common'
 import { Level } from 'modules/courses/schemas/level.schema'
@@ -172,37 +172,29 @@ export class CourseEnrollmentsService {
   // }
 
   async createLevelProgress(
-    courseEnrollementId: string,
-    missionEnrollementId: string,
-    levelEnrollementId: string
+    createLevelProgress: CreateLevelManagementDto
   ): Promise<LevelManagement> {
-    const level = await this.courseEnrollmentRepository.createLevelProgress(
-      courseEnrollementId,
-      missionEnrollementId,
-      levelEnrollementId
+    const level = await this.coursesService.findLevelById(
+      createLevelProgress.courseId,
+      createLevelProgress.missionId,
+      createLevelProgress.levelId
     )
-    return level
+    return await this.courseEnrollmentRepository.createLevelProgress(createLevelProgress, level)
   }
 
   // the update function change the state comleted of a level to true, then checks all the levels
   // if all completed, it set the completed state of missions to true, and checks for all the missions
   // if all completed, then it marks the course as completed
   async updateProgress(
-    courseEnrolementId: string,
-    missionEnrollementId: string,
-    levelEnrollementId: string,
-    levelManagmentDto: UpdateMissionManagementDto,
-    _MissionManagmentDto: UpdateLevelManagementDto,
-    CourseManagmntDto: UpdateCourseMangementDto
-  ): Promise<LevelManagement | MissionManagement | CourseEnrollment> {
+    levelManagmentDto: UpdateLevelManagementDto,
+    missionManagementDto: UpdateMissionManagementDto,
+    courseManagementDto: UpdateCourseMangementDto
+  ): Promise<CourseEnrollment> {
     //update the level and checks if all other levels are completed
     const progress = await this.courseEnrollmentRepository.updateProgress(
-      courseEnrolementId,
-      missionEnrollementId,
-      levelEnrollementId,
       levelManagmentDto,
-      _MissionManagmentDto,
-      CourseManagmntDto
+      missionManagementDto,
+      courseManagementDto
     )
     return progress
   }

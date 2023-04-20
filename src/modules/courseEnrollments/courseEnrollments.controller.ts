@@ -6,6 +6,7 @@ import { Course } from 'modules/courses/schemas/course.schema'
 import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsService } from './courseEnrollments.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
+import { CreateLevelManagementDto } from './dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
@@ -144,38 +145,26 @@ export class CourseEnrollmentsController {
   @ApiGlobalResponse(LevelManagement, {
     description: 'Create level progress ',
   })
-  @Post(':id/:missionId/:levelId')
+  @Post('/missions/levels')
   createLevelProgress(
-    @Param('id') courseEnrolementId: string,
-    @Param('missionId') missionEnrollementId: string,
-    @Param('levelId') levelEnrollementId: string
+    @Body() createLevelProgress: CreateLevelManagementDto
   ): Promise<LevelManagement> {
-    return this.CourseEnrollmentService.createLevelProgress(
-      courseEnrolementId,
-      missionEnrollementId,
-      levelEnrollementId
-    )
+    return this.CourseEnrollmentService.createLevelProgress(createLevelProgress)
   }
 
   @ApiGlobalResponse(LevelManagement, {
     description: 'Update level progress ',
   })
-  @Put(':id/:missionId/:levelId')
+  @Put('/missions/levels/:levelId')
   updateProgress(
-    @Param('id') courseEnrolementId: string,
-    @Param('missionId') missionEnrollementId: string,
-    @Param('levelId') levelEnrollementId: string,
-    levelManagmentDto: UpdateMissionManagementDto,
-    MissionManagmentDto: UpdateLevelManagementDto,
-    CourseManagmntDto: UpdateCourseMangementDto
-  ): Promise<LevelManagement | MissionManagement | CourseEnrollment> {
+    @Body() levelManagmentDto: UpdateLevelManagementDto,
+    missionManagementDto: UpdateMissionManagementDto,
+    courseManagementDto: UpdateCourseMangementDto
+  ): Promise<CourseEnrollment> {
     return this.CourseEnrollmentService.updateProgress(
-      courseEnrolementId,
-      missionEnrollementId,
-      levelEnrollementId,
       levelManagmentDto,
-      MissionManagmentDto,
-      CourseManagmntDto
+      missionManagementDto,
+      courseManagementDto
     )
   }
 }
