@@ -235,7 +235,11 @@ export class CourseEnrollmentsService {
     // return the level object by levelId
     return levels.find((level) => level.level.toString() === levelId)
   }
-
+  /**
+   *
+   * @param createLevelProgress
+   * @returns the levelProgress object
+   */
   async createLevelProgress(
     createLevelProgress: CreateLevelManagementDto
   ): Promise<LevelManagement> {
