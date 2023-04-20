@@ -18,7 +18,7 @@ export class LevelManagement extends BaseEntity {
   levelProgress: LevelProgress
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ default: false, required: true })
   completed: boolean
 
   @ApiProperty()
