@@ -6,4 +6,9 @@ export class CreateCourseManagementDto {
   @IsString()
   @IsNotEmpty()
   userId: string
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  courseId: string
 }
