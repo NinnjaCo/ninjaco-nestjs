@@ -1,9 +1,9 @@
 import { ApiGlobalResponse } from '../../common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
-import { ArraySchema } from 'swagger/swagger-primitive-type'
+import { ArraySchema } from '../../swagger/swagger-primitive-type'
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { CreateUserPlayGameDto } from './dto/create-user-play-game.dto'
-import { GameProgress } from '../usersGameProgress/schema/game-progress.schema'
+import { Game } from '../games/schemas/game.schema'
 import { UpdateUserPlayGameDto } from './dto/update-user-play-game.dto'
 import { UserPlayGame } from './schemas/userPlayGame.schema'
 import { UsersPlayGamesService } from './usersPlayGames.service'
@@ -33,9 +33,12 @@ export class UsersPlayGamesController {
   @ApiGlobalResponse(UserPlayGame, {
     description: 'Get user play game entry by id',
   })
-  @Get(':id')
-  async getUserPlayGameEntry(@Param('id') id: string): Promise<UserPlayGame> {
-    return await this.userPlayGamesService.getUserPlayGameEntry(id)
+  @Get(':gameId')
+  async getUserPlayGameEntry(
+    @Param('gameId') gameId: string,
+    @Query('userId') userId: string
+  ): Promise<Game | UserPlayGame> {
+    return await this.userPlayGamesService.getUserPlayGameEntry(gameId, userId)
   }
 
   @ApiGlobalResponse(UserPlayGame, {

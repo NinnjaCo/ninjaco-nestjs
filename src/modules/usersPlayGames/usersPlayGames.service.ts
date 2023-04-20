@@ -108,11 +108,16 @@ export class UsersPlayGamesService {
    * @throws {BadRequestException}
    * @throws {InternalServerErrorException}
    */
-  async getUserPlayGameEntry(id: string): Promise<UserPlayGame> {
-    const userPlayGame = await this.usersPlayGamesRepository.findOne({ _id: id })
+  async getUserPlayGameEntry(gameId: string, userId: string): Promise<Game | UserPlayGame> {
+    const userPlayGame = await this.usersPlayGamesRepository.findOne({ game: gameId, user: userId })
 
     if (!userPlayGame) {
-      throw new BadRequestException('User play game entry not found')
+      const game = await this.gamesService.findOne(gameId)
+      if (!game) {
+        throw new BadRequestException('Incorrect game id')
+      }
+
+      return game
     }
 
     return userPlayGame
