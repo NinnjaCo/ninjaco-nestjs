@@ -1,9 +1,10 @@
 import { CourseEnrollment, CourseEnrollmentDocument } from './schemas/courseEnrollment.schema'
-import { CreateMissionDto } from 'modules/courses/dto/create-mission.dto'
+import { CreateLevelManagementDto } from './dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { EntityRepository } from 'database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
+import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
@@ -56,13 +57,12 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
   }
 
   async createLevelProgress(
-    courseEnrollmentId: string,
-    missionEnrollmentId: string,
-    levelEnrollmentId: string
+    createLevelProgress: CreateLevelManagementDto,
+    level: Level
   ): Promise<LevelManagement> {
     // create a new level management
     const levelObjct = {
-      levelEnrollmentId,
+      level: level,
       startedAt: new Date().toISOString(),
     }
     const levelManagement = new this.levelManagementModel({
@@ -70,19 +70,20 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     })
     // find the course enrollment
     const courseEnrollment = await this.courseEnrollmentModel.findOne({
-      _id: courseEnrollmentId,
+      course: createLevelProgress.courseId,
+      user: createLevelProgress.userId,
     })
     // find the mission management inside the course enrollment
     const missionManagement = courseEnrollment.missions.find(
-      (mission) => mission._id.toString() === missionEnrollmentId
+      (mission) => mission.mission.toString() === createLevelProgress.missionId
     )
     missionManagement.levels.push(levelManagement)
-
+    console.log(missionManagement)
     courseEnrollment.missions = courseEnrollment.missions.map(async (mission) => {
-      if (mission._id.toString() === missionEnrollmentId) {
+      if (mission.mission.toString() === createLevelProgress.missionId) {
         // delete the old mission management, and save the new one that contains the new level
         courseEnrollment.missions = (await courseEnrollment.missions.filter(
-          (mission) => mission._id.toString() !== missionEnrollmentId
+          (mission) => mission.mission.toString() !== createLevelProgress.missionId
         )) as unknown as [MissionManagement]
 
         courseEnrollment.missions.push(missionManagement)
