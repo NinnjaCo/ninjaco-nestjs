@@ -1,5 +1,5 @@
 import { ApiTags } from '@nestjs/swagger'
-import { Body, Controller, Put } from '@nestjs/common'
+import { Body, Controller, Param, Put } from '@nestjs/common'
 import { GameProgress } from './schema/game-progress.schema'
 import { GameProgressService } from './game-progress.service'
 import { UpdateGameProgressDto } from './dto/update-game-progress.dto'
@@ -9,9 +9,11 @@ import { UpdateGameProgressDto } from './dto/update-game-progress.dto'
 export class GameProgressController {
   constructor(private readonly gameProgressService: GameProgressService) {}
 
-  @Put()
-  async updateGameProgress(@Body() updateDto: UpdateGameProgressDto): Promise<GameProgress> {
-    console.log('Dto', updateDto)
-    return await this.gameProgressService.updateGameProgress(updateDto)
+  @Put(':id')
+  async updateGameProgress(
+    @Param('id') id: string,
+    @Body() updateDto: UpdateGameProgressDto
+  ): Promise<GameProgress> {
+    return await this.gameProgressService.updateGameProgress(id, updateDto)
   }
 }

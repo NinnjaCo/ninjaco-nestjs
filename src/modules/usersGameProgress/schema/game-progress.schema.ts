@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BaseEntity } from 'database/base.entity'
-import { Game } from 'modules/games/schemas/game.schema'
+import { BaseEntity } from '../../../database/base.entity'
+import { Game } from '../../games/schemas/game.schema'
 import { HydratedDocument } from 'mongoose'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { User } from 'modules/users/schemas/user.schema'
+import { User } from '../../users/schemas/user.schema'
 
 export type GameProgressDocument = HydratedDocument<GameProgress>
 
@@ -18,8 +18,10 @@ export class GameProgress extends BaseEntity {
   gameId: string
 
   @ApiProperty()
-  @Prop({ required: true, default: '' })
+  @Prop({ default: '' })
   progress: string
 }
 
 export const GameProgressSchema = SchemaFactory.createForClass(GameProgress)
+
+GameProgressSchema.index({ userId: 1, gameId: 1 }, { unique: true })
