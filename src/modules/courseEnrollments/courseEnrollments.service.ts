@@ -25,10 +25,17 @@ export class CourseEnrollmentsService {
     private readonly userService: UsersService
   ) {}
 
+  /**
+   *
+   * @param userId
+   * @returns return all the courses the user is enrolled in and all the courses the user is not enrolled in
+   */
   async findAllCourses(userId: string): Promise<(Course | CourseEnrollment)[]> {
     //return the all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
-    const result = courses.map(async (course) => {
+    //create an empty array to store the result
+    const result = []
+    courses.map(async (course) => {
       //get the course id as a string
       const courseId = course._id.toString()
       const courseEnrollment = await this.findCourseById(courseId, userId)
@@ -36,8 +43,10 @@ export class CourseEnrollmentsService {
 
       if (courseEnrollment) {
         console.log(courseEnrollment)
-        return courseEnrollment
-      } else return course
+        result.push(courseEnrollment)
+      } else {
+        result.push(course)
+      }
     }) as unknown as (Course | CourseEnrollment)[]
     return result
   }
