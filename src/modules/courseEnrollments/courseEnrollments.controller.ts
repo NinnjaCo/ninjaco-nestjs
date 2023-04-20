@@ -25,7 +25,8 @@ export class CourseEnrollmentsController {
     isArray: true,
   })
   @Get()
-  findAllCourses(@Body() userId: string): Promise<(Course | CourseEnrollment)[]> {
+  findAllCourses(@Body() body): Promise<(Course | CourseEnrollment)[]> {
+    const userId = body.userId
     return this.CourseEnrollmentService.findAllCourses(userId)
   }
 
@@ -33,10 +34,8 @@ export class CourseEnrollmentsController {
     description: 'Get course by id ',
   })
   @Get(':courseId')
-  findOne(
-    @Param('courseId') courseId: string,
-    @Body() userId: string
-  ): Promise<CourseEnrollment | Course> {
+  findOne(@Param('courseId') courseId: string, @Body() body): Promise<CourseEnrollment | Course> {
+    const userId = body.userId
     return this.CourseEnrollmentService.findCourseById(courseId, userId)
   }
 
@@ -105,12 +104,14 @@ export class CourseEnrollmentsController {
   @ApiGlobalResponse(MissionManagement, {
     description: 'Get a mssion user enrolled in  ',
   })
-  @Get(':id/:missionId')
+  @Get(':id/missions/:missionId')
   findMissionById(
-    @Param('missionId') missionEnrollmentId: string,
-    @Param('id') courseEnrollmentId: string
+    @Param('missionId') missionId: string,
+    @Param('id') courseId: string,
+    @Body() body
   ): Promise<MissionManagement> {
-    return this.CourseEnrollmentService.findMissionById(missionEnrollmentId, courseEnrollmentId)
+    const userId = body.userId
+    return this.CourseEnrollmentService.findMissionById(missionId, courseId, userId)
   }
 
   //level crud
@@ -131,16 +132,15 @@ export class CourseEnrollmentsController {
     description: 'Create level progress | ADMIN and creator only',
   })
   // get a level by id
-  @Get(':id/:missoinId/:levelId')
-  findLevelById(
-    @Param('id') courseId: string,
-    @Param('missionId') missionId: string,
-    @Param('levelId') levelId: string,
-    userId: string
-  ): Promise<LevelManagement> {
-    return this.CourseEnrollmentService.findLevelById(userId, courseId, missionId, levelId)
-  }
-
+  // @Get(':id/:missoinId/:levelId')
+  // findLevelById(
+  //   @Param('id') courseId: string,
+  //   @Param('missionId') missionId: string,
+  //   @Param('levelId') levelId: string,
+  //   userId: string
+  // ): Promise<LevelManagement> {
+  //   return this.CourseEnrollmentService.findLevelById(userId, courseId, missionId, levelId)
+  // }
   @ApiGlobalResponse(LevelManagement, {
     description: 'Create level progress ',
   })
