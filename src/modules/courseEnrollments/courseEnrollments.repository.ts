@@ -27,6 +27,13 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     super(courseEnrollmentModel)
   }
 
+  /**
+   * create mission progress
+   * @param createMissionProgress
+   * @param mission
+   * @returns Promise<MissionManagement>
+   */
+
   async createMissionProgress(
     createMissionProgress: CreateMissionManagementDto,
     mission: Mission
@@ -56,6 +63,12 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     return missionManagement
   }
 
+  /**
+   *
+   * @param createLevelProgress
+   * @param level
+   * @returns Promise<LevelManagement>
+   */
   async createLevelProgress(
     createLevelProgress: CreateLevelManagementDto,
     level: Level
@@ -96,6 +109,14 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     // return the level management
     return levelManagement
   }
+
+  /**
+   *
+   * @param levelManagmentDto
+   * @param missionManagementDto
+   * @param courseManagementDto
+   * @returns  Promise<CourseEnrollment>
+   */
 
   async updateProgress(
     levelManagmentDto: UpdateLevelManagementDto,
