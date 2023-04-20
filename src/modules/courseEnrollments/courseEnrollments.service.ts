@@ -42,15 +42,20 @@ export class CourseEnrollmentsService {
       // wait for the course to be fetched from the database
 
       if (courseEnrollment) {
-        console.log(courseEnrollment)
         result.push(courseEnrollment)
+        console.log(result)
       } else {
         result.push(course)
       }
     }) as unknown as (Course | CourseEnrollment)[]
     return result
   }
-
+  /**
+   *
+   * @param courseId
+   * @param userId
+   * @returns the courseEnrollment object if the user is enrolled in the course or the course object if the user is not enrolled in the course
+   */
   async findCourseById(courseId: string, userId: string): Promise<CourseEnrollment | Course> {
     // get the course with courseId from the course service
     const course = await this.coursesService.findCourseById(courseId)
