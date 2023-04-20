@@ -35,7 +35,7 @@ export class CourseEnrollmentsService {
     const courses = await this.coursesService.findAll()
     //create an empty array to store the result
     let result = []
-    courses.map(async (course) => {
+    result = courses.map(async (course) => {
       //get the course id as a string
       const courseId = course._id.toString()
       const courseEnrollment = await this.findCourseById(courseId, userId)
@@ -44,8 +44,10 @@ export class CourseEnrollmentsService {
       if (courseEnrollment) {
         result.push(courseEnrollment)
         console.log(result)
+        return result
       } else {
         result.push(course)
+        return result
       }
     }) as unknown as (Course | CourseEnrollment)[]
     return result
@@ -106,26 +108,33 @@ export class CourseEnrollmentsService {
   }
 
   // mission service
-  // find all missions
-  // async findAllMissions(
-  //   userId: string,
-  //   courseId: string
-  // ): Promise<(MissionManagement | Mission)[]> {
-  //   // do the same concept as the findAllCourses function
-  //   const missions = await this.coursesService.findAllMissions(courseId)
-  //   const result = missions.map((mission) => {
-  //     const MissionManagement = this.courseEnrollmentRepository.findOne({
-  //       courseId,
-  //       userId,
-  //       'missions.missionId': mission._id,
-  //     })
-  //     if (MissionManagement) {
-  //       return MissionManagement
-  //     }
-  //     return mission
-  //   }) as unknown as (MissionManagement | Mission)[]
-  //   return result
-  // }
+  //find all missions
+
+  /**
+   *
+   * @param userId
+   * @param courseId
+   * @returns find all the missions the user is enrolled in and all the missions the user is not enrolled in
+   */
+  async findAllMissions(
+    userId: string,
+    courseId: string
+  ): Promise<(MissionManagement | Mission)[]> {
+    // do the same concept as the findAllCourses function
+    const missions = await this.coursesService.findAllMissions(courseId)
+    const result = missions.map((mission) => {
+      const MissionManagement = this.courseEnrollmentRepository.findOne({
+        courseId,
+        userId,
+        'missions.missionId': mission._id,
+      })
+      if (MissionManagement) {
+        return MissionManagement
+      }
+      return mission
+    }) as unknown as (MissionManagement | Mission)[]
+    return result
+  }
 
   async createMissionProgress(
     createMissionProgress: CreateMissionManagementDto
