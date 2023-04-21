@@ -12,12 +12,16 @@ export class Level extends BaseEntity {
   levelNumber: number
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   buildingPartsImages: string[]
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   stepGuideImages: string[]
+
+  @ApiProperty()
+  @Prop({ required: false })
+  websitePreviewImage: string
 }
 
 export const LevelSchema = SchemaFactory.createForClass(Level)
