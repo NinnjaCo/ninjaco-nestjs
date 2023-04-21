@@ -13,6 +13,7 @@ import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 
+import { GetCurrentUserId } from 'common/decorators/get-current-user-id.decorator'
 import { UpdateCourseMangementDto } from './dto/update-courseManagement'
 import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
 import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
@@ -21,13 +22,14 @@ import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 @Controller('course-enrollements')
 export class CourseEnrollmentsController {
   constructor(private readonly CourseEnrollmentService: CourseEnrollmentsService) {}
+
   @ApiGlobalResponse(ArraySchema, {
-    description: 'Get all courses user enrolled in  ',
+    description:
+      'Get all courses, if user is enrolled in course, return course enrollment otherwise return course',
     isArray: true,
   })
   @Get()
-  findAllCourses(@Body() body): Promise<(Course | CourseEnrollment)[]> {
-    const userId = body.userId
+  findAllCourses(@GetCurrentUserId() userId: string): Promise<(Course | CourseEnrollment)[]> {
     return this.CourseEnrollmentService.findAllCourses(userId)
   }
 
@@ -35,60 +37,73 @@ export class CourseEnrollmentsController {
     description: 'Get course by id ',
   })
   @Get(':courseId')
-  findOne(@Param('courseId') courseId: string, @Body() body): Promise<CourseEnrollment | Course> {
-    const userId = body.userId
+  findOne(
+    @Param('courseId') courseId: string,
+    @GetCurrentUserId() userId: string
+  ): Promise<CourseEnrollment | Course> {
     return this.CourseEnrollmentService.findCourseById(courseId, userId)
   }
 
   @ApiGlobalResponse(CourseEnrollment, {
-    description: 'Delete course by id ',
+    description: 'Delete course enrollment for a user given the course id and user id',
   })
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<CourseEnrollment> {
-    return this.CourseEnrollmentService.deleteCourse(id)
+  @Delete(':courseId')
+  remove(
+    @Param('courseId') courseId: string,
+    @GetCurrentUserId() userId: string
+  ): Promise<CourseEnrollment> {
+    return this.CourseEnrollmentService.deleteCourse(courseId, userId)
   }
 
   @ApiGlobalResponse(CourseEnrollment, {
-    description: 'Create new course enrollment ',
+    description: 'Create new course enrollment for a user given the course id and user id',
   })
   @Post()
-  create(@Body() courseMnagementDto: CreateCourseManagementDto): Promise<CourseEnrollment> {
-    return this.CourseEnrollmentService.createCourseEnrollement(courseMnagementDto)
+  create(
+    @GetCurrentUserId() userId: string,
+    @Body() courseMnagementDto: CreateCourseManagementDto
+  ): Promise<CourseEnrollment> {
+    return this.CourseEnrollmentService.createCourseEnrollement(userId, courseMnagementDto)
   }
 
   @ApiGlobalResponse(MissionManagement, {
-    description: 'Create mission progress ',
+    description:
+      'Create mission progress in a course enrollment for a user given the course id and user id and mission id',
   })
-  @Post('/missions')
+  @Post(':courseId/missions')
   createMissionProgress(
-    @Body() createMissionProgress: CreateMissionManagementDto
+    @Param('courseId') courseId: string,
+    @GetCurrentUserId() userId: string,
+    @Body() createMissionProgressDto: CreateMissionManagementDto
   ): Promise<MissionManagement> {
-    return this.CourseEnrollmentService.createMissionProgress(createMissionProgress)
+    return this.CourseEnrollmentService.createMissionProgress(
+      userId,
+      courseId,
+      createMissionProgressDto
+    )
   }
 
   @ApiGlobalResponse(ArraySchema, {
     description: 'Get all mssions user enrolled in   ',
     isArray: true,
   })
-  @Get(':id')
+  @Get(':courseId/missions')
   findAllMissions(
-    @Param('id') courseId: string,
-    @Body() body
+    @Param('courseId') courseId: string,
+    @GetCurrentUserId() userId: string
   ): Promise<(MissionManagement | Mission)[]> {
-    const userId = body.userId
     return this.CourseEnrollmentService.findAllMissions(userId, courseId)
   }
 
   @ApiGlobalResponse(MissionManagement, {
-    description: 'Get a mssion user enrolled in  ',
+    description: 'Get a mission user enrolled in  ',
   })
-  @Get(':id/missions/:missionId')
+  @Get(':courseId/missions/:missionId')
   findMissionById(
+    @Param('courseId') courseId: string,
     @Param('missionId') missionId: string,
-    @Param('id') courseId: string,
-    @Body() body
+    @GetCurrentUserId() userId: string
   ): Promise<MissionManagement> {
-    const userId = body.userId
     return this.CourseEnrollmentService.findMissionById(missionId, courseId, userId)
   }
 
@@ -97,53 +112,63 @@ export class CourseEnrollmentsController {
     description: 'Get all levels user enrolled in   ',
     isArray: true,
   })
-  @Get(':id/:missionId')
+  @Get(':courseId/missions/:missionId/levels')
   findAllLevels(
-    @Param('id') courseId: string,
-    @Body() body,
-    @Param('missionId') missionId: string
+    @Param('courseId') courseId: string,
+    @Param('missionId') missionId: string,
+    @GetCurrentUserId() userId: string
   ): Promise<(Level | LevelManagement)[]> {
-    const userId = body.userId
     return this.CourseEnrollmentService.findAllLevels(userId, courseId, missionId)
   }
 
   @ApiGlobalResponse(LevelManagement, {
-    description: 'get level by id| ADMIN and creator only',
+    description: 'Get level by id',
   })
-  @Get(':id/:missionId/:levelId')
+  @Get(':courseId/missions/:missionId/levels/levelId')
   findLevelById(
-    @Param('id') courseId: string,
+    @Param('courseId') courseId: string,
     @Param('missionId') missionId: string,
     @Param('levelId') levelId: string,
-    @Body() body
+    @GetCurrentUserId() userId: string
   ): Promise<LevelManagement> {
-    const userId = body.userId
     return this.CourseEnrollmentService.findLevelById(userId, courseId, missionId, levelId)
   }
 
   @ApiGlobalResponse(LevelManagement, {
     description: 'Create level progress ',
   })
-  @Post('/missions/levels')
+  @Post(':courseId/missions/:missionId/levels')
   createLevelProgress(
+    @Param('courseId') courseId: string,
+    @Param('missionId') missionId: string,
+    @GetCurrentUserId() userId: string,
     @Body() createLevelProgress: CreateLevelManagementDto
   ): Promise<LevelManagement> {
-    return this.CourseEnrollmentService.createLevelProgress(createLevelProgress)
+    return this.CourseEnrollmentService.createLevelProgress(
+      userId,
+      courseId,
+      missionId,
+      createLevelProgress
+    )
   }
 
   @ApiGlobalResponse(LevelManagement, {
     description: 'Update level progress ',
   })
-  @Put('/missions/levels')
+  @Put(':courseId/missions/:missionId/levels/:levelId')
   updateProgress(
-    @Body() levelManagmentDto: UpdateLevelManagementDto,
-    missionManagementDto: UpdateMissionManagementDto,
-    courseManagementDto: UpdateCourseMangementDto
+    @Param('courseId') courseId: string,
+    @Param('missionId') missionId: string,
+    @Param('levelId') levelId: string,
+    @GetCurrentUserId() userId: string,
+    @Body() updateLevelProgress: UpdateLevelManagementDto
   ): Promise<CourseEnrollment> {
-    return this.CourseEnrollmentService.updateProgress(
-      levelManagmentDto,
-      missionManagementDto,
-      courseManagementDto
+    return this.CourseEnrollmentService.updateLevel(
+      userId,
+      courseId,
+      missionId,
+      levelId,
+      updateLevelProgress
     )
   }
 }

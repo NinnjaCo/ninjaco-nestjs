@@ -43,7 +43,6 @@ export class UsersLevelsProgressController {
   @ApiGlobalResponse(LevelProgress, {
     description: 'Update LevelProgress | ADMIN and creator only',
   })
-  @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Put(':id')
   update(
     @Param('id') id: string,

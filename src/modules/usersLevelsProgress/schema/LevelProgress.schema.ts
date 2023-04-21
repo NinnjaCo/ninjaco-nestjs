@@ -28,8 +28,11 @@ export class LevelProgress extends BaseEntity {
   missionId: string
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ default: '' })
   progress: string
 }
 
 export const LevelProgressSchema = SchemaFactory.createForClass(LevelProgress)
+
+// Set indexes to improve query performance
+LevelProgressSchema.index({ courseId: 1, levelId: 1, userId: 1, missionId: 1 }, { unique: true })

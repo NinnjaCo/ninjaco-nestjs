@@ -4,15 +4,5 @@ export class CreateMissionManagementDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  userId: string
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  courseId: string
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   missionId: string
 }

@@ -1,14 +1,15 @@
 import { CourseEnrollment, CourseEnrollmentDocument } from './schemas/courseEnrollment.schema'
 import { CreateLevelManagementDto } from './dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
+import { Document, FilterQuery, Model, Types } from 'mongoose'
 import { EntityRepository } from 'database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
+import { LevelProgress } from 'modules/usersLevelsProgress/schema/LevelProgress.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
-import { Model } from 'mongoose'
 import { UpdateCourseMangementDto } from './dto/update-courseManagement'
 import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
 import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
@@ -28,38 +29,55 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
   }
 
   /**
+   * find one course enrollement by query  and populate the user and course
+   * @param entityFilterQuery
+   * @param projection
+   * @returns Promise<CourseEnrollmentDocument>
+   */
+  async findOne(
+    entityFilterQuery: FilterQuery<CourseEnrollmentDocument>,
+    projection?: Record<string, unknown>
+  ): Promise<CourseEnrollmentDocument> {
+    // populate the user and course
+    // remove the password, verifyEmailToken, hashedRt, resetPasswordToken
+    return await this.courseEnrollmentModel
+      .findOne(entityFilterQuery, projection)
+      .populate('user', '-password -verifyEmailToken -hashedRt -resetPasswordToken')
+      .populate('course')
+  }
+
+  /**
    * create mission progress
    * @param createMissionProgress
    * @param mission
    * @returns Promise<MissionManagement>
+   * @throws InternalServerErrorException
    */
-
   async createMissionProgress(
-    createMissionProgress: CreateMissionManagementDto,
+    userId: string,
+    courseId: string,
+    createMissionProgressDto: CreateMissionManagementDto,
     mission: Mission
   ): Promise<MissionManagement> {
-    // create a new mission management
-    const missionObjct = {
+    const missionManagement = new this.missionManagementModel({
       mission: mission,
       startedAt: new Date().toISOString(),
-    }
-    const missionManagement = new this.missionManagementModel({
-      ...missionObjct,
     })
+
+    if (!missionManagement) {
+      throw new InternalServerErrorException('Unable to create mission management')
+    }
 
     // find the course enrollment
-    const courseEnrollment = await this.courseEnrollmentModel.findOne({
-      course: createMissionProgress.courseId,
-      user: createMissionProgress.userId,
+    const courseEnrollment = await this.findOne({
+      course: courseId,
+      user: userId,
     })
 
-    console.log(courseEnrollment)
-    console.log(missionManagement)
-    // push the mission management to the missions array of the course enrollment
     courseEnrollment.missions.push(missionManagement)
-    // save the course enrollment
+
     await courseEnrollment.save()
-    // return the mission management
+
     return missionManagement
   }
 
@@ -70,43 +88,50 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
    * @returns Promise<LevelManagement>
    */
   async createLevelProgress(
+    userId: string,
+    courseId: string,
+    missionId: string,
     createLevelProgress: CreateLevelManagementDto,
+    levelProgress: LevelProgress,
     level: Level
   ): Promise<LevelManagement> {
-    // create a new level management
-    const levelObjct = {
-      level: level,
-      startedAt: new Date().toISOString(),
-    }
     const levelManagement = new this.levelManagementModel({
-      ...levelObjct,
+      level: level,
+      levelProgress: levelProgress,
+      startedAt: new Date().toISOString(),
     })
-    // find the course enrollment
-    const courseEnrollment = await this.courseEnrollmentModel.findOne({
-      course: createLevelProgress.courseId,
-      user: createLevelProgress.userId,
-    })
-    // find the mission management inside the course enrollment
-    const missionManagement = courseEnrollment.missions.find(
-      (mission) => mission.mission.toString() === createLevelProgress.missionId
-    )
-    missionManagement.levels.push(levelManagement)
-    console.log(missionManagement)
-    courseEnrollment.missions = courseEnrollment.missions.map(async (mission) => {
-      if (mission.mission.toString() === createLevelProgress.missionId) {
-        // delete the old mission management, and save the new one that contains the new level
-        courseEnrollment.missions = (await courseEnrollment.missions.filter(
-          (mission) => mission.mission.toString() !== createLevelProgress.missionId
-        )) as unknown as [MissionManagement]
 
-        courseEnrollment.missions.push(missionManagement)
-        return missionManagement
+    if (!levelManagement) {
+      throw new InternalServerErrorException('Unable to create level management')
+    }
+
+    // find the course enrollment
+    const courseEnrollment = await this.findOne({
+      course: courseId,
+      user: userId,
+    })
+
+    const missionToUpdate = courseEnrollment.missions.find(
+      (mission) => mission.mission.toString() === missionId
+    )
+
+    missionToUpdate.levels.push(levelManagement)
+
+    courseEnrollment.missions = courseEnrollment.missions.map((mission) => {
+      if (mission.mission.toString() === missionId) {
+        // delete the old mission management, and save the new one that contains the new level
+        courseEnrollment.missions = courseEnrollment.missions.filter(
+          (mission) => mission.mission.toString() !== missionId
+        ) as unknown as [MissionManagement]
+
+        courseEnrollment.missions.push(missionToUpdate)
+        return missionToUpdate
       }
       return mission
     }) as unknown as [MissionManagement]
 
     await courseEnrollment.save()
-    // return the level management
+
     return levelManagement
   }
 
@@ -118,36 +143,37 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
    * @returns  Promise<CourseEnrollment>
    */
 
-  async updateProgress(
-    levelManagmentDto: UpdateLevelManagementDto,
-    missionManagementDto: UpdateMissionManagementDto,
-    courseManagementDto: UpdateCourseMangementDto
+  async updateLevel(
+    userId: string,
+    courseId: string,
+    missionId: string,
+    levelId: string,
+    updateLevelProgress: UpdateLevelManagementDto
   ): Promise<CourseEnrollment> {
-    // find the course enrollment
-    const courseEnrollment = await this.courseEnrollmentModel.findOne({
-      course: levelManagmentDto.courseId,
-      user: levelManagmentDto.userId,
+    const courseEnrollment = await this.findOne({
+      course: courseId,
+      user: userId,
     })
-    // find the mission management inside the course enrollment
+
     const missionManagement = courseEnrollment.missions.find(
-      (mission) => mission.mission.toString() === levelManagmentDto.missionId
+      (mission) => mission.mission.toString() === missionId
     )
-    // find the level management inside the mission management
     const levelManagement = missionManagement.levels.find(
-      (level) => level.level.toString() === levelManagmentDto.levelId
+      (level) => level.level.toString() === levelId
     )
-    // update the level management
-    levelManagement.completed = levelManagmentDto.completed
 
-    //********** */
-    //delete the old mission and add the updated one
+    if (!courseEnrollment || !missionManagement || !levelManagement) {
+      throw new InternalServerErrorException('Unable to find the course enrollment')
+    }
 
-    courseEnrollment.missions = courseEnrollment.missions.map(async (mission) => {
-      if (mission.mission.toString() === levelManagmentDto.missionId) {
+    levelManagement.completed = updateLevelProgress.completed
+
+    courseEnrollment.missions = courseEnrollment.missions.map((mission) => {
+      if (mission.mission.toString() === missionId) {
         // delete the old mission management, and save the new one that contains the new level
-        courseEnrollment.missions = (await courseEnrollment.missions.filter(
-          (mission) => mission.mission.toString() !== levelManagmentDto.missionId
-        )) as unknown as [MissionManagement]
+        courseEnrollment.missions = courseEnrollment.missions.filter(
+          (mission) => mission.mission.toString() !== missionId
+        ) as unknown as [MissionManagement]
 
         courseEnrollment.missions.push(missionManagement)
         return missionManagement
@@ -155,30 +181,49 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
       return mission
     }) as unknown as [MissionManagement]
 
-    //************************** */
+    console.log(missionManagement)
 
-    // loop through the levels, if all completed, set the mission as completed, if not return the updated level
     const completedLevels = missionManagement.levels.filter((level) => level.completed === true)
-    if (completedLevels.length === missionManagement.levels.length) {
+
+    console.log(completedLevels)
+    console.log(courseEnrollment.course.missions)
+    if (
+      completedLevels.length === missionManagement.levels.length &&
+      missionManagement.levels.length === courseEnrollment.course.missions.length
+    ) {
       missionManagement.completed = true
+
+      courseEnrollment.missions = courseEnrollment.missions.map((mission) => {
+        if (mission.mission.toString() === missionId) {
+          // delete the old mission management, and save the new one that contains the new level
+          courseEnrollment.missions = courseEnrollment.missions.filter(
+            (mission) => mission.mission.toString() !== missionId
+          ) as unknown as [MissionManagement]
+
+          courseEnrollment.missions.push(missionManagement)
+          return missionManagement
+        }
+        return mission
+      }) as unknown as [MissionManagement]
+
+      // loop through the missions, if all completed, set the course as completed, if not return the updated mission
+      const completedMissions = courseEnrollment.missions.filter(
+        (mission) => mission.completed === true
+      )
+      if (
+        completedMissions.length === courseEnrollment.missions.length && // user completed all missions they have started
+        courseEnrollment.missions.length === courseEnrollment.course.missions.length // user started all missions
+      ) {
+        courseEnrollment.completed = true
+        await courseEnrollment.save()
+        return courseEnrollment
+      } else {
+        await courseEnrollment.save()
+        return courseEnrollment
+      }
     } else {
       await courseEnrollment.save()
       return courseEnrollment
     }
-
-    //loop through the missions, if all completed, set the course as completed, if not return the updated mission
-    const completedMissions = courseEnrollment.missions.filter(
-      (mission) => mission.completed === true
-    )
-    if (completedMissions.length === courseEnrollment.missions.length) {
-      console.log('course completed')
-      courseEnrollment.completed = true
-    } else {
-      await courseEnrollment.save()
-      return courseEnrollment
-    }
-
-    // save the course enrollment
-    return await courseEnrollment.save()
   }
 }

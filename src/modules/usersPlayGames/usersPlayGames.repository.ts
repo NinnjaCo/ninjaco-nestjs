@@ -21,9 +21,11 @@ export class UsersPlayGamesRepository extends EntityRepository<UserPlayGameDocum
    */
   async create(userPlayGameEntryData): Promise<UserPlayGameDocument> {
     const entity = new this.userPlayGameModel(userPlayGameEntryData)
-    return (await (await (await entity.save()).populate('game')).populate('user')).populate(
-      'gameProgress'
-    )
+    return (
+      await (
+        await (await entity.save()).populate('game')
+      ).populate('user', '-password -verifyEmailToken -hashedRt -resetPasswordToken')
+    ).populate('gameProgress')
   }
 
   /**
@@ -41,7 +43,7 @@ export class UsersPlayGamesRepository extends EntityRepository<UserPlayGameDocum
     return await this.userPlayGameModel
       .findOne(entityFilterQuery, projection)
       .populate('game')
-      .populate('user')
+      .populate('user', '-password -verifyEmailToken -hashedRt -resetPasswordToken')
       .populate('gameProgress')
   }
 
@@ -58,7 +60,7 @@ export class UsersPlayGamesRepository extends EntityRepository<UserPlayGameDocum
     return await this.userPlayGameModel
       .find(entityFilterQuery)
       .populate('game')
-      .populate('user')
+      .populate('user', '-password -verifyEmailToken -hashedRt -resetPasswordToken')
       .populate('gameProgress')
   }
 }

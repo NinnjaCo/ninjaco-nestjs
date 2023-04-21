@@ -1,3 +1,4 @@
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { Course } from 'modules/courses/schemas/course.schema'
 import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
@@ -5,24 +6,26 @@ import { CoursesService } from 'modules/courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { CreateLevelManagementDto } from './dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
-import { Injectable } from '@nestjs/common'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
+import { MongoServerError } from 'mongodb'
 import { ObjectId } from 'mongoose'
 import { UpdateCourseMangementDto } from './dto/update-courseManagement'
 import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
 import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
+import { UsersLevelsProgressService } from 'modules/usersLevelsProgress/usersLevelsProgress.service'
 import { UsersService } from 'modules/users/users.service'
-import { waitForDebugger } from 'inspector'
+import { handleMongoDuplicateKeyError } from 'common/shared'
 
 @Injectable()
 export class CourseEnrollmentsService {
   constructor(
     private readonly courseEnrollmentRepository: CourseEnrollmentsRepository,
     private readonly coursesService: CoursesService,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    private readonly usersLevelsProgressService: UsersLevelsProgressService
   ) {}
 
   /**
@@ -31,30 +34,26 @@ export class CourseEnrollmentsService {
    * @returns return all the courses the user is enrolled in and all the courses the user is not enrolled in
    */
   async findAllCourses(userId: string): Promise<(Course | CourseEnrollment)[]> {
-    //return the all the courses using the findAll function in the course Service
+    // get all the courses using the findAll function in the course Service
     const courses = await this.coursesService.findAll()
-    //create an empty array to store the result
 
-    const result = courses.map(async (course) => {
-      //get the course id as a string
-      const courseId = course._id.toString()
+    const result: (Course | CourseEnrollment)[] = []
+
+    for (const course of courses) {
+      const courseObjectId = course._id
+
       const courseEnrollment = await this.courseEnrollmentRepository.findOne({
-        course: courseId,
+        course: courseObjectId,
         user: userId,
       })
 
-      // wait for the course to be fetched from the database
       if (courseEnrollment) {
-        console.log('ia m here')
         result.push(courseEnrollment)
-        console.log(result)
       } else {
-        console.log('lalalalal')
         result.push(course)
-        console.log(result)
       }
-    }) as any
-    console.log('outout,', result)
+    }
+
     return result
   }
 
@@ -63,57 +62,87 @@ export class CourseEnrollmentsService {
    * @param courseId
    * @param userId
    * @returns the courseEnrollment object if the user is enrolled in the course or the course object if the user is not enrolled in the course
+   * @throws BadRequestException if the course or user id is invalid
    */
   async findCourseById(courseId: string, userId: string): Promise<CourseEnrollment | Course> {
     // get the course with courseId from the course service
     const course = await this.coursesService.findCourseById(courseId)
     // get the user with userId from the user service
-
     const user = await this.userService.findOne(userId)
+
+    if (!course || !user) {
+      throw new BadRequestException('Invalid course or user id')
+    }
+
     const courseObjectId = course._id
     const userObjectId = user._id
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      course: courseObjectId,
+      user: userObjectId,
+    })
 
-    return this.courseEnrollmentRepository.findOne({ course: courseObjectId, user: userObjectId })
+    if (courseEnrollment) {
+      return courseEnrollment
+    }
+
+    return course
   }
 
   /**
    *
    * @param courseMnagementDto
-   * @returns the course enrollement object when a user enrol in a course
+   * @returns the course enrollement object when a user enroll in a course
+   * @throws BadRequestException if the course or user id is invalid
    */
-  async createCourseEnrollement(courseMnagementDto: CreateCourseManagementDto) {
-    // user from the courseManagmentDto
-    const { userId, ...newDto } = courseMnagementDto
+  async createCourseEnrollement(
+    userId: string,
+    courseMnagementDto: CreateCourseManagementDto
+  ): Promise<CourseEnrollment> {
     // get the user Object and the course
     const user = await this.userService.findOne(userId)
     const course = await this.coursesService.findCourseById(courseMnagementDto.courseId)
 
-    const courseEnrollment = {
-      newDto,
-      user,
-      course,
+    if (!user || !course) {
+      throw new BadRequestException('Invalid course or user id')
     }
+
     // create a new object and add to it the enrolledAt date using the new Date() function
-    const courseEnrollmentObjct = {
-      ...courseEnrollment,
+    const courseEnrollmentObject = {
+      user: user,
+      course: course,
       enrolledAt: new Date().toISOString(),
     }
 
-    return this.courseEnrollmentRepository.create(courseEnrollmentObjct)
+    try {
+      return await this.courseEnrollmentRepository.create(courseEnrollmentObject)
+    } catch (error) {
+      // if error type is from mongodb
+      if (error instanceof MongoServerError) {
+        // This will automatically throw a BadRequestException with the duplicate key error message
+        handleMongoDuplicateKeyError(error)
+      } else {
+        throw new InternalServerErrorException(error)
+      }
+    }
   }
 
   /**
    *
    * @param coursid
+   * @param userId
    * @returns the deleted courseEnrollment object
+   * @throws BadRequestException if the course or user id is invalid
    */
-
-  async deleteCourse(id: string): Promise<CourseEnrollment> {
-    return this.courseEnrollmentRepository.findOneAndDelete({ _id: id })
+  async deleteCourse(courseId: string, userId: string): Promise<CourseEnrollment> {
+    try {
+      return await this.courseEnrollmentRepository.findOneAndDelete({
+        course: courseId,
+        user: userId,
+      })
+    } catch (error) {
+      throw new BadRequestException('Invalid course or user id')
+    }
   }
-
-  // mission service
-  //find all missions
 
   /**
    *
@@ -125,38 +154,61 @@ export class CourseEnrollmentsService {
     userId: string,
     courseId: string
   ): Promise<(MissionManagement | Mission)[]> {
-    // do the same concept as the findAllCourses function
-    const missions = await this.coursesService.findAllMissions(courseId)
-    const result = missions.map((mission) => {
-      const MissionManagement = this.courseEnrollmentRepository.findOne({
-        courseId,
-        userId,
-        'missions.missionId': mission._id,
-      })
-      if (MissionManagement) {
-        return MissionManagement
+    const actuallMissions = await this.coursesService.findAllMissions(courseId)
+
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      user: userId,
+      course: courseId,
+    })
+
+    const courseEnrollmentMissions = courseEnrollment.missions
+
+    const result: (MissionManagement | Mission)[] = []
+
+    for (const mission of actuallMissions) {
+      const missionObjectId = mission._id
+
+      const missionEnrollment = courseEnrollmentMissions.find(
+        (mission) => mission.mission._id === missionObjectId
+      )
+
+      if (missionEnrollment) {
+        result.push(missionEnrollment)
+      } else {
+        result.push(mission)
       }
-      return mission
-    }) as unknown as (MissionManagement | Mission)[]
+    }
+
     return result
   }
+
   /**
    *
    * @param createMissionProgress
    * @returns the missionProgress object
    */
   async createMissionProgress(
+    userId: string,
+    courseId: string,
     createMissionProgress: CreateMissionManagementDto
   ): Promise<MissionManagement> {
     const mission = await this.coursesService.findMissionById(
-      createMissionProgress.courseId,
+      courseId,
       createMissionProgress.missionId
     )
+
+    if (!mission) {
+      throw new BadRequestException('Invalid mission or course id')
+    }
+
     return await this.courseEnrollmentRepository.createMissionProgress(
+      userId,
+      courseId,
       createMissionProgress,
       mission
     )
   }
+
   /**
    *
    * @param missionId
@@ -170,17 +222,34 @@ export class CourseEnrollmentsService {
     userId: string
   ): Promise<MissionManagement> {
     // get the courseEnrollment object by courseId
-    const courseEnrollment = await this.findCourseById(courseId, userId)
-    // get the missions array from the courseEnrollment object
-    const missions = courseEnrollment.missions
-
-    //loop over the missions array and get the mission object by missionId
-    const mission = missions.map((mission) => {
-      if (mission.mission.toString() === missionId) {
-        return mission
-      }
+    // Dont use the findCourseById function because it will return the course object if the user is not enrolled in the course
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      course: courseId,
+      user: userId,
     })
-    return mission[0]
+
+    if (!courseEnrollment) {
+      throw new BadRequestException('Invalid course or user id')
+    }
+
+    const mission = courseEnrollment.missions.find(
+      (mission) => mission.mission._id.toString() === missionId
+    )
+
+    if (!mission) {
+      throw new BadRequestException('Invalid mission id')
+    }
+
+    const actualMissions: Mission = courseEnrollment.course.missions.find(
+      (actualMission: Mission) =>
+        actualMission._id.toString() == (mission.mission as unknown as string)
+    )
+
+    // Mutate the mission object to add the actual mission object to it  (we cannot do populate)
+    return {
+      ...mission,
+      mission: actualMissions,
+    }
   }
 
   /**
@@ -190,7 +259,6 @@ export class CourseEnrollmentsService {
    * @param missionId
    * @returns all the levels the user is enrolled in and all the levels the user is not enrolled in
    */
-
   async findAllLevels(courseId, userId, missionId): Promise<(Level | LevelManagement)[]> {
     // do the same concept as the findAllCourses function
     const levels = await this.coursesService.findAllLevels(courseId, missionId)
@@ -208,6 +276,7 @@ export class CourseEnrollmentsService {
     }) as unknown as (LevelManagement | Level)[]
     return result
   }
+
   /**
    *
    * @param userId
@@ -240,20 +309,44 @@ export class CourseEnrollmentsService {
     // return the level object by levelId
     return levels.find((level) => level.level.toString() === levelId)
   }
+
   /**
    *
    * @param createLevelProgress
    * @returns the levelProgress object
    */
   async createLevelProgress(
+    userId: string,
+    courseId: string,
+    missionId: string,
     createLevelProgress: CreateLevelManagementDto
   ): Promise<LevelManagement> {
     const level = await this.coursesService.findLevelById(
-      createLevelProgress.courseId,
-      createLevelProgress.missionId,
+      courseId,
+      missionId,
       createLevelProgress.levelId
     )
-    return await this.courseEnrollmentRepository.createLevelProgress(createLevelProgress, level)
+
+    if (!level) {
+      throw new BadRequestException('Invalid level or course id')
+    }
+
+    const levelProgress = await this.usersLevelsProgressService.createLevelProgress({
+      userId,
+      courseId,
+      missionId,
+      levelId: createLevelProgress.levelId,
+      progress: '',
+    })
+
+    return await this.courseEnrollmentRepository.createLevelProgress(
+      userId,
+      courseId,
+      missionId,
+      createLevelProgress,
+      levelProgress,
+      level
+    )
   }
 
   /**
@@ -266,16 +359,20 @@ export class CourseEnrollmentsService {
   // the update function change the state comleted of a level to true, then checks all the levels
   // if all completed, it set the completed state of missions to true, and checks for all the missions
   // if all completed, then it marks the course as completed
-  async updateProgress(
-    levelManagmentDto: UpdateLevelManagementDto,
-    missionManagementDto: UpdateMissionManagementDto,
-    courseManagementDto: UpdateCourseMangementDto
+  async updateLevel(
+    userId: string,
+    courseId: string,
+    missionId: string,
+    levelId: string,
+    updateLevelProgress: UpdateLevelManagementDto
   ): Promise<CourseEnrollment> {
     //update the level and checks if all other levels are completed
-    const progress = await this.courseEnrollmentRepository.updateProgress(
-      levelManagmentDto,
-      missionManagementDto,
-      courseManagementDto
+    const progress = await this.courseEnrollmentRepository.updateLevel(
+      userId,
+      courseId,
+      missionId,
+      levelId,
+      updateLevelProgress
     )
     return progress
   }
