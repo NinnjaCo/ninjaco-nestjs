@@ -57,7 +57,6 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
    * @param missionId
    * @returns Promise<Mission>
    */
-
   async findOneMission(courseId: string, missionId: string): Promise<Mission> {
     //find the course having courseId
     const course = await this.courseModel.find({ _id: courseId })
@@ -72,7 +71,6 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
    * @param missionDto
    * @returns Promise<Mission>
    */
-
   async findOneMisionAndUpdate(
     courseId: string,
     missionId: string,
