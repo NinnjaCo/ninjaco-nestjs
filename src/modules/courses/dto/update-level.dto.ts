@@ -11,12 +11,15 @@ export class UpdateLevelDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString({ each: true })
-  @IsNotEmpty()
   buildingPartsImages: string[]
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString({ each: true })
-  @IsNotEmpty()
   stepGuideImages: string[]
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  websitePreviewImage: string
 }
