@@ -6,6 +6,8 @@ export class CreateGameDto {
   @IsString()
   @IsNotEmpty()
   title: string
+
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   image: string
@@ -13,7 +15,7 @@ export class CreateGameDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  image: string
+  playerDirection: string
 
   @ApiProperty({ required: false })
   @IsNumber()

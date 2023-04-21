@@ -1,5 +1,5 @@
+import { Allow, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class UpdateGameDto {
   @ApiProperty()
@@ -11,6 +11,12 @@ export class UpdateGameDto {
   @IsString()
   @IsNotEmpty()
   image: string
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  playerDirection: string
 
   @ApiProperty()
   @IsNumber()
@@ -31,5 +37,6 @@ export class UpdateGameDto {
   goalLocation: number[]
 
   @ApiProperty()
+  @Allow()
   wallsLocations: number[][]
 }

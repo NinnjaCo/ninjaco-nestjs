@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BaseEntity } from 'database/base.entity'
+import { BaseEntity } from '../../../database/base.entity'
 import { HydratedDocument } from 'mongoose'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
@@ -10,6 +10,14 @@ export class Game extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
   title: string
+
+  @ApiProperty()
+  @Prop({ required: true })
+  image: string
+
+  @ApiProperty()
+  @Prop({ required: true })
+  playerDirection: string
 
   @ApiProperty()
   @Prop()
@@ -30,10 +38,6 @@ export class Game extends BaseEntity {
   @ApiProperty()
   @Prop()
   wallsLocations: Array<Array<number>>
-
-  @ApiProperty()
-  @Prop()
-  image: string
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game)

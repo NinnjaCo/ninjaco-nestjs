@@ -1,12 +1,12 @@
-import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
+import { ApiGlobalResponse } from '../../common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
 import { Body, Post } from '@nestjs/common'
-import { BooleanSchema } from 'swagger/swagger-primitive-type'
+import { BooleanSchema } from '../../swagger/swagger-primitive-type'
 import { Controller } from '@nestjs/common'
 import { MailService } from './mail.service'
-import { RoleEnum } from 'modules/roles/roles.enum'
-import { Roles } from 'modules/roles/roles.decorator'
-import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
+import { RoleEnum } from '../roles/roles.enum'
+import { Roles } from '../roles/roles.decorator'
+import { sendEmailDto } from '../mail/dto/send-email.dto'
 
 @ApiTags('Emails')
 @Controller('send-email')

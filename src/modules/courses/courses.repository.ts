@@ -1,7 +1,7 @@
 import { Course, CourseDocument } from './schemas/course.schema'
 import { CreateLevelDto } from './dto/create-level.dto'
 import { CreateMissionDto } from './dto/create-mission.dto'
-import { EntityRepository } from 'database/entity.repository'
+import { EntityRepository } from '../../database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { UpdateMissionDto } from './dto/update-mission.dto'
@@ -22,6 +22,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     super(courseModel)
   }
 
+  /**
+   *
+   * @param courseId
+   * @param missionDto
+   * @returns Promise<Mission>
+   */
   async createMission(courseId: string, missionDto: CreateMissionDto): Promise<Mission> {
     const mission = new this.missionModel(missionDto)
     mission.createdAt = new Date().toISOString()
@@ -33,6 +39,11 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     return mission
   }
 
+  /**
+   *
+   * @param courseId
+   * @returns Promise<Mission[]>
+   */
   async findAllMissions(courseId: string): Promise<Mission[]> {
     //find the course having courseId
     const course = await this.courseModel.find({ _id: courseId })
@@ -40,6 +51,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     return course[0].missions
   }
 
+  /**
+   *
+   * @param courseId
+   * @param missionId
+   * @returns Promise<Mission>
+   */
   async findOneMission(courseId: string, missionId: string): Promise<Mission> {
     //find the course having courseId
     const course = await this.courseModel.find({ _id: courseId })
@@ -47,6 +64,13 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
     return course[0].missions.find((mission) => mission._id.toString() === missionId)
   }
 
+  /**
+   *
+   * @param courseId
+   * @param missionId
+   * @param missionDto
+   * @returns Promise<Mission>
+   */
   async findOneMisionAndUpdate(
     courseId: string,
     missionId: string,
@@ -76,6 +100,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   }
 
   //delete a mission inside a course
+  /**
+   *
+   * @param courseId
+   * @param missionId
+   * @returns Promise<Mission>
+   */
   async findOneMissionAndDelete(courseId: string, missionId: string): Promise<Mission> {
     const course = await this.courseModel.findOne({ _id: courseId })
     const deletedMission = course?.missions.find((mission) => mission._id.toString() === missionId)
@@ -88,6 +118,12 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   }
 
   //find all levels in a mission inside a course
+  /**
+   *
+   * @param courseId
+   * @param missionId
+   * @returns Promise<Level[]>
+   */
   async findAllLevels(courseId: string, missionId: string): Promise<Level[]> {
     //find the course having courseId
     const course = await this.courseModel.find({ _id: courseId })
@@ -98,6 +134,13 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   }
 
   //create level
+  /**
+   *
+   * @param courseId
+   * @param missionId
+   * @param levelDto
+   * @returns Promise<Level>
+   */
   async createLevel(courseId: string, missionId: string, levelDto: CreateLevelDto): Promise<Level> {
     const level = new this.levelModel(levelDto)
     level.createdAt = new Date().toISOString()
@@ -126,6 +169,13 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   }
 
   //find a level by id
+  /**
+   *
+   * @param courseId \
+   * @param missionId
+   * @param levelId
+   * @returns Promise<Level>
+   */
   async findOneLevel(courseId: string, missionId: string, levelId: string): Promise<Level> {
     // find the mission using findoneMission function
     const mission = await this.findOneMission(courseId, missionId)
@@ -134,6 +184,14 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   }
 
   //update a level
+  /**
+   *
+   * @param id
+   * @param missionId
+   * @param levelId
+   * @param levelDto
+   * @returns  Promise<Level>
+   */
   async findOneLevelAndUpdate(
     id: string,
     missionId: string,
@@ -177,6 +235,13 @@ export class CoursesRepository extends EntityRepository<CourseDocument> {
   }
 
   //delete a level inside a mission inside a course
+  /**
+   *
+   * @param id
+   * @param missionId
+   * @param levelId
+   * @returns Promise<Level>
+   */
   async findOneLevelAndDelete(id: string, missionId: string, levelId: string): Promise<Level> {
     // find the mission using findoneMission function
     const updatedMission = await this.findOneMission(id, missionId)

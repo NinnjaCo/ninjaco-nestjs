@@ -9,5 +9,6 @@ import { MongooseModule } from '@nestjs/mongoose'
   imports: [MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }])],
   controllers: [GamesController],
   providers: [GamesService, GamesRepository],
+  exports: [GamesService, GamesRepository],
 })
 export class GamesModule {}

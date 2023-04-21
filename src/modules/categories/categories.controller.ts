@@ -1,12 +1,12 @@
-import { ApiGlobalResponse } from 'common/decorators/api-global-response.decorators'
+import { ApiGlobalResponse } from '../../common/decorators/api-global-response.decorators'
 import { ApiTags } from '@nestjs/swagger'
-import { ArraySchema } from 'swagger/swagger-primitive-type'
+import { ArraySchema } from '../../swagger/swagger-primitive-type'
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CategoriesService } from './categories.service'
 import { Category } from './schemas/category.schema'
 import { CreateCategoryDto } from './dto/create-category.dto'
-import { RoleEnum } from 'modules/roles/roles.enum'
-import { Roles } from 'modules/roles/roles.decorator'
+import { RoleEnum } from '../roles/roles.enum'
+import { Roles } from '../roles/roles.decorator'
 import { UpdateCategoryDto } from './dto/update-category.dto'
 
 @ApiTags('Categories')

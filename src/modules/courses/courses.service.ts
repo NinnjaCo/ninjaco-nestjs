@@ -8,7 +8,7 @@ import { Level } from './schemas/level.schema'
 import { Mission } from './schemas/mission.schema'
 import { MongoServerError } from 'mongodb'
 import { UpdateLevelDto } from './dto/update-level.dto'
-import { checkIfValidObjectId, handleMongoDuplicateKeyError } from 'common/shared'
+import { checkIfValidObjectId, handleMongoDuplicateKeyError } from '../../common/shared'
 
 @Injectable()
 export class CoursesService {

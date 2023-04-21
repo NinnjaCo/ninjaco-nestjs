@@ -4,7 +4,7 @@ import { Injectable, InternalServerErrorException, UnauthorizedException } from 
 import { JwtService } from '@nestjs/jwt'
 import { MailService } from '../mail/mail.service'
 import { ResetPasswordDto } from './dto/reset-password.dto'
-import { RolesService } from 'modules/roles/roles.service'
+import { RolesService } from '../roles/roles.service'
 import { SignInDto } from './dto/signin.dto'
 import { SignUpDto } from './dto/signup.dto'
 import { UNAUTHORIZED_EXCEPTION_MESSAGE } from '../../common/constants'
@@ -234,8 +234,6 @@ export class AuthService {
    */
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<boolean> {
     const user = await this.usersService.findOne(resetPasswordDto.userId)
-
-    console.log(resetPasswordDto)
 
     if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
     const tokenMatches = await isHashMatched(resetPasswordDto.token, user.resetPasswordToken)
