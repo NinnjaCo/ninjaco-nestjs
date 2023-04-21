@@ -161,18 +161,17 @@ export class CourseEnrollmentsService {
       course: courseId,
     })
 
-    const courseEnrollmentMissions = courseEnrollment.missions
-
     const result: (MissionManagement | Mission)[] = []
 
     for (const mission of actuallMissions) {
       const missionObjectId = mission._id
 
-      const missionEnrollment = courseEnrollmentMissions.find(
-        (mission) => mission.mission._id === missionObjectId
+      const missionEnrollment = courseEnrollment.missions.find(
+        (mission: any) => mission.mission.toString() === missionObjectId.toString()
       )
 
       if (missionEnrollment) {
+        missionEnrollment.mission = mission
         result.push(missionEnrollment)
       } else {
         result.push(mission)
