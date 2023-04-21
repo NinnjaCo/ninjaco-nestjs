@@ -2,8 +2,8 @@ import { ConfigService } from '@nestjs/config'
 import { EmailEnum } from './mail.enum'
 import { Injectable } from '@nestjs/common'
 import { MailerService } from '@nestjs-modules/mailer'
-import { User } from 'modules/users/schemas/user.schema'
-import { sendEmailDto } from 'modules/mail/dto/send-email.dto'
+import { User } from '../users/schemas/user.schema'
+import { sendEmailDto } from '../mail/dto/send-email.dto'
 @Injectable()
 export class MailService {
   private readonly APP_URL: string
