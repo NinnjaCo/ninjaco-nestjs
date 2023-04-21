@@ -28,7 +28,11 @@ export class CourseEnrollment extends BaseEntity {
 
   @ApiProperty()
   @Prop({ default: [], required: true })
-  missions: MissionManagement[]
+  missions: [MissionManagement]
 }
 
 export const CourseEnrollmentSchema = SchemaFactory.createForClass(CourseEnrollment)
+
+// Set the index of the course and user to be unique
+// To prevent the same user from enrolling in the same course more than once, and increase the performance of the query
+CourseEnrollmentSchema.index({ course: 1, user: 1 }, { unique: true })

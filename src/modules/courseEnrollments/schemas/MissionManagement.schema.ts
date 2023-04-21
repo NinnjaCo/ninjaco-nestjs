@@ -23,7 +23,7 @@ export class MissionManagement extends BaseEntity {
 
   @ApiProperty()
   @Prop({ default: [], required: true })
-  levels: LevelManagement[]
+  levels: [LevelManagement]
 }
 
 export const MissionManagementSchema = SchemaFactory.createForClass(MissionManagement)
