@@ -98,7 +98,6 @@ export class AuthController {
   @ApiGlobalResponse(BooleanSchema, {
     description: 'Resend verification email',
   })
-  @Public()
   @Throttle(5, 60) // 5 requests per minute
   @Post('resend-verification-email')
   async resendVerificationEmail(@Body() body: ResendEmailDto): Promise<boolean> {
