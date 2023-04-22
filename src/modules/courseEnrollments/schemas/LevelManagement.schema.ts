@@ -27,3 +27,5 @@ export class LevelManagement extends BaseEntity {
 }
 
 export const LevelManagementSchema = SchemaFactory.createForClass(LevelManagement)
+
+LevelManagementSchema.index({ level: 1, levelProgress: 1 }, { unique: true })

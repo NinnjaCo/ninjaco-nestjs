@@ -161,6 +161,11 @@ export class CourseEnrollmentsService {
       course: courseId,
     })
 
+    if (!courseEnrollment) {
+      // if the user is not enrolled in the course return all the missions so they can see the missions
+      return actuallMissions
+    }
+
     const result: (MissionManagement | Mission)[] = []
 
     for (const mission of actuallMissions) {
@@ -200,12 +205,7 @@ export class CourseEnrollmentsService {
       throw new BadRequestException('Invalid mission or course id')
     }
 
-    return await this.courseEnrollmentRepository.createMissionProgress(
-      userId,
-      courseId,
-      createMissionProgress,
-      mission
-    )
+    return await this.courseEnrollmentRepository.createMissionProgress(userId, courseId, mission)
   }
 
   /**
@@ -219,7 +219,7 @@ export class CourseEnrollmentsService {
     missionId: string,
     courseId: string,
     userId: string
-  ): Promise<MissionManagement> {
+  ): Promise<MissionManagement | Mission> {
     // get the courseEnrollment object by courseId
     // Dont use the findCourseById function because it will return the course object if the user is not enrolled in the course
     const courseEnrollment = await this.courseEnrollmentRepository.findOne({
@@ -231,12 +231,20 @@ export class CourseEnrollmentsService {
       throw new BadRequestException('Invalid course or user id')
     }
 
+    const actualMission = courseEnrollment.course.missions.find(
+      (actualMission: Mission) => actualMission._id.toString() === missionId
+    )
+
     const mission = courseEnrollment.missions.find(
       (mission) => mission.mission._id.toString() === missionId
     )
 
     if (!mission) {
-      throw new BadRequestException('Invalid mission id')
+      if (!actualMission) {
+        throw new BadRequestException('Invalid mission id')
+      }
+      // if the user is not enrolled in the mission return the normal mission object
+      return actualMission
     }
 
     const actualMissions: Mission = courseEnrollment.course.missions.find(
@@ -258,21 +266,40 @@ export class CourseEnrollmentsService {
    * @param missionId
    * @returns all the levels the user is enrolled in and all the levels the user is not enrolled in
    */
-  async findAllLevels(courseId, userId, missionId): Promise<(Level | LevelManagement)[]> {
+  async findAllLevels(
+    courseId: string,
+    userId: string,
+    missionId: string
+  ): Promise<(Level | LevelManagement)[]> {
     // do the same concept as the findAllCourses function
-    const levels = await this.coursesService.findAllLevels(courseId, missionId)
-    const result = levels.map((level) => {
-      const LevelManagement = this.courseEnrollmentRepository.findOne({
-        courseId,
-        userId,
-        'missions.missionId': missionId,
-        'missions.levels.levelId': level._id,
-      })
-      if (LevelManagement) {
-        return LevelManagement
+    const actualLevels = await this.coursesService.findAllLevels(courseId, missionId)
+
+    if (!actualLevels) {
+      throw new BadRequestException('Invalid course or user or mission id')
+    }
+
+    const courseEnrollment = await this.courseEnrollmentRepository.findOne({
+      user: userId,
+      course: courseId,
+    })
+
+    const result: (Level | LevelManagement)[] = []
+
+    for (const level of actualLevels) {
+      const levelObjectId = level._id
+
+      const levelEnrollment = courseEnrollment.missions
+        ?.find((mission: any) => mission.mission.toString() === missionId)
+        ?.levels.find((level: any) => level.level.toString() === levelObjectId.toString())
+
+      if (levelEnrollment) {
+        levelEnrollment.level = level
+        result.push(levelEnrollment)
+      } else {
+        result.push(level)
       }
-      return level
-    }) as unknown as (LevelManagement | Level)[]
+    }
+
     return result
   }
 

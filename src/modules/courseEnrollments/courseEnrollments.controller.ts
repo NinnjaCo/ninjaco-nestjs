@@ -103,7 +103,7 @@ export class CourseEnrollmentsController {
     @Param('courseId') courseId: string,
     @Param('missionId') missionId: string,
     @GetCurrentUserId() userId: string
-  ): Promise<MissionManagement> {
+  ): Promise<MissionManagement | Mission> {
     return this.CourseEnrollmentService.findMissionById(missionId, courseId, userId)
   }
 
@@ -118,13 +118,13 @@ export class CourseEnrollmentsController {
     @Param('missionId') missionId: string,
     @GetCurrentUserId() userId: string
   ): Promise<(Level | LevelManagement)[]> {
-    return this.CourseEnrollmentService.findAllLevels(userId, courseId, missionId)
+    return this.CourseEnrollmentService.findAllLevels(courseId, userId, missionId)
   }
 
   @ApiGlobalResponse(LevelManagement, {
     description: 'Get level by id',
   })
-  @Get(':courseId/missions/:missionId/levels/levelId')
+  @Get(':courseId/missions/:missionId/levels/:levelId')
   findLevelById(
     @Param('courseId') courseId: string,
     @Param('missionId') missionId: string,

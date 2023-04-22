@@ -27,3 +27,5 @@ export class MissionManagement extends BaseEntity {
 }
 
 export const MissionManagementSchema = SchemaFactory.createForClass(MissionManagement)
+
+MissionManagementSchema.index({ mission: 1 }, { unique: true })
