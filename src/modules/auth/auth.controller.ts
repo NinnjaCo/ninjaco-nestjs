@@ -8,6 +8,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto'
 import { GetCurrentUser } from '../../common/decorators/get-current-user.decorator'
 import { GetCurrentUserId } from '../../common/decorators/get-current-user-id.decorator'
 import { Public } from '../../common/decorators/public.decorator'
+import { ResendEmailDto } from './dto/resend-email.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
 import { RtGuard } from './guards/rt.guard'
 import { SignInDto } from './dto/signin.dto'
@@ -92,5 +93,15 @@ export class AuthController {
   @Post('verify-email')
   async verifyEmail(@Body() body: verifyEmailDto): Promise<boolean> {
     return this.authService.verifyEmail(body)
+  }
+
+  @ApiGlobalResponse(BooleanSchema, {
+    description: 'Resend verification email',
+  })
+  @Public()
+  @Throttle(5, 60) // 5 requests per minute
+  @Post('resend-verification-email')
+  async resendVerificationEmail(@Body() body: ResendEmailDto): Promise<boolean> {
+    return this.authService.resendVerificationEmail(body)
   }
 }
