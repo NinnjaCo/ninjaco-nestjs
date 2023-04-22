@@ -1,10 +1,10 @@
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { CourseEnrollment, CourseEnrollmentDocument } from './schemas/courseEnrollment.schema'
 import { CreateLevelManagementDto } from './dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Document, FilterQuery, Model, Types } from 'mongoose'
 import { EntityRepository } from 'database/entity.repository'
 import { InjectModel } from '@nestjs/mongoose'
-import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
 import { LevelProgress } from 'modules/usersLevelsProgress/schema/LevelProgress.schema'
@@ -56,7 +56,6 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
   async createMissionProgress(
     userId: string,
     courseId: string,
-    createMissionProgressDto: CreateMissionManagementDto,
     mission: Mission
   ): Promise<MissionManagement> {
     const missionManagement = new this.missionManagementModel({
@@ -73,6 +72,15 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
       course: courseId,
       user: userId,
     })
+
+    // if a mission with the same id exists do not add it
+    if (
+      courseEnrollment.missions.find(
+        (mission) => mission.mission.toString() === missionManagement.mission.toString()
+      )
+    ) {
+      throw new BadRequestException('Mission already exists')
+    }
 
     courseEnrollment.missions.push(missionManagement)
 
@@ -114,6 +122,15 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     const missionToUpdate = courseEnrollment.missions.find(
       (mission) => mission.mission.toString() === missionId
     )
+
+    // if a level with the same id exists do not add it
+    if (
+      missionToUpdate.levels.find(
+        (level) => level.level.toString() === levelManagement.level.toString()
+      )
+    ) {
+      throw new BadRequestException('Level already exists')
+    }
 
     missionToUpdate.levels.push(levelManagement)
 
