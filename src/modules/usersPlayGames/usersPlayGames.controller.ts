@@ -49,7 +49,6 @@ export class UsersPlayGamesController {
     @Param('id') id: string,
     @Body() updateDto: UpdateUserPlayGameDto
   ): Promise<UserPlayGame> {
-    console.log('updateDto in controller', updateDto)
     return await this.userPlayGamesService.updateUserPlayGame(id, updateDto)
   }
 }

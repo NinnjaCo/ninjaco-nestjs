@@ -97,11 +97,6 @@ export class UsersPlayGamesService {
    * @returns {Promise<UserPlayGame>}
    */
   async updateUserPlayGame(id: string, updateDto: UpdateUserPlayGameDto): Promise<UserPlayGame> {
-    console.log('updateDto in service', updateDto)
-    console.log(
-      'afterUpdate',
-      await this.usersPlayGamesRepository.findOneAndUpdate({ _id: id }, updateDto)
-    )
     return await this.usersPlayGamesRepository.findOneAndUpdate({ _id: id }, updateDto)
   }
 
