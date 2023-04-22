@@ -299,7 +299,19 @@ export class AuthService {
     })
     return true
   }
-
+  /**
+   *
+   * @param resendEmailDto
+   * @returns Promise<boolean>
+   * @description find the user in the database by email
+   * @description check if the user exists
+   * @description check if the user is already verified
+   * @description check if the user is logged in
+   * @description create a verification token
+   * @description hash and save the token in the database
+   * @description send the email with the link to verify the email
+   * @description return true if the email was sent
+   */
   async resendVerificationEmail(resendEmailDto: ResendEmailDto): Promise<boolean> {
     const user = await this.usersService.findOneByEmail(resendEmailDto.email)
     if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
