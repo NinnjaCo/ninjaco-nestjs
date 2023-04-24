@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { MailService } from '../mail/mail.service'
+import { ResendEmailDto } from './dto/resend-email.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
 import { RolesService } from '../roles/roles.service'
 import { SignInDto } from './dto/signin.dto'
@@ -297,5 +298,44 @@ export class AuthService {
       verifyEmailToken: null,
     })
     return true
+  }
+  /**
+   *
+   * @param resendEmailDto
+   * @returns Promise<boolean>
+   * @description find the user in the database by email
+   * @description check if the user exists
+   * @description check if the user is already verified
+   * @description check if the user is logged in
+   * @description create a verification token
+   * @description hash and save the token in the database
+   * @description send the email with the link to verify the email
+   * @description return true if the email was sent
+   */
+  async resendVerificationEmail(resendEmailDto: ResendEmailDto): Promise<boolean> {
+    const user = await this.usersService.findOneByEmail(resendEmailDto.email)
+    if (!user) throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE)
+
+    if (user.isVerified) throw new UnauthorizedException('The email is already verified')
+
+    if (!user.hashedRt) throw new UnauthorizedException('The user is not logged in')
+
+    //create a verification token
+    const verificationToken = await this.jwtService.signAsync(
+      { sub: user._id.toString() },
+      {
+        secret: this.JWT_ACCESS_SECRET, // Sign it with the access secret, because it can be decoded on the client side
+        expiresIn: '24h',
+      }
+    )
+    const hashedToken = await hashData(verificationToken)
+    //save token in the database
+    await this.usersService.update(user._id.toString(), { verifyEmailToken: hashedToken })
+    //send verification email
+    const sentTheEmail = await this.mailService.sendVerifyEmail(user, verificationToken)
+    user.password = undefined
+    user.hashedRt = undefined
+
+    return sentTheEmail
   }
 }
