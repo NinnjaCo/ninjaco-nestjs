@@ -23,14 +23,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Throttle(5, 60) // 5 requests per minute
+  @Throttle(3, 60) // 3 requests per minute
   @Post('/local/signup')
   async register(@Body() body: SignUpDto): Promise<AuthResponse> {
     return this.authService.signUp(body)
   }
 
   @Public()
-  @Throttle(10, 60) // 10 requests per minute
+  @Throttle(3, 60) // 3 requests per minute
   @Post('local/signin')
   async signinLocal(@Body() dto: SignInDto): Promise<AuthResponse> {
     return this.authService.signIn(dto)
@@ -62,7 +62,7 @@ export class AuthController {
   @ApiGlobalResponse(BooleanSchema, {
     description: 'Send email with link to reset password',
   })
-  @Throttle(5, 60) // 5 requests per minute
+  @Throttle(5, 3600) //  5 requests per hour
   @Post('forgot-password')
   async forgotPassword(@Body() body: ForgotPasswordDto): Promise<boolean> {
     return this.authService.forgotPassword(body.email)
@@ -72,7 +72,7 @@ export class AuthController {
   @ApiGlobalResponse(BooleanSchema, {
     description: 'Reset password',
   })
-  @Throttle(5, 60) // 5 requests per minute
+  @Throttle(5, 3600) // 5 requests per hour
   @Post('reset-password')
   async resetPassword(@Body() body: ResetPasswordDto): Promise<boolean> {
     return this.authService.resetPassword(body)
