@@ -32,7 +32,7 @@ export class Feedback extends BaseEntity {
   rating: number
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   message: string
 }
 
