@@ -1,13 +1,19 @@
+import { CoursesService } from 'modules/courses/courses.service'
 import { CreateFeedbackDto } from './dto/create-feedback.dto'
 import { Feedback } from './schemas/feedbacks.schema'
 import { FeedbacksRepository } from './feedbacks.repository'
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { MongoServerError } from 'mongodb'
+import { UsersService } from 'modules/users/users.service'
 import { handleMongoDuplicateKeyError } from 'common/shared'
 
 @Injectable()
 export class FeedbacksService {
-  constructor(private readonly feedbacksRepository: FeedbacksRepository) {}
+  constructor(
+    private readonly feedbacksRepository: FeedbacksRepository,
+    private readonly coursesService: CoursesService,
+    private readonly userService: UsersService
+  ) {}
 
   /**
    * Find all feedbacks
@@ -22,10 +28,30 @@ export class FeedbacksService {
    * @param feedbackDto
    * @returns promise<feedback>
    */
-  async createFeedback(feedbackDto: CreateFeedbackDto): Promise<Feedback> {
+  async createFeedback(userId: string, feedbackDto: CreateFeedbackDto): Promise<Feedback> {
+    // get the user Object and the course
+    const user = await this.userService.findOne(userId)
+    const course = await this.coursesService.findCourseById(feedbackDto.courseId)
+    const mission = await this.coursesService.findMissionById(
+      feedbackDto.courseId,
+      feedbackDto.missionId
+    )
+    const level = await this.coursesService.findLevelById(
+      feedbackDto.courseId,
+      feedbackDto.missionId,
+      feedbackDto.levelId
+    )
+
+    const feedbackObject = {
+      user,
+      course,
+      mission,
+      level,
+      rating: feedbackDto.rating,
+      message: feedbackDto.message,
+    }
     try {
-      const feedback = await this.feedbacksRepository.create(feedbackDto)
-      return feedback
+      return await this.feedbacksRepository.create(feedbackObject)
     } catch (error) {
       // if error type is from mongodb
       if (error instanceof MongoServerError) {
