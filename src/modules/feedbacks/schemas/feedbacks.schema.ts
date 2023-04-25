@@ -4,27 +4,28 @@ import { Course } from 'modules/courses/schemas/course.schema'
 import { HydratedDocument } from 'mongoose'
 import { Level } from 'modules/courses/schemas/level.schema'
 import { Mission } from 'modules/courses/schemas/mission.schema'
-import { Prop, SchemaFactory } from '@nestjs/mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { User } from 'modules/users/schemas/user.schema'
 
 export type FeedbackDocument = HydratedDocument<Feedback>
 
+@Schema({ collection: 'feedbacks', timestamps: true })
 export class Feedback extends BaseEntity {
   @ApiProperty()
-  @Prop({ required: true })
-  userId: User
+  @Prop({ required: true, type: 'ObjectId', ref: User.name })
+  user: User
 
   @ApiProperty()
-  @Prop({ required: true })
-  level: Level
-
-  @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: true, type: 'ObjectId', ref: Course.name })
   course: Course
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: true, type: 'ObjectId', ref: Mission.name })
   mission: Mission
+
+  @ApiProperty()
+  @Prop({ required: true, type: 'ObjectId', ref: Level.name })
+  level: Level
 
   @ApiProperty()
   @Prop({ required: true })

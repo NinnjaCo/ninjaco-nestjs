@@ -1,30 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Course } from 'modules/courses/schemas/course.schema'
-import { IsNotEmpty, IsNumber, IsObject, IsString } from 'class-validator'
-import { Level } from 'modules/courses/schemas/level.schema'
-import { Mission } from 'modules/courses/schemas/mission.schema'
-import { User } from 'modules/users/schemas/user.schema'
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
 
 export class CreateFeedbackDto {
   @ApiProperty()
-  @IsObject()
+  @IsString()
   @IsNotEmpty()
-  author: User
+  levelId: string
 
   @ApiProperty()
-  @IsObject()
+  @IsString()
   @IsNotEmpty()
-  level: Level
+  courseId: string
 
   @ApiProperty()
-  @IsObject()
+  @IsString()
   @IsNotEmpty()
-  course: Course
-
-  @ApiProperty()
-  @IsObject()
-  @IsNotEmpty()
-  mission: Mission
+  missionId: string
 
   @ApiProperty()
   @IsNumber()
