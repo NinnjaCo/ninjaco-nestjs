@@ -9,10 +9,19 @@ import { handleMongoDuplicateKeyError } from 'common/shared'
 export class FeedbacksService {
   constructor(private readonly feedbacksRepository: FeedbacksRepository) {}
 
+  /**
+   * Find all feedbacks
+   * @returns Promise<Feedback[]> if feedbacks are found, otherwise empty array
+   */
   async findAll(): Promise<Feedback[]> {
     return await this.feedbacksRepository.find({})
   }
 
+  /**
+   * create feedback
+   * @param feedbackDto
+   * @returns promise<feedback>
+   */
   async createFeedback(feedbackDto: CreateFeedbackDto): Promise<Feedback> {
     try {
       const feedback = await this.feedbacksRepository.create(feedbackDto)
