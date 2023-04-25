@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config'
 import { CoursesEnrollmentModule } from 'modules/courseEnrollments/courseEnrollments.module'
 import { CoursesModule } from '../courses/courses.module'
 import { DatabaseModule } from '../../database/database.module'
+import { FeedbacksModule } from 'modules/feedbacks/feedbacks.module'
 import { FileUploadModule } from '../files/file-upload.module'
 import { GameProgressModule } from 'modules/usersGameProgress/game-progress.module'
 import { GamesModule } from '../games/games.module'
@@ -50,6 +51,7 @@ import { validateConfig } from '../config'
     UsersPlayGamesModule,
     UserLevelProgressModule,
     CoursesEnrollmentModule,
+    FeedbacksModule,
   ],
   controllers: [AppController],
   providers: [
