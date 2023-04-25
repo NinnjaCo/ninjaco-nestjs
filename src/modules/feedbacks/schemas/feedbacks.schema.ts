@@ -7,12 +7,12 @@ import { Mission } from 'modules/courses/schemas/mission.schema'
 import { Prop, SchemaFactory } from '@nestjs/mongoose'
 import { User } from 'modules/users/schemas/user.schema'
 
-export type CourseDocument = HydratedDocument<Feedback>
+export type FeedbackDocument = HydratedDocument<Feedback>
 
 export class Feedback extends BaseEntity {
   @ApiProperty()
   @Prop({ required: true })
-  author: User
+  userId: User
 
   @ApiProperty()
   @Prop({ required: true })
