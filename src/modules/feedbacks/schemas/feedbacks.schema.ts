@@ -37,3 +37,5 @@ export class Feedback extends BaseEntity {
 }
 
 export const FeedbackSchema = SchemaFactory.createForClass(Feedback)
+
+FeedbackSchema.index({ user: 1, course: 1, mission: 1, level: 1 }, { unique: true })
