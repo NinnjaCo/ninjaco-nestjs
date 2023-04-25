@@ -5,6 +5,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common'
 import { CreateFeedbackDto } from './dto/create-feedback.dto'
 import { Feedback } from './schemas/feedbacks.schema'
 import { FeedbacksService } from './feedbacks.service'
+import { GetCurrentUserId } from 'common/decorators/get-current-user-id.decorator'
 
 @ApiTags('Feedbacks')
 @Controller('feedbacks')
@@ -23,7 +24,10 @@ export class FeedbacksController {
     description: 'create feedback',
   })
   @Post()
-  create(@Body() feedbackDto: CreateFeedbackDto): Promise<Feedback> {
-    return this.feedbacksService.createFeedback(feedbackDto)
+  create(
+    @GetCurrentUserId() userId: string,
+    @Body() feedbackDto: CreateFeedbackDto
+  ): Promise<Feedback> {
+    return this.feedbacksService.createFeedback(userId, feedbackDto)
   }
 }
