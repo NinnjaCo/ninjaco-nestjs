@@ -30,4 +30,9 @@ export class UpdateUserDto {
 
   @IsOptional()
   profilePicture: string | undefined
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  points: string
 }
