@@ -198,12 +198,8 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
       return mission
     }) as unknown as [MissionManagement]
 
-    console.log(missionManagement)
-
     const completedLevels = missionManagement.levels.filter((level) => level.completed === true)
 
-    console.log(completedLevels)
-    console.log(courseEnrollment.course.missions)
     if (
       completedLevels.length === missionManagement.levels.length &&
       missionManagement.levels.length === courseEnrollment.course.missions.length
