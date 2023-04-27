@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
+import { Course } from 'modules/courses/schemas/course.schema'
 import { CourseEnrollment, CourseEnrollmentDocument } from './schemas/courseEnrollment.schema'
+import { CoursesService } from 'modules/courses/courses.service'
 import { CreateLevelManagementDto } from './dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
 import { Document, FilterQuery, Model, Types } from 'mongoose'
@@ -17,6 +19,7 @@ import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 @Injectable()
 export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollmentDocument> {
   constructor(
+    private readonly coursesService: CoursesService,
     @InjectModel(CourseEnrollment.name)
     private readonly courseEnrollmentModel: Model<CourseEnrollmentDocument>,
     // inject the model of the cMissionManagement schema
@@ -167,6 +170,12 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
     levelId: string,
     updateLevelProgress: UpdateLevelManagementDto
   ): Promise<CourseEnrollment> {
+    //find the course from the Course Service using the courseId
+
+    const course = await this.coursesService.findCourseById(courseId)
+
+    const mission = await this.coursesService.findMissionById(courseId, missionId)
+
     const courseEnrollment = await this.findOne({
       course: courseId,
       user: userId,
@@ -200,49 +209,40 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
 
     const completedLevels = missionManagement.levels.filter((level) => level.completed === true)
     // check if the number of levels inside missionManagment is equal to the number of levels in missions
-    if (missionManagement.levels.length === courseEnrollment.course.missions.length) {
+
+    if (completedLevels.length === mission.levels.length) {
+      missionManagement.completed = true
+
+      // loop through the missions, if all completed, set the course as completed, if not return the updated mission
+      const completedMissions = courseEnrollment.missions.filter(
+        (mission) => mission.completed === true
+      )
+      // check if the number of missions inside courseEnrollment is equal to the number of missions in course
+
       if (
-        completedLevels.length === missionManagement.levels.length &&
-        missionManagement.levels.length === courseEnrollment.course.missions.length
+        completedMissions.length === course.missions.length // user completed all missions they have started
+        // courseEnrollment.missions.length === courseEnrollment.course.missions.length // user started all missions
       ) {
-        missionManagement.completed = true
-
-        courseEnrollment.missions = courseEnrollment.missions.map((mission) => {
-          if (mission.mission.toString() === missionId) {
-            // delete the old mission management, and save the new one that contains the new level
-            courseEnrollment.missions = courseEnrollment.missions.filter(
-              (mission) => mission.mission.toString() !== missionId
-            ) as unknown as [MissionManagement]
-
-            courseEnrollment.missions.push(missionManagement)
-            return missionManagement
-          }
-          return mission
-        }) as unknown as [MissionManagement]
-
-        // loop through the missions, if all completed, set the course as completed, if not return the updated mission
-        const completedMissions = courseEnrollment.missions.filter(
-          (mission) => mission.completed === true
-        )
-        // check if the number of missions inside courseEnrollment is equal to the number of missions in course
-        if (courseEnrollment.missions.length === courseEnrollment.course.missions.length) {
-          if (
-            completedMissions.length === courseEnrollment.missions.length && // user completed all missions they have started
-            courseEnrollment.missions.length === courseEnrollment.course.missions.length // user started all missions
-          ) {
-            courseEnrollment.completed = true
-            await courseEnrollment.save()
-            return courseEnrollment
-          } else {
-            await courseEnrollment.save()
-            return courseEnrollment
-          }
-        }
+        courseEnrollment.completed = true
+        await courseEnrollment.save()
+        return courseEnrollment
       } else {
         await courseEnrollment.save()
         return courseEnrollment
       }
     } else {
+      courseEnrollment.missions = courseEnrollment.missions.map((mission) => {
+        if (mission.mission.toString() === missionId) {
+          // delete the old mission management, and save the new one that contains the new level
+          courseEnrollment.missions = courseEnrollment.missions.filter(
+            (mission) => mission.mission.toString() !== missionId
+          ) as unknown as [MissionManagement]
+
+          courseEnrollment.missions.push(missionManagement)
+          return missionManagement
+        }
+        return mission
+      }) as unknown as [MissionManagement]
       await courseEnrollment.save()
       return courseEnrollment
     }
