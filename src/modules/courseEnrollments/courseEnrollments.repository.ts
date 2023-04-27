@@ -242,6 +242,9 @@ export class CourseEnrollmentsRepository extends EntityRepository<CourseEnrollme
         await courseEnrollment.save()
         return courseEnrollment
       }
+    } else {
+      await courseEnrollment.save()
+      return courseEnrollment
     }
   }
 }
