@@ -42,4 +42,23 @@ describe('UsersController', () => {
       })
     })
   })
+
+  describe('findUserById', () => {
+    describe('when findUserById is called', () => {
+      let user: User
+      let userId: string
+
+      beforeEach(async () => {
+        user = await controller.findOne(userId)
+      })
+
+      test('should call usersService.findUserById', () => {
+        expect(usersService.findOne).toBeCalled()
+      })
+
+      test('should return a user', () => {
+        expect(user).toEqual(userStub())
+      })
+    })
+  })
 })
