@@ -1,6 +1,6 @@
-import { CourseType } from 'modules/courses/schemas/course.schema'
+import { CourseType } from '../../../courses/schemas/course.schema'
 import { Feedback } from '../../schemas/feedbacks.schema'
-import { RoleEnum } from 'modules/roles/roles.enum'
+import { RoleEnum } from '../../../roles/roles.enum'
 import mongoose from 'mongoose'
 
 export const feedbackStub: () => Feedback = () => {

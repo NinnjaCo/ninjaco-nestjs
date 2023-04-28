@@ -1,11 +1,11 @@
-import { CoursesModule } from 'modules/courses/courses.module'
+import { CoursesModule } from '../courses/courses.module'
 import { Feedback, FeedbackSchema } from './schemas/feedbacks.schema'
 import { FeedbacksController } from './feedbacks.controller'
 import { FeedbacksRepository } from './feedbacks.repository'
 import { FeedbacksService } from './feedbacks.service'
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { UsersModule } from 'modules/users/users.module'
+import { UsersModule } from '../users/users.module'
 
 @Module({
   imports: [

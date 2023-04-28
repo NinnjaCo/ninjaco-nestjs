@@ -1,10 +1,10 @@
-import { getModelToken } from '@nestjs/mongoose'
-import { Test, TestingModule } from '@nestjs/testing'
-import { FilterQuery } from 'mongoose'
 import { Feedback } from '../schemas/feedbacks.schema'
-import { FeedbacksRepository } from '../feedbacks.repository'
-import { feedbackStub } from './stubs/feedback.stub'
 import { FeedbackModel } from './support/feedback.model'
+import { FeedbacksRepository } from '../feedbacks.repository'
+import { FilterQuery } from 'mongoose'
+import { Test, TestingModule } from '@nestjs/testing'
+import { feedbackStub } from './stubs/feedback.stub'
+import { getModelToken } from '@nestjs/mongoose'
 
 describe('FeedbacksRepository', () => {
   let repository: FeedbacksRepository

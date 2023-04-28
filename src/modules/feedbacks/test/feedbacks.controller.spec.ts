@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { CreateFeedbackDto } from '../dto/create-feedback.dto'
 import { Feedback } from '../schemas/feedbacks.schema'
 import { FeedbacksController } from '../feedbacks.controller'
 import { FeedbacksService } from '../feedbacks.service'
+import { Test, TestingModule } from '@nestjs/testing'
 import { feedbackStub } from './stubs/feedback.stub'
 
 jest.mock('../feedbacks.service')
@@ -48,18 +48,26 @@ describe('FeedbacksController', () => {
     describe('when createFeedback is called', () => {
       let feedback: Feedback
       let createFeedbackDto: CreateFeedbackDto
+      let userId: string
 
       beforeEach(async () => {
         const { user, course, mission, level, rating, message } = feedbackStub()
         const courseId = course._id
         const missionId = mission._id
         const levelId = level._id
-        createFeedbackDto = { courseId, missionId, levelId, rating, message }
-        feedback = await controller.create(user._id, createFeedbackDto)
+        userId = user._id.toString()
+        createFeedbackDto = {
+          courseId: courseId.toString(),
+          missionId: missionId.toString(),
+          levelId: levelId.toString(),
+          rating,
+          message,
+        }
+        feedback = await controller.create(userId, createFeedbackDto)
       })
 
       test('should call feedbacksService.createFeedback', () => {
-        expect(feedbacksService.createFeedback).toBeCalledWith(createFeedbackDto)
+        expect(feedbacksService.createFeedback).toBeCalledWith(userId, createFeedbackDto)
       })
 
       test('should return a feedback', () => {
