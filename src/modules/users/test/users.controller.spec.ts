@@ -1,5 +1,6 @@
 import { CreateUsersDto } from '../dto/create-user.dto'
 import { Test, TestingModule } from '@nestjs/testing'
+import { UpdateUserDto } from '../dto/update-user.dto'
 import { User } from '../schemas/user.schema'
 import { UsersController } from '../users.controller'
 import { UsersService } from '../users.service'
@@ -94,6 +95,36 @@ describe('UsersController', () => {
 
       test('should call usersService.removeUser', () => {
         expect(usersService.remove).toBeCalledWith(userId)
+      })
+
+      test('should return a user', () => {
+        expect(user).toEqual(userStub())
+      })
+    })
+  })
+
+  describe('updateUser', () => {
+    describe('when updateUser is called', () => {
+      let user: User
+      let updateUserDto: UpdateUserDto
+      let userId: string
+
+      beforeEach(async () => {
+        const { firstName, lastName, dateOfBirth, email, password } = userStub()
+        updateUserDto = {
+          firstName,
+          lastName,
+          dateOfBirth,
+          email,
+          password,
+          points: 0,
+          profilePicture: '',
+        }
+        user = await controller.update(userId, updateUserDto)
+      })
+
+      test('should call usersService.updateUser', () => {
+        expect(usersService.update).toBeCalledWith(userId, updateUserDto)
       })
 
       test('should return a user', () => {
