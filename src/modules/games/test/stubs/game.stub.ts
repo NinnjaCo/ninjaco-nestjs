@@ -1,4 +1,4 @@
-import { Game } from 'modules/games/schemas/game.schema'
+import { Game } from '../../../games/schemas/game.schema'
 import mongoose from 'mongoose'
 
 export const gameStub: () => Game = () => {

@@ -1,11 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing'
+import { CreateGameDto } from '../dto/create-game.dto'
+import { Game } from '../schemas/game.schema'
 import { GamesController } from '../games.controller'
 import { GamesService } from '../games.service'
-import { CreateFeedbackDto } from 'modules/feedbacks/dto/create-feedback.dto'
-import { Feedback } from 'modules/feedbacks/schemas/feedbacks.schema'
-import { feedbackStub } from 'modules/feedbacks/test/stubs/feedback.stub'
-import { Game } from '../schemas/game.schema'
-import { CreateGameDto } from '../dto/create-game.dto'
+import { Test, TestingModule } from '@nestjs/testing'
 import { gameStub } from './stubs/game.stub'
 
 jest.mock('../games.service')
@@ -42,7 +39,7 @@ describe('GamesController', () => {
       })
 
       test('should return an array of games', () => {
-        expect(games).toEqual([feedbackStub()])
+        expect(games).toEqual([gameStub()])
       })
     })
   })
