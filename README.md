@@ -19,18 +19,20 @@
 <a id="er-diagram"></a>
 <br><br>
 <img src="README_ASSETS/README_ER.svg"/>
-<!-- create a table -->
-| ER Diagram Non transparent
+
+| ER Diagram Non transparent <> Download 4k [here](https://github.com/NinnjaCo/ninjaco-nestjs/raw/dev/README_ASSETS/er_4k_non_trans.png)|
 | :---: |
 | <img src="README_ASSETS/er_4k_non_trans.png"/> |
-| ER Diagram Transparent |
+| ER Diagram Transparent <> Download 4k [here](https://github.com/NinnjaCo/ninjaco-nestjs/raw/dev/README_ASSETS/er_4k_trans.png)|
 | <img src="README_ASSETS/er_4k_trans.png"/>
 
 <a id="sys-arch"></a>
 <br><br>
 <img src="README_ASSETS/README_ARCH.svg"/>
 
-TODO
+| System Architecture <> Download SVG [here](https://github.com/NinnjaCo/ninjaco-nestjs/raw/dev/README_ASSETS/er_4k_non_trans.png)|
+| :---: |
+| <img src="README_ASSETS/system_architecture_non_trans.svg"/> |
 
 <a id="tech-stack"></a>
 <br><br>
