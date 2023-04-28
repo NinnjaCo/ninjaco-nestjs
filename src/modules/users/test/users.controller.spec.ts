@@ -83,4 +83,22 @@ describe('UsersController', () => {
       })
     })
   })
+  describe('removeUser', () => {
+    describe('when removeUser is called', () => {
+      let user: User
+      let userId: string
+
+      beforeEach(async () => {
+        user = await controller.remove(userId)
+      })
+
+      test('should call usersService.removeUser', () => {
+        expect(usersService.remove).toBeCalledWith(userId)
+      })
+
+      test('should return a user', () => {
+        expect(user).toEqual(userStub())
+      })
+    })
+  })
 })
