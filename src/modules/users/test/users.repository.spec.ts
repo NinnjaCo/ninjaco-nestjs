@@ -37,7 +37,7 @@ describe('UsersRepository', () => {
 
         beforeEach(async () => {
           jest.spyOn(userModel, 'find')
-          users = (await repository.find({})) as User[]
+          users = (await userModel.find({})) as User[]
         })
 
         test('then it should call the userModel', () => {
@@ -56,7 +56,7 @@ describe('UsersRepository', () => {
 
         beforeEach(async () => {
           jest.spyOn(userModel, 'findOne')
-          user = (await repository.findOne(userFilterQuery)) as User
+          user = (await userModel.findOne(userFilterQuery).exec()) as User
         })
 
         test('then it should call the userModel', () => {
