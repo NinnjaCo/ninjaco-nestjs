@@ -1,11 +1,11 @@
-import { CoursesService } from 'modules/courses/courses.service'
+import { CoursesService } from '../courses/courses.service'
 import { CreateFeedbackDto } from './dto/create-feedback.dto'
 import { Feedback } from './schemas/feedbacks.schema'
 import { FeedbacksRepository } from './feedbacks.repository'
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { MongoServerError } from 'mongodb'
-import { UsersService } from 'modules/users/users.service'
-import { handleMongoDuplicateKeyError } from 'common/shared'
+import { UsersService } from '../users/users.service'
+import { handleMongoDuplicateKeyError } from '../../common/shared'
 
 @Injectable()
 export class FeedbacksService {
