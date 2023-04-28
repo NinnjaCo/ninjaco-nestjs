@@ -19,7 +19,12 @@
 <a id="er-diagram"></a>
 <br><br>
 <img src="README_ASSETS/README_ER.svg"/>
-TODO
+<!-- create a table -->
+| ER Diagram Non transparent
+| :---: |
+| <img src="README_ASSETS/er_4k_non_trans.png"/> |
+| ER Diagram Transparent |
+| <img src="README_ASSETS/er_4k_trans.png"/>
 
 <a id="sys-arch"></a>
 <br><br>
