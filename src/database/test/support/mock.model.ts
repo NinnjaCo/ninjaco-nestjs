@@ -1,3 +1,5 @@
+import { FilterQuery } from 'mongoose'
+
 export class MockModel<T> {
   protected entityStub: T
 
@@ -7,11 +9,11 @@ export class MockModel<T> {
 
   constructorSpy(_createEntityData: T): void {}
 
-  findOne(): { exec: () => T } {
+  findOne(query: FilterQuery<T>): { exec: () => T } {
     return { exec: (): T => this.entityStub }
   }
 
-  async find(): Promise<T[]> {
+  async find(query: FilterQuery<T>): Promise<T[]> {
     return [this.entityStub]
   }
 
@@ -19,11 +21,11 @@ export class MockModel<T> {
     return this.entityStub
   }
 
-  async findOneAndUpdate(): Promise<T> {
+  async findOneAndUpdate(query: FilterQuery<T>): Promise<T> {
     return this.entityStub
   }
 
-  async findOneAndDelete(): Promise<T> {
+  async findOneAndDelete(query: FilterQuery<T>): Promise<T> {
     return this.entityStub
   }
   async updateMany(): Promise<boolean> {
