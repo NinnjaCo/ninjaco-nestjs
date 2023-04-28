@@ -1,3 +1,4 @@
+import { CreateUsersDto } from '../dto/create-user.dto'
 import { Test, TestingModule } from '@nestjs/testing'
 import { User } from '../schemas/user.schema'
 import { UsersController } from '../users.controller'
@@ -54,6 +55,27 @@ describe('UsersController', () => {
 
       test('should call usersService.findUserById', () => {
         expect(usersService.findOne).toBeCalled()
+      })
+
+      test('should return a user', () => {
+        expect(user).toEqual(userStub())
+      })
+    })
+  })
+
+  describe('createUser', () => {
+    describe('when createUser is called', () => {
+      let user: User
+      let createUserDto: CreateUsersDto
+
+      beforeEach(async () => {
+        const { firstName, lastName, dateOfBirth, email, password } = userStub()
+        createUserDto = { firstName, lastName, dateOfBirth, email, password }
+        user = await controller.create(createUserDto)
+      })
+
+      test('should call usersService.createUser', () => {
+        expect(usersService.create).toBeCalledWith(createUserDto)
       })
 
       test('should return a user', () => {
