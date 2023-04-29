@@ -37,7 +37,7 @@ describe('UsersPlayGamesRepository', () => {
 
         beforeEach(async () => {
           jest.spyOn(userPlayGameModel, 'find')
-          userPlayGames = (await repository.find({})) as UserPlayGame[]
+          userPlayGames = (await userPlayGameModel.find({})) as UserPlayGame[]
         })
 
         test('then it should call the userPlayGameModel', () => {
