@@ -4,6 +4,8 @@ import { CourseEnrollmentsController } from '../courseEnrollments.controller'
 import { CourseEnrollmentsService } from '../courseEnrollments.service'
 import { CreateCourseManagementDto } from '../dto/create-courseManagement.dto'
 import { CreateMissionManagementDto } from '../dto/create-missionManagement.dto'
+import { Level } from '../../courses/schemas/level.schema'
+import { LevelManagement } from '../schemas/LevelManagement.schema'
 import { Mission } from '../../courses/schemas/mission.schema'
 import { MissionManagement } from '../schemas/MissionManagement.schema'
 import { Test, TestingModule } from '@nestjs/testing'
@@ -165,6 +167,27 @@ describe('CourseEnrollmentsController', () => {
 
       test('should return a mission', () => {
         expect(mission).toEqual(courseEnrollmentStub())
+      })
+    })
+  })
+
+  describe('findAllLevels', () => {
+    describe('when findAllLeves is called', () => {
+      let levels: (LevelManagement | Level)[]
+      let missionId: string
+      let userId: string
+      let courseId: string
+
+      beforeEach(async () => {
+        levels = await controller.findAllLevels(courseId, missionId, userId)
+      })
+
+      test('should call courseEnrollmentsService.findAllLeves', () => {
+        expect(courseEnrollmentsService.findAllLevels).toBeCalled()
+      })
+
+      test('should return an array of levels', () => {
+        expect(levels).toEqual([courseEnrollmentStub()])
       })
     })
   })
