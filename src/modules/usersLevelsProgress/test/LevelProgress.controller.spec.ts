@@ -1,10 +1,8 @@
 import { CreateLevelProgressDto } from '../dto/create-levelProgress.dto'
-import { GamesService } from 'modules/games/games.service'
 import { LevelProgress } from '../schema/LevelProgress.schema'
 import { Test, TestingModule } from '@nestjs/testing'
 import { UsersLevelsProgressController } from '../usersLevelsProgress.controller'
 import { UsersLevelsProgressService } from '../usersLevelsProgress.service'
-import { gameStub } from 'modules/games/test/stubs/game.stub'
 import { levelProgressStub } from './stubs/levelProgress.stub'
 
 jest.mock('../levelProgress.service')
