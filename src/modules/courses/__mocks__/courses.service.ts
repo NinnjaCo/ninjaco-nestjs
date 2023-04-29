@@ -11,4 +11,9 @@ export const CoursesService = jest.fn().mockReturnValue({
   createMission: jest.fn().mockResolvedValue(courseStub()),
   deleteMission: jest.fn().mockResolvedValue(courseStub()),
   updateMission: jest.fn().mockResolvedValue(courseStub()),
+  findAllLevels: jest.fn().mockResolvedValue([courseStub()]),
+  findLevelById: jest.fn().mockResolvedValue(courseStub()),
+  createLevel: jest.fn().mockResolvedValue(courseStub()),
+  deleteLevel: jest.fn().mockResolvedValue(courseStub()),
+  updateLevel: jest.fn().mockResolvedValue(courseStub()),
 })
