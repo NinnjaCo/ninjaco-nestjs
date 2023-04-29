@@ -284,4 +284,25 @@ describe('CoursesController', () => {
       })
     })
   })
+
+  describe('deleteLevel', () => {
+    describe('when deleteLevel is called', () => {
+      let level: Level
+      let courseId: string
+      let missionId: string
+      let levelId: string
+
+      beforeEach(async () => {
+        level = await controller.removeLevel(courseId, missionId, levelId)
+      })
+
+      test('should call coursesService.deleteLevel', () => {
+        expect(coursesService.deleteLevel).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(level).toEqual(courseStub())
+      })
+    })
+  })
 })
