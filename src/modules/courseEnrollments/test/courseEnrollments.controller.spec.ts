@@ -67,4 +67,27 @@ describe('CourseEnrollmentsController', () => {
       })
     })
   })
+
+  describe('deleteCourse', () => {
+    describe('when deleteCourse is called', () => {
+      let course: CourseEnrollment
+      let courseId: string
+      let userId: string
+
+      beforeEach(async () => {
+        const { _id } = courseEnrollmentStub()
+        courseId = _id.toString()
+        userId = 'userId'
+        course = await controller.remove(courseId, userId)
+      })
+
+      test('should call courseEnrollmentsService.deleteCourse', () => {
+        expect(courseEnrollmentsService.deleteCourse).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(course).toEqual(courseEnrollmentStub())
+      })
+    })
+  })
 })
