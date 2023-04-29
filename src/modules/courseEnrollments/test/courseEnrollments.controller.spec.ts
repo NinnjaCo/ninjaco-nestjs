@@ -90,4 +90,29 @@ describe('CourseEnrollmentsController', () => {
       })
     })
   })
+  
+
+  describe('createCourseEnrollment', () => {
+    describe('when createCourse is called', () => {
+      let course: CourseEnrollment
+      let createCourseDto: CreateCourseManagementDto
+      let userId: string
+
+      beforeEach(async () => {
+        const { _id } = courseEnrollmentStub()
+        userId = 'userId'
+        createCourseDto = {
+          courseId: _id.toString(),
+        }
+        course = await controller.create(userId, createCourseDto)
+      })
+
+      test('should call courseEnrollmentsService.createCourse', () => {
+        expect(courseEnrollmentsService.createCourseEnrollement).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(course).toEqual(courseEnrollmentStub())
+      })
+    })
 })
