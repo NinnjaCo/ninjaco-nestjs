@@ -1,14 +1,9 @@
-import { getModelToken } from '@nestjs/mongoose'
-import { TestingModule, Test } from '@nestjs/testing'
-import { feedbackStub } from 'modules/feedbacks/test/stubs/feedback.stub'
-import { GamesRepository } from 'modules/games/games.repository'
-import { Game } from 'modules/games/schemas/game.schema'
-import { gameStub } from 'modules/games/test/stubs/game.stub'
-import { GamesModel } from 'modules/games/test/support/game.model'
 import { FilterQuery } from 'mongoose'
 import { LevelProgress } from '../schema/LevelProgress.schema'
-import { UsersLevelsProgressRepository } from '../usersLevelsProgress.repository'
 import { LevelProgressModel } from './support/levelProgress.model'
+import { Test, TestingModule } from '@nestjs/testing'
+import { UsersLevelsProgressRepository } from '../usersLevelsProgress.repository'
+import { getModelToken } from '@nestjs/mongoose'
 import { levelProgressStub } from './stubs/levelProgress.stub'
 
 describe(' UsersLevelsProgressRepository', () => {
@@ -50,37 +45,37 @@ describe(' UsersLevelsProgressRepository', () => {
       })
     })
 
-    // describe('Create Operations', () => {
-    //   beforeEach(async () => {
-    //     const module: TestingModule = await Test.createTestingModule({
-    //       providers: [
-    //         GamesRepository,
-    //         {
-    //           provide: getModelToken(Game.name),
-    //           useClass: GamesModel,
-    //         },
-    //       ],
-    //     }).compile()
+    describe('Create Operations', () => {
+      beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+          providers: [
+            UsersLevelsProgressRepository,
+            {
+              provide: getModelToken(LevelProgress.name),
+              useClass: LevelProgressModel,
+            },
+          ],
+        }).compile()
 
-    //     repository = module.get<GamesRepository>(GamesRepository)
-    //   })
+        repository = module.get<UsersLevelsProgressRepository>(UsersLevelsProgressRepository)
+      })
 
-    //   describe('create', () => {
-    //     describe('when create is called', () => {
-    //       let game: Game
-    //       let entity: GamesModel
+      describe('create', () => {
+        describe('when create is called', () => {
+          let levelProgress: LevelProgress
+          let entity: LevelProgressModel
 
-    //       beforeEach(async () => {
-    //         jest.spyOn(GamesModel.prototype, 'save')
-    //         entity = new GamesModel(gameStub())
-    //         game = await entity.save()
-    //       })
+          beforeEach(async () => {
+            jest.spyOn(LevelProgressModel.prototype, 'save')
+            entity = new LevelProgressModel(levelProgressStub())
+            levelProgress = await entity.save()
+          })
 
-    //       test('then it should call the gameModel', () => {
-    //         expect(entity.save).toHaveBeenCalledWith()
-    //       })
-    //     })
-    //   })
-    // })
+          test('then it should call the LevelProgressModel', () => {
+            expect(entity.save).toHaveBeenCalledWith()
+          })
+        })
+      })
+    })
   })
 })
