@@ -45,4 +45,26 @@ describe('CourseEnrollmentsController', () => {
       })
     })
   })
+  describe('findCourseById', () => {
+    describe('when findCourseById is called', () => {
+      let course: Course | CourseEnrollment
+      let courseId: string
+      let userId: string
+
+      beforeEach(async () => {
+        const { _id } = courseEnrollmentStub()
+        courseId = _id.toString()
+        userId = 'userId'
+        course = await controller.findOne(courseId, userId)
+      })
+
+      test('should call courseEnrollmentsService.findCourseById', () => {
+        expect(courseEnrollmentsService.findCourseById).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(course).toEqual(courseEnrollmentStub())
+      })
+    })
+  })
 })
