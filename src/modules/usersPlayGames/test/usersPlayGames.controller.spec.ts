@@ -3,6 +3,8 @@ import { UsersPlayGamesController } from '../usersPlayGames.controller'
 import { UsersPlayGamesService } from '../usersPlayGames.service'
 import { UserPlayGame } from '../schemas/userPlayGame.schema'
 import { CreateUserPlayGameDto } from '../dto/create-user-play-game.dto'
+import { userPlayGameStub } from './stubs/userPlayGame.stub'
+import { Game } from 'modules/games/schemas/game.schema'
 
 jest.mock('../usersPlayGames.service')
 
@@ -27,18 +29,19 @@ describe('UsersPlayGamesController', () => {
 
   describe('findAllUsersPlayGames', () => {
     describe('when findAllUsersPlayGames is called', () => {
-      let usersPlayGames: UserPlayGame[]
+      let usersPlayGames: (UserPlayGame | Game)[]
+      const { user } = userPlayGameStub()
 
       beforeEach(async () => {
-        usersPlayGames = await controller.findAll()
+        usersPlayGames = await controller.getCompletedGames(user._id.toString())
       })
 
       test('should call usersPlayGamesService.findAllUsersPlayGames', () => {
-        expect(usersPlayGamesService.findAll).toBeCalled()
+        expect(usersPlayGamesService.getCompletedGames).toBeCalled()
       })
 
       test('should return an array of usersPlayGames', () => {
-        expect(usersPlayGames).toEqual([feedbackStub()])
+        expect(usersPlayGames).toEqual([userPlayGameStub()])
       })
     })
   })
@@ -50,27 +53,23 @@ describe('UsersPlayGamesController', () => {
       let userId: string
 
       beforeEach(async () => {
-        const { user, course, mission, level, rating, message } = feedbackStub()
-        const courseId = course._id
-        const missionId = mission._id
-        const levelId = level._id
-        userId = user._id.toString()
+        const { user, game } = userPlayGameStub()
         createUserPlayGameDto = {
-          userId: userId.toString(),
-          gameId: gameId.toString(),
+          userId: user._id.toString(),
+          gameId: game._id.toString(),
         }
-        userPlayGame = await controller.create(userId, createUserPlayGameDto)
+        userPlayGame = await controller.userPlayGameEntry(createUserPlayGameDto)
       })
 
       test('should call usersPlayGamesService.createUserPlayGame', () => {
-        expect(usersPlayGamesService.createUserPlayGame).toBeCalledWith(
+        expect(usersPlayGamesService.createUserPlayGameEntry).toBeCalledWith(
           userId,
           createUserPlayGameDto
         )
       })
 
       test('should return a userPlayGame', () => {
-        expect(userPlayGame).toEqual(feedbackStub())
+        expect(userPlayGame).toEqual(userPlayGameStub())
       })
     })
   })
