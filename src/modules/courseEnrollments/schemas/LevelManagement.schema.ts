@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BaseEntity } from 'database/base.entity'
+import { BaseEntity } from '../../../database/base.entity'
 import { HydratedDocument } from 'mongoose'
-import { Level } from 'modules/courses/schemas/level.schema'
+import { Level } from '../../../modules/courses/schemas/level.schema' // TODO: Change to 'src/modules/courses/schemas/level.schema
 import { LevelProgress } from '../../usersLevelsProgress/schema/LevelProgress.schema'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
