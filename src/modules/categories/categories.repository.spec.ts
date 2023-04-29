@@ -23,13 +23,13 @@ describe('CategoriesRepository', () => {
           CategoryRepository,
           {
             //
-            provide: getModelToken(Role.name),
+            provide: getModelToken(Category.name),
             useClass: CategoryModel,
           },
         ],
       }).compile()
 
-      repository = module.get<CategoryRepository>(RolesRepository)
+      repository = module.get<CategoryRepository>(CategoryRepository)
       categoryModel = module.get<CategoryModel>(getModelToken(categoryFilterQuery._id))
       categoryFilterQuery = { _id: categoryStub()._id }
 
@@ -38,11 +38,11 @@ describe('CategoriesRepository', () => {
 
     describe('findAll', () => {
       describe('when findAll is called', () => {
-        let role: Role[]
+        let category: Category[]
 
         beforeEach(async () => {
           jest.spyOn(categoryModel, 'find')
-          role = (await repository.find({})) as Category[]
+          category = (await repository.find({})) as Category[]
         })
 
         test('then it should call the category Model', () => {
