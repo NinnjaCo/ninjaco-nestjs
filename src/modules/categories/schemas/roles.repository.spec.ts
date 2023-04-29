@@ -8,6 +8,7 @@ import { roleStub } from './stubs/role.stub'
 import { CategoryRepository } from '../categories.repository'
 import { CategoryModel } from '../support/categorymodel'
 import { Category } from './category.schema'
+import { categoryStub } from '../stubs/category.stub'
 
 describe('CategoriesRepository', () => {
   let repository: CategoryRepository
@@ -19,17 +20,18 @@ describe('CategoriesRepository', () => {
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [
-          RolesRepository,
+          CategoryRepository,
           {
+            //
             provide: getModelToken(Role.name),
-            useClass: RoleModel,
+            useClass: CategoryModel,
           },
         ],
       }).compile()
 
-      repository = module.get<RolesRepository>(RolesRepository)
-      roleModel = module.get<RoleModel>(getModelToken(Role.name))
-      roleFilterQuery = { _id: roleStub()._id }
+      repository = module.get<CategoryRepository>(RolesRepository)
+      categoryModel = module.get<CategoryModel>(getModelToken(categoryFilterQuery._id))
+      categoryFilterQuery = { _id: categoryStub()._id }
 
       jest.clearAllMocks()
     })
