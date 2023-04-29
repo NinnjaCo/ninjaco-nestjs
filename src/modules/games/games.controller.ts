@@ -19,7 +19,7 @@ export class GamesController {
   @Post()
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   create(@Body() userDto: CreateGameDto): Promise<Game> {
-    return this.gamesService.create(userDto)
+    return this.gamesService.create(aqqquserDto)
   }
 
   @ApiGlobalResponse(Game, {
