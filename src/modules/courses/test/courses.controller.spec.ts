@@ -2,6 +2,7 @@ import { Course } from '../schemas/course.schema'
 import { CoursesController } from '../courses.controller'
 import { CoursesService } from '../courses.service'
 import { CreateCourseDto } from '../dto/create-course.dto'
+import { CreateLevelDto } from '../dto/create-level.dto'
 import { CreateMissionDto } from '../dto/create-mission.dto'
 import { Level } from '../schemas/level.schema'
 import { Mission } from '../schemas/mission.schema'
@@ -255,6 +256,27 @@ describe('CoursesController', () => {
 
       test('should call coursesService.findLevelById', () => {
         expect(coursesService.findLevelById).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(level).toEqual(courseStub())
+      })
+    })
+  })
+
+  describe('createLevel', () => {
+    describe('when createLevel is called', () => {
+      let level: Level
+      let courseId: string
+      let missionId: string
+      let createLevelDto: CreateLevelDto
+
+      beforeEach(async () => {
+        level = await controller.createLevel(courseId, missionId, createLevelDto)
+      })
+
+      test('should call coursesService.createLevel', () => {
+        expect(coursesService.createLevel).toBeCalled()
       })
 
       test('should return a course', () => {
