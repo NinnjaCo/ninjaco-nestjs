@@ -241,4 +241,25 @@ describe('CoursesController', () => {
       })
     })
   })
+
+  describe('findLevelById', () => {
+    describe('when findLevelById is called', () => {
+      let level: Level
+      let courseId: string
+      let missionId: string
+      let levelId: string
+
+      beforeEach(async () => {
+        level = await controller.findOneLevel(courseId, missionId, levelId)
+      })
+
+      test('should call coursesService.findLevelById', () => {
+        expect(coursesService.findLevelById).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(level).toEqual(courseStub())
+      })
+    })
+  })
 })
