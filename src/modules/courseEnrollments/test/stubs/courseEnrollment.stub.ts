@@ -1,6 +1,6 @@
-import { CourseEnrollment } from 'modules/courseEnrollments/schemas/courseEnrollment.schema'
-import { CourseType } from 'modules/courses/schemas/course.schema'
-import { RoleEnum } from 'modules/roles/roles.enum'
+import { CourseEnrollment } from '../../schemas/courseEnrollment.schema'
+import { CourseType } from '../../../courses/schemas/course.schema'
+import { RoleEnum } from '../../../roles/roles.enum'
 import mongoose from 'mongoose'
 
 export const courseEnrollmentStub: () => CourseEnrollment = () => ({
