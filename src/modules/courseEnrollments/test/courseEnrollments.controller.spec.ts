@@ -90,7 +90,6 @@ describe('CourseEnrollmentsController', () => {
       })
     })
   })
-  
 
   describe('createCourseEnrollment', () => {
     describe('when createCourse is called', () => {
@@ -115,4 +114,5 @@ describe('CourseEnrollmentsController', () => {
         expect(course).toEqual(courseEnrollmentStub())
       })
     })
+  })
 })
