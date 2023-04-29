@@ -43,4 +43,22 @@ describe('CoursesController', () => {
       })
     })
   })
+  describe('findCourseById', () => {
+    describe('when findCourseById is called', () => {
+      let course: Course
+      let courseId: string
+
+      beforeEach(async () => {
+        course = await controller.findOne(courseId)
+      })
+
+      test('should call coursesService.findCourseById', () => {
+        expect(coursesService.findCourseById).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(course).toEqual(courseStub())
+      })
+    })
+  })
 })
