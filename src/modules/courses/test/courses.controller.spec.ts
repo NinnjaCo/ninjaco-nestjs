@@ -179,4 +179,24 @@ describe('CoursesController', () => {
       })
     })
   })
+
+  describe('deleteMission', () => {
+    describe('when deleteMission is called', () => {
+      let mission: Mission
+      let courseId: string
+      let missionId: string
+
+      beforeEach(async () => {
+        mission = await controller.removeMission(courseId, missionId)
+      })
+
+      test('should call coursesService.deleteMission', () => {
+        expect(coursesService.deleteMission).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(mission).toEqual(courseStub())
+      })
+    })
+  })
 })
