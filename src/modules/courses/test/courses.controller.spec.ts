@@ -80,4 +80,23 @@ describe('CoursesController', () => {
       })
     })
   })
+
+  describe('deleteCourse', () => {
+    describe('when deleteCourse is called', () => {
+      let course: Course
+      let courseId: string
+
+      beforeEach(async () => {
+        course = await controller.remove(courseId)
+      })
+
+      test('should call coursesService.deleteCourse', () => {
+        expect(coursesService.deleteCourse).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(course).toEqual(courseStub())
+      })
+    })
+  })
 })
