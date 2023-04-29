@@ -3,6 +3,7 @@ import { CoursesController } from '../courses.controller'
 import { CoursesService } from '../courses.service'
 import { CreateCourseDto } from '../dto/create-course.dto'
 import { CreateMissionDto } from '../dto/create-mission.dto'
+import { Level } from '../schemas/level.schema'
 import { Mission } from '../schemas/mission.schema'
 import { Test, TestingModule } from '@nestjs/testing'
 import { courseStub } from './stubs/course.stub'
@@ -217,6 +218,26 @@ describe('CoursesController', () => {
 
       test('should return a course', () => {
         expect(mission).toEqual(courseStub())
+      })
+    })
+  })
+
+  describe('findAllLevels', () => {
+    describe('when findAllLevels is called', () => {
+      let levels: Level[]
+      let courseId: string
+      let missionId: string
+
+      beforeEach(async () => {
+        levels = await controller.findAllLevels(courseId, missionId)
+      })
+
+      test('should call coursesService.findAllLevels', () => {
+        expect(coursesService.findAllLevels).toBeCalled()
+      })
+
+      test('should return an array of courses', () => {
+        expect(levels).toEqual([courseStub()])
       })
     })
   })
