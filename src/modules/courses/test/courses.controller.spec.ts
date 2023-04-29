@@ -139,4 +139,23 @@ describe('CoursesController', () => {
       })
     })
   })
+  describe('findMissionById', () => {
+    describe('when findMissionById is called', () => {
+      let mission: Mission
+      let courseId: string
+      let missionId: string
+
+      beforeEach(async () => {
+        mission = await controller.findOneMission(courseId, missionId)
+      })
+
+      test('should call coursesService.findMissionById', () => {
+        expect(coursesService.findMissionById).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(mission).toEqual(courseStub())
+      })
+    })
+  })
 })
