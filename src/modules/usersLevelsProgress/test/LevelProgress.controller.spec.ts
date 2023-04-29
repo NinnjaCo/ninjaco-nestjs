@@ -1,9 +1,10 @@
+import { CreateLevelProgressDto } from '../dto/create-levelProgress.dto'
 import { GamesService } from 'modules/games/games.service'
+import { LevelProgress } from '../schema/LevelProgress.schema'
 import { Test, TestingModule } from '@nestjs/testing'
 import { UsersLevelsProgressController } from '../usersLevelsProgress.controller'
 import { UsersLevelsProgressService } from '../usersLevelsProgress.service'
 import { gameStub } from 'modules/games/test/stubs/game.stub'
-import { LevelProgress } from '../schema/LevelProgress.schema'
 import { levelProgressStub } from './stubs/levelProgress.stub'
 
 jest.mock('../levelProgress.service')
@@ -45,44 +46,32 @@ describe('UsersLevelsProgressController', () => {
     })
   })
 
-  //   describe('createGame', () => {
-  //     describe('when createGame is called', () => {
-  //       let game: Game
-  //       let CreateGameDto: CreateGameDto
+  describe('createLevelProgress', () => {
+    describe('when createLevelProgress is called', () => {
+      let levelProgress: LevelProgress
+      let createLevelProgressDto: CreateLevelProgressDto
 
-  //       beforeEach(async () => {
-  //         const {
-  //           title,
-  //           image,
-  //           playerDirection,
-  //           numOfBlocks,
-  //           sizeOfGrid,
-  //           playerLocation,
-  //           goalLocation,
-  //           wallsLocations,
-  //         } = gameStub()
+      beforeEach(async () => {
+        const { levelId, userId, courseId, missionId, progress } = levelProgressStub()
 
-  //         CreateGameDto = {
-  //           title,
-  //           image,
-  //           playerDirection,
-  //           numOfBlocks,
-  //           sizeOfGrid,
-  //           playerLocation,
-  //           goalLocation,
-  //           wallsLocations,
-  //         }
+        createLevelProgressDto = {
+          levelId,
+          userId,
+          courseId,
+          missionId,
+          progress,
+        }
 
-  //         game = await controller.create(CreateGameDto)
-  //       })
+        levelProgress = await controller.create(createLevelProgressDto)
+      })
 
-  //       test('should call gamesService.createGame', () => {
-  //         expect(gamesService.create).toBeCalledWith(CreateGameDto)
-  //       })
+      test('should call LevelProgresService.createLevelProgress', () => {
+        expect(levelProgressService.createLevelProgress).toBeCalledWith(createLevelProgressDto)
+      })
 
-  //       test('should return a game', () => {
-  //         expect(game).toEqual(gameStub())
-  //       })
-  //     })
-  //   })
+      test('should return a levelProgress', () => {
+        expect(levelProgress).toEqual(levelProgressStub())
+      })
+    })
+  })
 })
