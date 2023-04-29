@@ -1,14 +1,9 @@
 import { CategoriesController } from '../categories.controller'
 import { CategoriesService } from '../categories.service'
 import { Category } from '../schemas/category.schema'
-import { CreateGameDto } from '../dto/create-game.dto'
-import { Game } from '../schemas/game.schema'
-import { GamesController } from '../games.controller'
-import { GamesService } from '../games.service'
-import { Test, TestingModule } from '@nestjs/testing'
-import { gameStub } from './stubs/game.stub'
-import { categoryStub } from './stubs/category.stub'
 import { CreateCategoryDto } from '../dto/create-category.dto'
+import { Test, TestingModule } from '@nestjs/testing'
+import { categoryStub } from './stubs/category.stub'
 
 jest.mock('../categories.service')
 
@@ -39,23 +34,23 @@ describe('CategoriesController', () => {
         categories = await controller.findAll()
       })
 
-      test('should call GamesService.findAllGames', () => {
+      test('should call CategoriesService.findAllCategories', () => {
         expect(categoriesService.findAll).toBeCalled()
       })
 
-      test('should return an array of games', () => {
+      test('should return an array of categories', () => {
         expect(categories).toEqual([categoryStub()])
       })
     })
   })
 
-  describe('createGame', () => {
-    describe('when createGame is called', () => {
+  describe('createCategory', () => {
+    describe('when createCategory is called', () => {
       let category: Category
       let createCategoryDto: CreateCategoryDto
 
       beforeEach(async () => {
-        const { categoryName } = gameStub()
+        const { categoryName } = categoryStub()
 
         createCategoryDto = {
           categoryName,
@@ -64,12 +59,12 @@ describe('CategoriesController', () => {
         category = await controller.create(createCategoryDto)
       })
 
-      test('should call gamesService.createGame', () => {
+      test('should call categoryService.createCategory', () => {
         expect(categoriesService.createCategory).toBeCalledWith(createCategoryDto)
       })
 
-      test('should return a game', () => {
-        expect(category).toEqual(gameStub())
+      test('should return a category', () => {
+        expect(category).toEqual(categoryStub())
       })
     })
   })
