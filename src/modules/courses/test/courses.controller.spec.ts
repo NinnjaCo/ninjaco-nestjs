@@ -2,6 +2,7 @@ import { Course } from '../schemas/course.schema'
 import { CoursesController } from '../courses.controller'
 import { CoursesService } from '../courses.service'
 import { CreateCourseDto } from '../dto/create-course.dto'
+import { CreateMissionDto } from '../dto/create-mission.dto'
 import { Mission } from '../schemas/mission.schema'
 import { Test, TestingModule } from '@nestjs/testing'
 import { courseStub } from './stubs/course.stub'
@@ -151,6 +152,26 @@ describe('CoursesController', () => {
 
       test('should call coursesService.findMissionById', () => {
         expect(coursesService.findMissionById).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(mission).toEqual(courseStub())
+      })
+    })
+  })
+
+  describe('createMission', () => {
+    describe('when createMission is called', () => {
+      let mission: Mission
+      let courseId: string
+      let createMissionDto: CreateMissionDto
+
+      beforeEach(async () => {
+        mission = await controller.createMission(courseId, createMissionDto)
+      })
+
+      test('should call coursesService.createMission', () => {
+        expect(coursesService.createMission).toBeCalled()
       })
 
       test('should return a course', () => {
