@@ -3,6 +3,8 @@ import { CourseEnrollment } from '../schemas/courseEnrollment.schema'
 import { CourseEnrollmentsController } from '../courseEnrollments.controller'
 import { CourseEnrollmentsService } from '../courseEnrollments.service'
 import { CreateCourseManagementDto } from '../dto/create-courseManagement.dto'
+import { CreateMissionManagementDto } from '../dto/create-missionManagement.dto'
+import { MissionManagement } from '../schemas/MissionManagement.schema'
 import { Test, TestingModule } from '@nestjs/testing'
 import { courseEnrollmentStub } from './stubs/courseEnrollment.stub'
 
@@ -112,6 +114,32 @@ describe('CourseEnrollmentsController', () => {
 
       test('should return a course', () => {
         expect(course).toEqual(courseEnrollmentStub())
+      })
+    })
+  })
+
+  describe('createMissionProgress', () => {
+    describe('when createMissionProgress is called', () => {
+      let mission: MissionManagement
+      let createMissionDto: CreateMissionManagementDto
+      let userId: string
+
+      beforeEach(async () => {
+        const { _id } = courseEnrollmentStub()
+        const courseId = _id.toString()
+        userId = 'userId'
+        createMissionDto = {
+          missionId: _id.toString(),
+        }
+        mission = await controller.createMissionProgress(courseId, userId, createMissionDto)
+      })
+
+      test('should call courseEnrollmentsService.createMissionProgress', () => {
+        expect(courseEnrollmentsService.createMissionProgress).toBeCalled()
+      })
+
+      test('should return a mission', () => {
+        expect(mission).toEqual(courseEnrollmentStub())
       })
     })
   })
