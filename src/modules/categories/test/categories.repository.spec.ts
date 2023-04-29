@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { FilterQuery } from 'mongoose'
 import { getModelToken } from '@nestjs/mongoose'
+import { Test, TestingModule } from '@nestjs/testing'
 import { CategoryRepository } from '../categories.repository'
-import { CategoryModel } from './test/support/support/categorymodel'
+import { CategoryModel } from './support/category.model'
 import { Category } from '../schemas/category.schema'
-import { categoryStub } from './test/support/support/stubs/category.stub'
+import { categoryStub } from './stubs/category.stub'
 
 describe('CategoriesRepository', () => {
   let repository: CategoryRepository
