@@ -1,4 +1,4 @@
-import { RoleEnum } from 'modules/roles/roles.enum'
+import { RoleEnum } from '../../../roles/roles.enum'
 import { UserPlayGame } from 'modules/usersPlayGames/schemas/userPlayGame.schema'
 import mongoose from 'mongoose'
 
