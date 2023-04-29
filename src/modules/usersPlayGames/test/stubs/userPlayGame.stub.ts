@@ -101,8 +101,8 @@ export const userPlayGameStub: () => UserPlayGame = () => {
     startedAt: '2023-04-29T10:04:21.241Z',
     gameProgress: {
       _id: new mongoose.Types.ObjectId('644ceba57b6e0c32557e428a'),
-      userId: new mongoose.Types.ObjectId('5f9d5c2e5a6c2a1f9c2aae4f'),
-      gameId: new mongoose.Types.ObjectId('6443f7880104c20098c49919'),
+      userId: '5f9d5c2e5a6c2a1f9c2aae4f',
+      gameId: '6443f7880104c20098c49919',
       progress: '',
       createdAt: 'Sat Apr 29 2023 10:04:21 GMT+0000 (Coordinated Universal Time)',
       updatedAt: 'Sat Apr 29 2023 10:04:21 GMT+0000 (Coordinated Universal Time)',
