@@ -199,4 +199,25 @@ describe('CoursesController', () => {
       })
     })
   })
+
+  describe('updateMission', () => {
+    describe('when updateMission is called', () => {
+      let mission: Mission
+      let courseId: string
+      let missionId: string
+      let createMissionDto: CreateMissionDto
+
+      beforeEach(async () => {
+        mission = await controller.updateMission(courseId, missionId, createMissionDto)
+      })
+
+      test('should call coursesService.updateMission', () => {
+        expect(coursesService.updateMission).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(mission).toEqual(courseStub())
+      })
+    })
+  })
 })
