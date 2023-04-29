@@ -61,4 +61,23 @@ describe('CoursesController', () => {
       })
     })
   })
+
+  describe('createCourse', () => {
+    describe('when createCourse is called', () => {
+      let course: Course
+      let createCourseDto: CreateCourseDto
+
+      beforeEach(async () => {
+        course = await controller.create(createCourseDto)
+      })
+
+      test('should call coursesService.createCourse', () => {
+        expect(coursesService.createCourse).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(course).toEqual(courseStub())
+      })
+    })
+  })
 })
