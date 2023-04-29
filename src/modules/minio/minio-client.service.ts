@@ -76,7 +76,13 @@ export class MinioClientService {
   public async upload(file: BufferedFile, baseBucket: string = this.baseBucket) {
     this.logger.log('Uploading file to minio')
 
-    if (!(file.mimetype.includes('jpeg') || file.mimetype.includes('png'))) {
+    if (
+      !(
+        file.mimetype.includes('jpeg') ||
+        file.mimetype.includes('png') ||
+        file.mimetype.includes('jpg')
+      )
+    ) {
       throw new HttpException('Error uploading file', HttpStatus.BAD_REQUEST)
     }
     const temp_filename = Date.now().toString()

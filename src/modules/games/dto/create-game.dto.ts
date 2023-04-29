@@ -12,6 +12,11 @@ export class CreateGameDto {
   @IsNotEmpty()
   image: string
 
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  playerDirection: string
+
   @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()

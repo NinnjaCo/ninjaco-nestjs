@@ -1,4 +1,4 @@
-<img src="./README_ASSETS/README_HEADER.svg"/>
+<img src="README_ASSETS/README_HEADER.svg"/>
 
 <div align="center">
 
@@ -10,7 +10,7 @@
 
 <a id="project-philosophy"></a>
 <br><br>
-<img src="./README_ASSETS/README_PHILO.svg"/>
+<img src="README_ASSETS/README_PHILO.svg"/>
 
 > Programming is a skill that is becoming more and more important in our society. However, it is not easy to learn and practice programming. This project aims to make programming more accessible to kids by providing a visual block-based editor that allows them to learn and practice programming in a fun and engaging way.
 >
@@ -18,18 +18,25 @@
 
 <a id="er-diagram"></a>
 <br><br>
-<img src="./README_ASSETS/README_ER.svg"/>
-TODO
+<img src="README_ASSETS/README_ER.svg"/>
+
+| ER Diagram Non transparent <> Download 4k [here](https://github.com/NinnjaCo/ninjaco-nestjs/raw/dev/README_ASSETS/er_4k_non_trans.png)|
+| :---: |
+| <img src="README_ASSETS/er_4k_non_trans.png"/> |
+| ER Diagram Transparent <> Download 4k [here](https://github.com/NinnjaCo/ninjaco-nestjs/raw/dev/README_ASSETS/er_4k_trans.png)|
+| <img src="README_ASSETS/er_4k_trans.png"/>
 
 <a id="sys-arch"></a>
 <br><br>
-<img src="./README_ASSETS/README_ARCH.svg"/>
+<img src="README_ASSETS/README_ARCH.svg"/>
 
-TODO
+| System Architecture <> Download SVG [here](https://github.com/NinnjaCo/ninjaco-nestjs/raw/dev/README_ASSETS/er_4k_non_trans.png)|
+| :---: |
+| <img src="README_ASSETS/system_architecture_non_trans.svg"/> |
 
 <a id="tech-stack"></a>
 <br><br>
-<img src="./README_ASSETS/README_STACK.svg"/>
+<img src="README_ASSETS/README_STACK.svg"/>
 
 Here's a brief high-level overview of the tech stack the NinjaCo app uses:
 
@@ -77,7 +84,7 @@ Here's a brief high-level overview of the tech stack the NinjaCo app uses:
 
 <a id="how-to-run"></a>
 <br><br>
-<img src="./README_ASSETS/README_RUN.svg"/>
+<img src="README_ASSETS/README_RUN.svg"/>
 
 > To get a local copy up and running follow these simple example steps.
 

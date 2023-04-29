@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BaseEntity } from 'database/base.entity'
+import { BaseEntity } from '../../../database/base.entity'
 import { HydratedDocument } from 'mongoose'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
@@ -12,12 +12,16 @@ export class Level extends BaseEntity {
   levelNumber: number
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   buildingPartsImages: string[]
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   stepGuideImages: string[]
+
+  @ApiProperty()
+  @Prop({ required: false })
+  websitePreviewImage: string
 }
 
 export const LevelSchema = SchemaFactory.createForClass(Level)

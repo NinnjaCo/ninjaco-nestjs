@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
-import { JwtPayload } from 'modules/auth/interfaces'
+import { JwtPayload } from '../auth/interfaces'
 import { Reflector } from '@nestjs/core'
 import { RoleEnum } from './roles.enum'
 import { RolesService } from './roles.service'
