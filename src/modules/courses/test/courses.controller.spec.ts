@@ -99,4 +99,24 @@ describe('CoursesController', () => {
       })
     })
   })
+
+  describe('updateCourse', () => {
+    describe('when updateCourse is called', () => {
+      let course: Course
+      let courseId: string
+      let createCourseDto: CreateCourseDto
+
+      beforeEach(async () => {
+        course = await controller.update(courseId, createCourseDto)
+      })
+
+      test('should call coursesService.updateCourse', () => {
+        expect(coursesService.updateCourse).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(course).toEqual(courseStub())
+      })
+    })
+  })
 })
