@@ -3,6 +3,7 @@ import { CourseEnrollment } from '../schemas/courseEnrollment.schema'
 import { CourseEnrollmentsController } from '../courseEnrollments.controller'
 import { CourseEnrollmentsService } from '../courseEnrollments.service'
 import { CreateCourseManagementDto } from '../dto/create-courseManagement.dto'
+import { CreateLevelManagementDto } from '../dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from '../dto/create-missionManagement.dto'
 import { Level } from '../../courses/schemas/level.schema'
 import { LevelManagement } from '../schemas/LevelManagement.schema'
@@ -188,6 +189,58 @@ describe('CourseEnrollmentsController', () => {
 
       test('should return an array of levels', () => {
         expect(levels).toEqual([courseEnrollmentStub()])
+      })
+    })
+  })
+
+  describe('findLevelById', () => {
+    describe('when findLevelById is called', () => {
+      let level: LevelManagement | Level
+      let levelId: string
+      let missionId: string
+      let userId: string
+      let courseId: string
+
+      beforeEach(async () => {
+        const { _id } = courseEnrollmentStub()
+        levelId = _id.toString()
+        userId = 'userId'
+        level = await controller.findLevelById(courseId, missionId, levelId, userId)
+      })
+
+      test('should call courseEnrollmentsService.findLevelById', () => {
+        expect(courseEnrollmentsService.findLevelById).toBeCalled()
+      })
+
+      test('should return a level', () => {
+        expect(level).toEqual(courseEnrollmentStub())
+      })
+    })
+  })
+
+  describe('createLevelProgress', () => {
+    describe('when createLevelProgress is called', () => {
+      let level: LevelManagement
+      let createLevelDto: CreateLevelManagementDto
+      let userId: string
+      let missionId: string
+      let courseId: string
+
+      beforeEach(async () => {
+        const { _id } = courseEnrollmentStub()
+        userId = 'userId'
+        createLevelDto = {
+          levelId: _id.toString(),
+        }
+        level = await controller.createLevelProgress(courseId, missionId, userId, createLevelDto)
+      })
+
+      test('should call courseEnrollmentsService.createLevelProgress', () => {
+        expect(courseEnrollmentsService.createLevelProgress).toBeCalled()
+      })
+
+      test('should return a level', () => {
+        expect(level).toEqual(courseEnrollmentStub())
       })
     })
   })
