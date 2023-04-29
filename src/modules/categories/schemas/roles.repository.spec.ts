@@ -41,16 +41,16 @@ describe('CategoriesRepository', () => {
         let role: Role[]
 
         beforeEach(async () => {
-          jest.spyOn(roleModel, 'find')
-          role = (await repository.find({})) as Role[]
+          jest.spyOn(categoryModel, 'find')
+          role = (await repository.find({})) as Category[]
         })
 
-        test('then it should call the roleModel', () => {
-          expect(roleModel.find).toHaveBeenCalledWith({})
+        test('then it should call the category Model', () => {
+          expect(categoryModel.find).toHaveBeenCalledWith({})
         })
 
-        test('then it should return a role array', () => {
-          expect(role).toEqual([roleStub()])
+        test('then it should return a category array', () => {
+          expect(category).toEqual([categoryStub()])
         })
       })
     })
