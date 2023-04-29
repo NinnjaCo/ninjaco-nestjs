@@ -4,6 +4,7 @@ import { CourseEnrollmentsController } from '../courseEnrollments.controller'
 import { CourseEnrollmentsService } from '../courseEnrollments.service'
 import { CreateCourseManagementDto } from '../dto/create-courseManagement.dto'
 import { CreateMissionManagementDto } from '../dto/create-missionManagement.dto'
+import { Mission } from '../../courses/schemas/mission.schema'
 import { MissionManagement } from '../schemas/MissionManagement.schema'
 import { Test, TestingModule } from '@nestjs/testing'
 import { courseEnrollmentStub } from './stubs/courseEnrollment.stub'
@@ -123,10 +124,10 @@ describe('CourseEnrollmentsController', () => {
       let mission: MissionManagement
       let createMissionDto: CreateMissionManagementDto
       let userId: string
+      let courseId: string
 
       beforeEach(async () => {
         const { _id } = courseEnrollmentStub()
-        const courseId = _id.toString()
         userId = 'userId'
         createMissionDto = {
           missionId: _id.toString(),
@@ -136,6 +137,30 @@ describe('CourseEnrollmentsController', () => {
 
       test('should call courseEnrollmentsService.createMissionProgress', () => {
         expect(courseEnrollmentsService.createMissionProgress).toBeCalled()
+      })
+
+      test('should return a mission', () => {
+        expect(mission).toEqual(courseEnrollmentStub())
+      })
+    })
+  })
+
+  describe('findMissionById', () => {
+    describe('when findMissionById is called', () => {
+      let mission: MissionManagement | Mission
+      let missionId: string
+      let userId: string
+      let courseId: string
+
+      beforeEach(async () => {
+        const { _id } = courseEnrollmentStub()
+        missionId = _id.toString()
+        userId = 'userId'
+        mission = await controller.findMissionById(courseId, missionId, userId)
+      })
+
+      test('should call courseEnrollmentsService.findMissionById', () => {
+        expect(courseEnrollmentsService.findMissionById).toBeCalled()
       })
 
       test('should return a mission', () => {
