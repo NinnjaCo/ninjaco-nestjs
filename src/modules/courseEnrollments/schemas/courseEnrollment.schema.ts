@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BaseEntity } from 'database/base.entity'
-import { Course } from 'modules/courses/schemas/course.schema'
+import { BaseEntity } from '../../../database/base.entity'
+import { Course } from '../../courses/schemas/course.schema'
 import { HydratedDocument } from 'mongoose'
 import { MissionManagement } from './MissionManagement.schema'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { User } from 'modules/users/schemas/user.schema'
+import { User } from '../../users/schemas/user.schema'
 
 export type CourseEnrollmentDocument = HydratedDocument<CourseEnrollment>
 
