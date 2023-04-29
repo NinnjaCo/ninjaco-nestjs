@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BaseEntity } from 'database/base.entity'
+import { BaseEntity } from '../../../database/base.entity'
 import { HydratedDocument } from 'mongoose'
 import { LevelManagement } from './LevelManagement.schema'
-import { Mission } from 'modules/courses/schemas/mission.schema'
+import { Mission } from '../../courses/schemas/mission.schema'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 export type MissionManagementDocument = HydratedDocument<MissionManagement>
