@@ -305,4 +305,26 @@ describe('CoursesController', () => {
       })
     })
   })
+
+  describe('updateLevel', () => {
+    describe('when updateLevel is called', () => {
+      let level: Level
+      let courseId: string
+      let missionId: string
+      let levelId: string
+      let createLevelDto: CreateLevelDto
+
+      beforeEach(async () => {
+        level = await controller.updateLevel(courseId, missionId, levelId, createLevelDto)
+      })
+
+      test('should call coursesService.updateLevel', () => {
+        expect(coursesService.updateLevel).toBeCalled()
+      })
+
+      test('should return a course', () => {
+        expect(level).toEqual(courseStub())
+      })
+    })
+  })
 })
