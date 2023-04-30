@@ -1,10 +1,10 @@
-import { FilterQuery } from 'mongoose'
-import { getModelToken } from '@nestjs/mongoose'
-import { Test, TestingModule } from '@nestjs/testing'
-import { CategoryRepository } from '../categories.repository'
-import { CategoryModel } from './support/category.model'
 import { Category } from '../schemas/category.schema'
+import { CategoryModel } from './support/category.model'
+import { CategoryRepository } from '../categories.repository'
+import { FilterQuery } from 'mongoose'
+import { Test, TestingModule } from '@nestjs/testing'
 import { categoryStub } from './stubs/category.stub'
+import { getModelToken } from '@nestjs/mongoose'
 
 describe('CategoriesRepository', () => {
   let repository: CategoryRepository
@@ -18,7 +18,6 @@ describe('CategoriesRepository', () => {
         providers: [
           CategoryRepository,
           {
-            //
             provide: getModelToken(Category.name),
             useClass: CategoryModel,
           },
@@ -27,7 +26,7 @@ describe('CategoriesRepository', () => {
 
       repository = module.get<CategoryRepository>(CategoryRepository)
       categoryFilterQuery = { _id: categoryStub()._id }
-      categoryModel = module.get<CategoryModel>(getModelToken(categoryFilterQuery._id))
+      categoryModel = module.get<CategoryModel>(getModelToken(Category.name))
 
       jest.clearAllMocks()
     })
