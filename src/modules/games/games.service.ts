@@ -8,6 +8,12 @@ import { UpdateGameDto } from './dto/update-game.dto'
 export class GamesService {
   constructor(private readonly gamesRepository: GamesRepository) {}
 
+  /**
+   *
+   * @param createDto
+   * @returns Promise<Game>
+   * @description Create new game
+   */
   async create(createDto: CreateGameDto): Promise<Game> {
     const createdGame = await this.gamesRepository.create(createDto)
     return createdGame
