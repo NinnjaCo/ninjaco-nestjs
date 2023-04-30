@@ -90,8 +90,8 @@ export class CourseEnrollmentsService {
 
   /**
    *
-   * @param courseMnagementDto
-   * @returns the course enrollement object when a user enroll in a course
+   * @param courseManagementDto
+   * @returns the course enrollment object when a user enrol in a course
    * @throws BadRequestException if the course or user id is invalid
    */
   async createCourseEnrollement(
