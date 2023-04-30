@@ -98,7 +98,7 @@ export class CoursesService {
   }
 
   /**
-   * Find a specific mission in a specifique course by id
+   * Find a specific mission in a specific course by id
    * @param courseId
    * @param missionId
    * @returns Promise <Mission> if mission is found, otherwise null
