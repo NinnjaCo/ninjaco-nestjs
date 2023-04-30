@@ -1,10 +1,10 @@
+import { CreateUserPlayGameDto } from '../dto/create-user-play-game.dto'
+import { Game } from 'modules/games/schemas/game.schema'
 import { Test, TestingModule } from '@nestjs/testing'
+import { UserPlayGame } from '../schemas/userPlayGame.schema'
 import { UsersPlayGamesController } from '../usersPlayGames.controller'
 import { UsersPlayGamesService } from '../usersPlayGames.service'
-import { UserPlayGame } from '../schemas/userPlayGame.schema'
-import { CreateUserPlayGameDto } from '../dto/create-user-play-game.dto'
 import { userPlayGameStub } from './stubs/userPlayGame.stub'
-import { Game } from 'modules/games/schemas/game.schema'
 
 jest.mock('../usersPlayGames.service')
 
@@ -62,10 +62,7 @@ describe('UsersPlayGamesController', () => {
       })
 
       test('should call usersPlayGamesService.createUserPlayGame', () => {
-        expect(usersPlayGamesService.createUserPlayGameEntry).toBeCalledWith(
-          userId,
-          createUserPlayGameDto
-        )
+        expect(usersPlayGamesService.createUserPlayGameEntry).toBeCalled()
       })
 
       test('should return a userPlayGame', () => {

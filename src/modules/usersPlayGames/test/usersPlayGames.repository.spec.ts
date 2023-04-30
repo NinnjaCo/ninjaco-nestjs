@@ -1,9 +1,9 @@
 import { FilterQuery } from 'mongoose'
-import { UserPlayGame } from '../schemas/userPlayGame.schema'
-import { UsersPlayGamesRepository } from '../usersPlayGames.repository'
-import { UserPlayGameModel } from './support/userPlayGame.model'
-import { getModelToken } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
+import { UserPlayGame } from '../schemas/userPlayGame.schema'
+import { UserPlayGameModel } from './support/userPlayGame.model'
+import { UsersPlayGamesRepository } from '../usersPlayGames.repository'
+import { getModelToken } from '@nestjs/mongoose'
 import { userPlayGameStub } from './stubs/userPlayGame.stub'
 
 describe('UsersPlayGamesRepository', () => {
