@@ -4,8 +4,7 @@
 
 > The project is a web application that allows kids to learn and practice programming using visual blocks with a user-friendly editor
 
-**[PROJECT PHILOSOPHY](#project-philosophy) • [ER DIAGRAM](#er-diagram) • [SYSTEM ARCHITECTURE](#sys-arch) • [TECH STACK](#tech-stack) • [HOW TO RUN](#how-to-run)**
-
+**[PROJECT PHILOSOPHY](#project-philosophy) • [ER DIAGRAM](#er-diagram) • [SYSTEM ARCHITECTURE](#sys-arch) • [TECH STACK](#tech-stack) • [API DOCS](#api-docs) • [HOW TO RUN](#how-to-run)**
 </div>
 
 <a id="project-philosophy"></a>
@@ -83,8 +82,14 @@ Here's a brief high-level overview of the tech stack the NinjaCo app uses:
 <hr>
 
 <a id="how-to-run"></a>
+<a id="api-docs"></a>
 <br><br>
 <img src="README_ASSETS/README_RUN.svg"/>
+
+<h2>API Documentation Online</h2>
+<a href="https://ninjaco-nestjs.herokuapp.com/api/doc">Link To Documentation</a>
+
+<br>
 
 > To get a local copy up and running follow these simple example steps.
 

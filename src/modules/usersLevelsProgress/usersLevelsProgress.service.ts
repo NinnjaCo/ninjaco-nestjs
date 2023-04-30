@@ -52,4 +52,14 @@ export class UsersLevelsProgressService {
       }
     }
   }
+
+  /**
+   * @param userId
+   * @param courseId
+   * @returns void
+   * @description given userId and courseId, it deletes all level progress associated with the user and the course
+   */
+  async deleteAllLevelsProgress(courseId: string, userId: string): Promise<void> {
+    await this.levelProgressRepository.deleteMany({ userId, courseId })
+  }
 }

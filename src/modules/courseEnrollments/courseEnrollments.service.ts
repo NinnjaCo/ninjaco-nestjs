@@ -131,14 +131,21 @@ export class CourseEnrollmentsService {
    * @param coursid
    * @param userId
    * @returns the deleted courseEnrollment object
+   * @description delete the courseEnrollment object when a user unenroll from a course
+   * @description delete all level progress associated with the courseId, userId
    * @throws BadRequestException if the course or user id is invalid
    */
   async deleteCourse(courseId: string, userId: string): Promise<CourseEnrollment> {
     try {
-      return await this.courseEnrollmentRepository.findOneAndDelete({
+      const deletedCourseEnrollmnet = await this.courseEnrollmentRepository.findOneAndDelete({
         course: courseId,
         user: userId,
       })
+
+      // delete all the level progress associated with the courseId, userId
+      await this.usersLevelsProgressService.deleteAllLevelsProgress(courseId, userId)
+
+      return deletedCourseEnrollmnet
     } catch (error) {
       throw new BadRequestException('Invalid course or user id')
     }
