@@ -1,4 +1,3 @@
-import { CreateGameProgressDto } from '../dto/create-game-progress.dto'
 import { GameProgress } from '../schema/game-progress.schema'
 import { GameProgressController } from '../game-progress.controller'
 import { GameProgressService } from '../game-progress.service'
