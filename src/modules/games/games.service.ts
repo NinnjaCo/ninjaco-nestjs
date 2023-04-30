@@ -40,11 +40,24 @@ export class GamesService {
     return await this.gamesRepository.findOne({ _id: id })
   }
 
-
+  /**
+   *
+   * @param id
+   * @returns Promise<Game> if game is found, otherwise null
+   * @description Delete game by id
+   */
 
   async delete(id: string): Promise<Game> {
     return await this.gamesRepository.findOneAndDelete({ _id: id })
   }
+
+  /**
+   *
+   * @param id
+   * @param updateDto
+   * @returns Promise<Game> if game is found, otherwise null
+   * @description Update game by id
+   */
 
   async update(id: string, updateDto: UpdateGameDto): Promise<Game> {
     return await this.gamesRepository.findOneAndUpdate({ _id: id }, updateDto)
