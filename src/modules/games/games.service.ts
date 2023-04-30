@@ -19,13 +19,28 @@ export class GamesService {
     return createdGame
   }
 
+  /**
+   *
+   * @description Find all games
+   * @returns Promise<Game[]> if games are found, otherwise empty array
+   */
+
   async findAll(): Promise<Game[]> {
     return await this.gamesRepository.find({})
   }
 
+  /**
+   *
+   * @param id
+   * @returns Promise<Game> if game is found, otherwise null
+   * @description Find game by id
+   *
+   */
   async findOne(id: string): Promise<Game> {
     return await this.gamesRepository.findOne({ _id: id })
   }
+
+
 
   async delete(id: string): Promise<Game> {
     return await this.gamesRepository.findOneAndDelete({ _id: id })
