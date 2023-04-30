@@ -76,7 +76,7 @@ export class CategoriesService {
 
   /**
    * Delete category by id
-   * @param categoryeId
+   * @param categoryId
    * @returns Promise<category> if category is found, otherwise null
    */
   async deleteCategory(categoryId: string): Promise<Category> {
