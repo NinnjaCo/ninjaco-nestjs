@@ -1,4 +1,3 @@
-import { FilterQuery } from 'mongoose'
 import { Role } from '../schemas/role.schema'
 import { RoleModel } from './support/role.model'
 import { RolesRepository } from '../roles.repository'
@@ -11,7 +10,6 @@ describe('RolesRepository', () => {
 
   describe('Find Operations', () => {
     let roleModel: RoleModel
-    let roleFilterQuery: FilterQuery<Role>
 
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
@@ -26,7 +24,6 @@ describe('RolesRepository', () => {
 
       repository = module.get<RolesRepository>(RolesRepository)
       roleModel = module.get<RoleModel>(getModelToken(Role.name))
-      roleFilterQuery = { _id: roleStub()._id }
 
       jest.clearAllMocks()
     })

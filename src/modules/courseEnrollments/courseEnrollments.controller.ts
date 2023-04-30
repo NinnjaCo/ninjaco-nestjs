@@ -13,9 +13,7 @@ import { Level } from '../courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
 import { Mission } from '../courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
-import { UpdateCourseMangementDto } from './dto/update-courseManagement'
 import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
-import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
 
 @ApiTags('Course-Enrollements')
 @Controller('course-enrollements')

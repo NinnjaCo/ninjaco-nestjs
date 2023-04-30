@@ -2,13 +2,13 @@ import { CourseEnrollment, CourseEnrollmentSchema } from './schemas/courseEnroll
 import { CourseEnrollmentsController } from './courseEnrollments.controller'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
 import { CourseEnrollmentsService } from './courseEnrollments.service'
-import { CoursesModule } from 'modules/courses/courses.module'
+import { CoursesModule } from '../courses/courses.module'
 import { LevelManagement, LevelManagementSchema } from './schemas/LevelManagement.schema'
 import { MissionManagement, MissionManagementSchema } from './schemas/MissionManagement.schema'
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { UserLevelProgressModule } from 'modules/usersLevelsProgress/usersLevelsProgress.module'
-import { UsersModule } from 'modules/users/users.module'
+import { UserLevelProgressModule } from '../usersLevelsProgress/usersLevelsProgress.module'
+import { UsersModule } from '../users/users.module'
 
 @Module({
   imports: [

@@ -7,8 +7,6 @@ import { gameProgressStub } from './stubs/usersGameProgress.stub'
 import { getModelToken } from '@nestjs/mongoose'
 
 describe('UsersGameProgressRepository', () => {
-  let repository: GameProgressRepository
-
   describe('Find Operations', () => {
     let gameProgressModel: GameProgressModel
     let gameProgressFilterQuery: FilterQuery<GameProgress>
@@ -23,8 +21,6 @@ describe('UsersGameProgressRepository', () => {
           },
         ],
       }).compile()
-
-      repository = module.get<GameProgressRepository>(GameProgressRepository)
       gameProgressModel = module.get<GameProgressModel>(getModelToken(GameProgress.name))
       gameProgressFilterQuery = { _id: gameProgressStub()._id }
 
@@ -54,7 +50,7 @@ describe('UsersGameProgressRepository', () => {
 
     describe('Create Operations', () => {
       beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        await Test.createTestingModule({
           providers: [
             GameProgressRepository,
             {
@@ -63,8 +59,6 @@ describe('UsersGameProgressRepository', () => {
             },
           ],
         }).compile()
-
-        repository = module.get<GameProgressRepository>(GameProgressRepository)
       })
 
       describe('create', () => {

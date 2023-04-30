@@ -1,4 +1,3 @@
-import { FilterQuery } from 'mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
 import { UserPlayGame } from '../schemas/userPlayGame.schema'
 import { UserPlayGameModel } from './support/userPlayGame.model'
@@ -7,11 +6,8 @@ import { getModelToken } from '@nestjs/mongoose'
 import { userPlayGameStub } from './stubs/userPlayGame.stub'
 
 describe('UsersPlayGamesRepository', () => {
-  let repository: UsersPlayGamesRepository
-
   describe('Find Operations', () => {
     let userPlayGameModel: UserPlayGameModel
-    let userPlayGameFilterQuery: FilterQuery<UserPlayGame>
 
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
@@ -24,9 +20,7 @@ describe('UsersPlayGamesRepository', () => {
         ],
       }).compile()
 
-      repository = module.get<UsersPlayGamesRepository>(UsersPlayGamesRepository)
       userPlayGameModel = module.get<UserPlayGameModel>(getModelToken(UserPlayGame.name))
-      userPlayGameFilterQuery = { _id: userPlayGameStub()._id }
 
       jest.clearAllMocks()
     })
@@ -52,7 +46,7 @@ describe('UsersPlayGamesRepository', () => {
 
     describe('Create Operations', () => {
       beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        await Test.createTestingModule({
           providers: [
             UsersPlayGamesRepository,
             {
@@ -61,8 +55,6 @@ describe('UsersPlayGamesRepository', () => {
             },
           ],
         }).compile()
-
-        repository = module.get<UsersPlayGamesRepository>(UsersPlayGamesRepository)
       })
 
       describe('create', () => {
