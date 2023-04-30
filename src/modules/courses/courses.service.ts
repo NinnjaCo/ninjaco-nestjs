@@ -85,7 +85,7 @@ export class CoursesService {
   }
 
   /**
-   * Find all missions in a specifique course by id
+   * Find all missions in a specific course by id
    * @param courseId
    * @returns Promise <Missions[]> if missions are found, otherwise empty array
    */
