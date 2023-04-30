@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { gameProgressStub } from './stubs/usersGameProgress.stub'
 import { getModelToken } from '@nestjs/mongoose'
 
-describe('UsersPlayGamesRepository', () => {
+describe('UsersGameProgressRepository', () => {
   let repository: GameProgressRepository
 
   describe('Find Operations', () => {
@@ -43,11 +43,11 @@ describe('UsersPlayGamesRepository', () => {
         })
 
         test('then it should call the gameProgressModel', () => {
-          expect(gameProgressModel.find).toHaveBeenCalledWith({})
+          expect(gameProgressModel.findOne).toHaveBeenCalled()
         })
 
-        test('then it should return a user', () => {
-          expect(gameProgress).toEqual([gameProgressStub()])
+        test('then it should return a game progress', () => {
+          expect(gameProgress).toEqual(gameProgressStub())
         })
       })
     })
