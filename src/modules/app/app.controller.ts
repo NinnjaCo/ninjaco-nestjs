@@ -2,8 +2,8 @@ import { ApiGlobalResponse } from '../../common/decorators/api-global-response.d
 import { ApiTags } from '@nestjs/swagger'
 import { Controller, Get } from '@nestjs/common'
 import { Public } from '../../common/decorators/public.decorator'
-import { SkipThrottle, Throttle } from '@nestjs/throttler'
 import { StringSchema } from '../../swagger/swagger-primitive-type'
+import { Throttle } from '@nestjs/throttler'
 
 @Controller()
 @ApiTags('Health')

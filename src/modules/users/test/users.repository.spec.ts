@@ -7,8 +7,6 @@ import { getModelToken } from '@nestjs/mongoose'
 import { userStub } from './stubs/user.stub'
 
 describe('UsersRepository', () => {
-  let repository: UsersRepository
-
   describe('Find Operations', () => {
     let userModel: UserModel
     let userFilterQuery: FilterQuery<User>
@@ -24,7 +22,6 @@ describe('UsersRepository', () => {
         ],
       }).compile()
 
-      repository = module.get<UsersRepository>(UsersRepository)
       userModel = module.get<UserModel>(getModelToken(User.name))
       userFilterQuery = { _id: userStub()._id }
 

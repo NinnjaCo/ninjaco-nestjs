@@ -1,6 +1,5 @@
 import * as request from 'supertest'
 import { AppModule } from '../src/modules/app/app.module'
-import { AuthResponse } from 'modules/auth/interfaces'
 import { INestApplication } from '@nestjs/common'
 import { SignUpDto } from '../src/modules/auth/dto/signup.dto'
 import { Test, TestingModule } from '@nestjs/testing'

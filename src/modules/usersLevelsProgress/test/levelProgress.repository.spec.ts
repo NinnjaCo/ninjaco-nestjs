@@ -1,4 +1,3 @@
-import { FilterQuery } from 'mongoose'
 import { LevelProgress } from '../schema/LevelProgress.schema'
 import { LevelProgressModel } from './support/levelProgress.model'
 import { Test, TestingModule } from '@nestjs/testing'
@@ -11,7 +10,6 @@ describe(' UsersLevelsProgressRepository', () => {
 
   describe('Find Operations', () => {
     let levelProgressModel: LevelProgressModel
-    let levelProgressFilterQuery: FilterQuery<LevelProgress>
 
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
@@ -26,7 +24,6 @@ describe(' UsersLevelsProgressRepository', () => {
 
       repository = module.get<UsersLevelsProgressRepository>(UsersLevelsProgressRepository)
       levelProgressModel = module.get<LevelProgressModel>(getModelToken(LevelProgress.name))
-      levelProgressFilterQuery = { _id: levelProgressStub()._id }
 
       jest.clearAllMocks()
     })

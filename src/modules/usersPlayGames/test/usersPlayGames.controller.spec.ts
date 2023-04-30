@@ -50,7 +50,6 @@ describe('UsersPlayGamesController', () => {
     describe('when createUserPlayGame is called', () => {
       let userPlayGame: UserPlayGame
       let createUserPlayGameDto: CreateUserPlayGameDto
-      let userId: string
 
       beforeEach(async () => {
         const { user, game } = userPlayGameStub()
