@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BaseEntity } from 'database/base.entity'
+import { BaseEntity } from '../../../database/base.entity'
 import { Course } from '../..//courses/schemas/course.schema'
 import { HydratedDocument } from 'mongoose'
 import { Level } from '../../courses/schemas/level.schema'

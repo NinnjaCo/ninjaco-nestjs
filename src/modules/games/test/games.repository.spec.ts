@@ -1,9 +1,7 @@
-import { FilterQuery } from 'mongoose'
 import { Game } from '../schemas/game.schema'
 import { GamesModel } from './support/game.model'
 import { GamesRepository } from '../games.repository'
 import { Test, TestingModule } from '@nestjs/testing'
-import { feedbackStub } from '../../feedbacks/test/stubs/feedback.stub'
 import { gameStub } from './stubs/game.stub'
 import { getModelToken } from '@nestjs/mongoose'
 
@@ -12,7 +10,6 @@ describe('GamesRepository', () => {
 
   describe('Find Operations', () => {
     let gameModel: GamesModel
-    let gameFilterQuery: FilterQuery<Game>
 
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
@@ -27,7 +24,6 @@ describe('GamesRepository', () => {
 
       repository = module.get<GamesRepository>(GamesRepository)
       gameModel = module.get<GamesModel>(getModelToken(Game.name))
-      gameFilterQuery = { _id: feedbackStub()._id }
 
       jest.clearAllMocks()
     })

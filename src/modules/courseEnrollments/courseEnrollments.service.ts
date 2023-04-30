@@ -1,23 +1,20 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
-import { Course } from 'modules/courses/schemas/course.schema'
+import { Course } from '../courses/schemas/course.schema'
 import { CourseEnrollment } from './schemas/courseEnrollment.schema'
 import { CourseEnrollmentsRepository } from './courseEnrollments.repository'
-import { CoursesService } from 'modules/courses/courses.service'
+import { CoursesService } from '../courses/courses.service'
 import { CreateCourseManagementDto } from './dto/create-courseManagement.dto'
 import { CreateLevelManagementDto } from './dto/create-levelManagagement.dto'
 import { CreateMissionManagementDto } from './dto/create-missionManagement.dto'
-import { Level } from 'modules/courses/schemas/level.schema'
+import { Level } from '../courses/schemas/level.schema'
 import { LevelManagement } from './schemas/LevelManagement.schema'
-import { Mission } from 'modules/courses/schemas/mission.schema'
+import { Mission } from '../courses/schemas/mission.schema'
 import { MissionManagement } from './schemas/MissionManagement.schema'
 import { MongoServerError } from 'mongodb'
-import { ObjectId } from 'mongoose'
-import { UpdateCourseMangementDto } from './dto/update-courseManagement'
 import { UpdateLevelManagementDto } from './dto/update-levelManagement.dto'
-import { UpdateMissionManagementDto } from './dto/update-misionManagement.dto'
-import { UsersLevelsProgressService } from 'modules/usersLevelsProgress/usersLevelsProgress.service'
-import { UsersService } from 'modules/users/users.service'
-import { handleMongoDuplicateKeyError } from 'common/shared'
+import { UsersLevelsProgressService } from '../usersLevelsProgress/usersLevelsProgress.service'
+import { UsersService } from '../users/users.service'
+import { handleMongoDuplicateKeyError } from '../../common/shared'
 
 @Injectable()
 export class CourseEnrollmentsService {
@@ -90,8 +87,8 @@ export class CourseEnrollmentsService {
 
   /**
    *
-   * @param courseMnagementDto
-   * @returns the course enrollement object when a user enroll in a course
+   * @param courseManagementDto
+   * @returns the course enrollment object when a user enrol in a course
    * @throws BadRequestException if the course or user id is invalid
    */
   async createCourseEnrollement(
@@ -131,14 +128,21 @@ export class CourseEnrollmentsService {
    * @param coursid
    * @param userId
    * @returns the deleted courseEnrollment object
+   * @description delete the courseEnrollment object when a user unenroll from a course
+   * @description delete all level progress associated with the courseId, userId
    * @throws BadRequestException if the course or user id is invalid
    */
   async deleteCourse(courseId: string, userId: string): Promise<CourseEnrollment> {
     try {
-      return await this.courseEnrollmentRepository.findOneAndDelete({
+      const deletedCourseEnrollmnet = await this.courseEnrollmentRepository.findOneAndDelete({
         course: courseId,
         user: userId,
       })
+
+      // delete all the level progress associated with the courseId, userId
+      await this.usersLevelsProgressService.deleteAllLevelsProgress(courseId, userId)
+
+      return deletedCourseEnrollmnet
     } catch (error) {
       throw new BadRequestException('Invalid course or user id')
     }

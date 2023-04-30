@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsEnum, IsJWT, IsNotEmpty, IsString } from 'class-validator'
+import { IsEnum, IsJWT, IsNotEmpty, IsString } from 'class-validator'
 import { RoleEnum } from '../../roles/roles.enum'
 
 export class ValidateTokenRoleDto {
