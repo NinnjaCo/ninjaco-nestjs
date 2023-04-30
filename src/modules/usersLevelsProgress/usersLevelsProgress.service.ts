@@ -31,9 +31,24 @@ export class UsersLevelsProgressService {
     return await this.levelProgressRepository.findOne({ _id: id })
   }
 
+  /**
+   *
+   * @param id
+   * @returns Promise<LevelProgress> if level progress is found, otherwise null
+   * @description finds level progress by id and deletes it
+   */
+
   async deleteCourse(id: string): Promise<LevelProgress> {
     return await this.levelProgressRepository.findOneAndDelete({ _id: id })
   }
+
+  /**
+   *
+   * @param id
+   * @param progressDto
+   * @returns Promise <LevelProgress> if level progress is found, otherwise null
+   * @description finds level progress by id and updates it
+   */
 
   async updateLevelProgress(
     id: string,
@@ -51,6 +66,13 @@ export class UsersLevelsProgressService {
       }
     }
   }
+
+  /**
+   *
+   * @param progressDto
+   * @returns Promise <LevelProgress>
+   * @description creates new level progress
+   */
 
   async createLevelProgress(progressDto: CreateLevelProgressDto): Promise<LevelProgress> {
     try {
