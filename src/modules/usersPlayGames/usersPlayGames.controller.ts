@@ -26,7 +26,7 @@ export class UsersPlayGamesController {
       'Get all games and augment them with extra information if the user has played them',
   })
   @Get()
-  async getComspletedGames(@Query('userId') userId: string) {
+  async getCompletedGames(@Query('userId') userId: string) {
     return await this.userPlayGamesService.getCompletedGames(userId)
   }
 
