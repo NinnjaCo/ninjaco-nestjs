@@ -85,7 +85,7 @@ export class CoursesService {
   }
 
   /**
-   * Find all missions in a specifique course by id
+   * Find all missions in a specific course by id
    * @param courseId
    * @returns Promise <Missions[]> if missions are found, otherwise empty array
    */
@@ -98,7 +98,7 @@ export class CoursesService {
   }
 
   /**
-   * Find a specific mission in a specifique course by id
+   * Find a specific mission in a specific course by id
    * @param courseId
    * @param missionId
    * @returns Promise <Mission> if mission is found, otherwise null
@@ -146,7 +146,7 @@ export class CoursesService {
   }
 
   /**
-   * Delete a specific mission in a specifique course by id
+   * Delete a specific mission in a specific course by id
    * @param courseId
    * @param missionId
    * @returns Promise <Mission> if mission is found, otherwise null
@@ -167,7 +167,7 @@ export class CoursesService {
   }
 
   /**
-   * Create a new mission in a specifique course by id
+   * Create a new mission in a specific course by id
    * @param courseId
    * @param createMissionDto
    * @returns Promise <Mission> if mission is found, otherwise null
@@ -178,7 +178,7 @@ export class CoursesService {
   }
 
   /**
-   * Find all levels in a specifique course by id
+   * Find all levels in a specific course by id
    * @param courseId
    * @param missionId
    * @returns Promise <Levels[]> if levels are found, otherwise empty array
@@ -192,7 +192,7 @@ export class CoursesService {
   }
 
   /**
-   * Create a new level in a specifique course by id
+   * Create a new level in a specific course by id
    * @param courseId
    * @param missionId
    * @param createLevelDto
@@ -204,7 +204,7 @@ export class CoursesService {
   }
 
   /**
-   * Find a specific level in a specifique course by id
+   * Find a specific level in a specific course by id
    * @param courseId
    * @param missionId
    * @param levelId
@@ -226,7 +226,7 @@ export class CoursesService {
   }
 
   /**
-   * Update a specific level in a specifique course by id
+   * Update a specific level in a specific course by id
    * @param courseId
    * @param missionId
    * @param levelId
@@ -259,7 +259,7 @@ export class CoursesService {
   }
 
   /**
-   * Delete a specific level in a specifique course by id
+   * Delete a specific level in a specific course by id
    * @param courseId
    * @param missionId
    * @param levelId
