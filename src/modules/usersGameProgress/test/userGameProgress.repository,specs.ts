@@ -36,8 +36,10 @@ describe('UsersPlayGamesRepository', () => {
         let gameProgress: GameProgress
 
         beforeEach(async () => {
-          jest.spyOn(GameProgressModel, 'findOne')
-          gameProgress = await gameProgressModel.findOne({})
+          jest.spyOn(gameProgressModel, 'findOne')
+          gameProgress = (await gameProgressModel
+            .findOne(gameProgressFilterQuery)
+            .exec()) as GameProgress
         })
 
         test('then it should call the gameProgressModel', () => {
