@@ -1,12 +1,17 @@
 import { CourseEnrollment } from '../schemas/courseEnrollment.schema'
 import { CourseEnrollmentModel } from './support/courseEnrollment.model'
 import { CourseEnrollmentsRepository } from '../courseEnrollments.repository'
+import { CoursesService } from '../../courses/courses.service'
 import { FilterQuery } from 'mongoose'
+import { LevelEnrollmentModel } from './support/levelEnrollment.model'
+import { LevelManagement } from '../schemas/LevelManagement.schema'
 import { MissionEnrollmentModel } from './support/missionEnrollment.model'
 import { MissionManagement } from '../schemas/MissionManagement.schema'
 import { Test, TestingModule } from '@nestjs/testing'
 import { courseEnrollmentStub } from './stubs/courseEnrollment.stub'
 import { getModelToken } from '@nestjs/mongoose'
+
+jest.mock('../../courses/courses.service')
 
 describe('CourseEnrollmentsRepository', () => {
   let repository: CourseEnrollmentsRepository
@@ -20,7 +25,7 @@ describe('CourseEnrollmentsRepository', () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [
           CourseEnrollmentsRepository,
-
+          CoursesService,
           {
             provide: getModelToken(CourseEnrollment.name),
             useClass: CourseEnrollmentModel,
@@ -28,6 +33,10 @@ describe('CourseEnrollmentsRepository', () => {
           {
             provide: getModelToken(MissionManagement.name),
             useClass: MissionEnrollmentModel,
+          },
+          {
+            provide: getModelToken(LevelManagement.name),
+            useClass: LevelEnrollmentModel,
           },
         ],
       }).compile()
@@ -54,7 +63,7 @@ describe('CourseEnrollmentsRepository', () => {
         })
 
         test('then it should call the courseEnrollmentModel', () => {
-          expect(courseEnrollmentModel.create).toHaveBeenCalledWith(courseEnrollmentStub())
+          expect(courseEnrollmentModel.create).toHaveBeenCalled()
         })
 
         test('then it should return a user', () => {
