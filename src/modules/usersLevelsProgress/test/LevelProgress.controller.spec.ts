@@ -5,7 +5,7 @@ import { UsersLevelsProgressController } from '../usersLevelsProgress.controller
 import { UsersLevelsProgressService } from '../usersLevelsProgress.service'
 import { levelProgressStub } from './stubs/levelProgress.stub'
 
-jest.mock('../levelProgress.service')
+jest.mock('../usersLevelsProgress.service')
 
 describe('UsersLevelsProgressController', () => {
   let controller: UsersLevelsProgressController

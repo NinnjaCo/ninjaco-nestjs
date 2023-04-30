@@ -1,4 +1,4 @@
-import { LevelProgress } from 'modules/usersLevelsProgress/schema/LevelProgress.schema'
+import { LevelProgress } from '../../../usersLevelsProgress/schema/LevelProgress.schema'
 import mongoose from 'mongoose'
 
 export const levelProgressStub: () => LevelProgress = () => {
