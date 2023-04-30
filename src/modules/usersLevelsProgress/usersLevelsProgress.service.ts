@@ -38,7 +38,7 @@ export class UsersLevelsProgressService {
    * @description finds level progress by id and deletes it
    */
 
-  async deleteCourse(id: string): Promise<LevelProgress> {
+  async deleteLevel(id: string): Promise<LevelProgress> {
     return await this.levelProgressRepository.findOneAndDelete({ _id: id })
   }
 

@@ -37,7 +37,7 @@ export class UsersLevelsProgressController {
   @Roles(RoleEnum.ADMIN, RoleEnum.CREATOR)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<LevelProgress> {
-    return this.levelProgressService.deleteCourse(id)
+    return this.levelProgressService.deleteLevel(id)
   }
 
   @ApiGlobalResponse(LevelProgress, {
