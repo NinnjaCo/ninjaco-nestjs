@@ -81,7 +81,11 @@ export class MinioClientService {
         file.mimetype.includes('jpeg') ||
         file.mimetype.includes('png') ||
         file.mimetype.includes('jpg') ||
-        file.mimetype.includes('webp')
+        file.mimetype.includes('webp') ||
+        file.mimetype.includes('avif') ||
+        file.mimetype.includes('jfif') ||
+        file.mimetype.includes('pjpeg') ||
+        file.mimetype.includes('pjp')
       )
     ) {
       throw new HttpException('Error uploading file', HttpStatus.BAD_REQUEST)
