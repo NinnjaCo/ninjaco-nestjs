@@ -88,10 +88,10 @@ async function bootstrap() {
   app.use(compression())
 
   // Global rate limiter
-  // limit 1 ip for 100 request under 15 minutes
+  // limit 1 ip for 2000 request under 15 minutes
   // this is for preventing brute force attack
   // routes with @Throttle() decorator will be ignored
-  const maxAllowedRequest = 1000
+  const maxAllowedRequest = 2000
   const durationForMaxAllowedRequest = 15 * 60 * 1000
   app.use(
     rateLimit({
